@@ -439,9 +439,8 @@ class UseCaseFormWrapper():
 		self.form.mainScenarioView.setSelectionBehavior(QtGui.QAbstractItemView.SelectRows)
 		self.form.mainScenarioView.setSelectionMode(QtGui.QAbstractItemView.SingleSelection)
 
-		#QtCore.QObject.connect(self.form.eventsView, QtCore.SIGNAL(_fromUtf8("clicked(QModelIndex)")), self.modelEV.optButtons)
-		#QtCore.QObject.connect(self.form.mainScenarioView, QtCore.SIGNAL(_fromUtf8("clicked(QModelIndex)")), self.modelMS.optButtons)
-		QtCore.QObject.connect(self.form.buttonBox, QtCore.SIGNAL(_fromUtf8("clicked(QAbstractButton*)")), self.clickedButtonBox)
+		QtCore.QObject.connect(self.form.buttonBox, QtCore.SIGNAL(_fromUtf8("accepted()")), self.clickedOKButton)
+		QtCore.QObject.connect(self.form.buttonBox, QtCore.SIGNAL(_fromUtf8("rejected()")), self.clickedCancelButton)
 		QtCore.QObject.connect(self.form.actorMainSelectButton, QtCore.SIGNAL(_fromUtf8("clicked()")), self.clickedActorMainSelectButton)
 		QtCore.QObject.connect(self.form.actorOthersSelectButton, QtCore.SIGNAL(_fromUtf8("clicked()")), self.clickedActorOthersSelectButton)
 		QtCore.QObject.connect(self.form.insertStepMSButton, QtCore.SIGNAL(_fromUtf8("clicked()")), self.clickedInsertStepMSButton)
@@ -463,9 +462,11 @@ class UseCaseFormWrapper():
 		self.dialog.exec_()
 
 	def clickedCancelButton(self):
+		print "clickedCancelButton"
 		self.dialog.close()
 
 	def clickedOKButton(self):
+		print "clickedOKButton"
 		index = self.form.priorityComboBox.currentIndex()
 		priority = self.form.priorityComboBox.itemData(index).toPyObject()
 		self.item.priority = priority.get_ref()
@@ -482,6 +483,7 @@ class UseCaseFormWrapper():
 		self.dialog.close()
 
 	def clickedButtonBox(self, btn):
+		print "clickedButtonBox"
 		{
 			'&Cancel': self.clickedCancelButton,
 			'&OK':     self.clickedOKButton,
