@@ -196,20 +196,22 @@ def read(filename = None):
 		if node.attrib.has_key('ref'):
 			return get_ref(node.attrib['ref'], model.Reference)
 
-		retval = model.Event()
-
-		add_ref(node.attrib['id'], retval)
+		retval = {
+			model.EventType.ALTERNATION: model.AlternationEvent,
+			model.EventType.EXTENSION:   model.ExtensionEvent,
+			model.EventType.EXCEPTION:   model.ExceptionEvent
+		}.get(node.attrib['type'])()
 
 		for n in node.getchildren():
 			if n.tag == 'title':
 				retval.title = items(project, n)
-			elif n.tag == 'event-type':
-				retval.event_type = n.text
 			elif n.tag == 'scenario':
 				retval.scenario = scenario(project, n)
 			else:
 				print n.tag
 				raise ValueError("Unsupported format file")
+
+		add_ref(node.attrib['id'], retval)
 
 		step = get_ref(node.attrib['step'], model.Reference).item
 
