@@ -35,7 +35,8 @@ def Project_att_to_xml(self, parent = None):
 		node = ET.SubElement(parent, "project")
 	else:
 		node = ET.Element("project")
-		node.set("format", "1")
+
+	node.set("format", "1")
 
 	name = ET.SubElement(node, "name")
 	name.text = self.name
