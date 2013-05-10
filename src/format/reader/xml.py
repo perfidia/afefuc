@@ -98,9 +98,9 @@ def read(filename = None):
 			elif n.tag == 'id':
 				retval.identifier = n.text
 			elif n.tag == 'main-actors':
-				retval.main_actors = actors(project, n)
+				retval.main_actors = generic_list_iterator(retval, n, actor)
 			elif n.tag == 'other-actors':
-				retval.other_actors = actors(project, n)
+				retval.other_actors = generic_list_iterator(retval, n, actor)
 			elif n.tag == 'goal-level':
 				retval.goal_level = goal_level(project, n)
 			elif n.tag == 'priority':
@@ -116,7 +116,8 @@ def read(filename = None):
 			elif n.tag == 'testcases':
 				pass
 			elif n.tag == 'events':
-				events(project, n)
+				generic_list_iterator(retval, n, event)
+				# ignore returned value
 			else:
 				print n.tag
 				raise ValueError("Unsupported format file")
@@ -155,20 +156,12 @@ def read(filename = None):
 			elif n.tag == 'description':
 				retval.description = items(project, n)
 			elif n.tag == 'attributes':
-				retval.attributes = attributes(project, n)
+				retval.attributes = generic_list_iterator(retval, n, attribute)
 			elif n.tag == 'properties':
 				pass
 			else:
 				print n.tag
 				raise ValueError("Unsupported format file")
-
-		return retval
-
-	def attributes(project, node):
-		retval = []
-
-		for n in node.getchildren():
-			retval.append(attribute(project, n))
 
 		return retval
 
@@ -219,28 +212,6 @@ def read(filename = None):
 
 		# NO RETURN
 
-	def events(project, node):
-		for n in node.getchildren():
-			event(project, n)
-
-		# NO RETURN
-
-	def priorities(project, node):
-		retval = []
-
-		for n in node.getchildren():
-			retval.append(priority(project, n))
-
-		return retval
-
-	def goal_levels(project, node):
-		retval = []
-
-		for n in node.getchildren():
-			retval.append(goal_level(project, n))
-
-		return retval
-
 	def step(project, node):
 		if node.attrib.has_key('ref'):
 			return get_ref(node.attrib['ref'], model.Reference)
@@ -261,27 +232,11 @@ def read(filename = None):
 
 		return retval
 
-	def actors(project, node):
+	def generic_list_iterator(project, node, func):
 		retval = []
 
 		for n in node.getchildren():
-			retval.append(actor(project, n))
-
-		return retval
-
-	def usecases(project, node):
-		retval = []
-
-		for n in node.getchildren():
-			retval.append(usecase(project, n))
-
-		return retval
-
-	def business_objects(project, node):
-		retval = []
-
-		for n in node.getchildren():
-			retval.append(business_object(project, n))
+			retval.append(func(project, n))
 
 		return retval
 
@@ -290,11 +245,11 @@ def read(filename = None):
 
 		for n in node.getchildren():
 			if n.tag == 'priorities':
-				retval.priorities = priorities(project, n)
+				retval.priorities = generic_list_iterator(retval, n, priority)
 			elif n.tag == 'goal-levels':
-				retval.goal_levels = goal_levels(project, n)
+				retval.goal_levels = generic_list_iterator(retval, n, goal_level)
 			elif n.tag == 'usecases':
-				retval.usecases = usecases(project, n)
+				retval.usecases = generic_list_iterator(retval, n, usecase)
 			else:
 				print n.tag
 				assert 1 == 2
@@ -318,9 +273,9 @@ def read(filename = None):
 			elif n.tag == 'language':
 				retval.language = n.text
 			elif n.tag == 'actors':
-				retval.actors = actors(retval, n)
+				retval.actors = generic_list_iterator(retval, n, actor)
 			elif n.tag == 'business-objects':
-				retval.business_objects = business_objects(retval, n)
+				retval.business_objects = generic_list_iterator(retval, n, business_object)
 			elif n.tag == 'business-rules':
 				pass
 			elif n.tag == 'ucspec':
