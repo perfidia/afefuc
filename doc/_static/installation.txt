@@ -1,0 +1,8 @@
+Installation
+============
+
+Linux:
+
+    * python 2.7 (tested on python 2.7.3)
+    * Python User Interface Compiler 4.9.3 for Qt version 4.8.2 - pyuic4 (apt-get install pyqt4-dev-tools)
+    * make 3.81 (apt-get install make)
