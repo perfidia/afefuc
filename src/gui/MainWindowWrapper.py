@@ -63,8 +63,8 @@ class MainWindowWrapper(QtGui.QMainWindow):
 		self.businessObjectsTab = BusinessObjectsTabWrapper(self, self.afefuc)
 		self.businessObjectsTab.show()
 
-		self.businessRulesTab = BusinessRulesTabWrapper(self, self.afefuc)
-		self.businessRulesTab.show()
+		#self.businessRulesTab = BusinessRulesTabWrapper(self, self.afefuc)
+		#self.businessRulesTab.show()
 
 		self.actorsTab = ActorsTabWrapper(self, self.afefuc)
 		self.actorsTab.show()
@@ -82,7 +82,7 @@ class MainWindowWrapper(QtGui.QMainWindow):
 		self.prioritiesTab.load()
 		self.goalLevelTab.load()
 		self.businessObjectsTab.load()
-		self.businessRulesTab.load()
+		#self.businessRulesTab.load()
 		self.actorsTab.load()
 		self.usecasesTab.load()
 		self.testcasesTab.load()

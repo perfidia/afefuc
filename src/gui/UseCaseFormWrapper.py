@@ -456,6 +456,8 @@ class UseCaseFormWrapper():
 		QtCore.QObject.connect(self.form.titleEdit, QtCore.SIGNAL(_fromUtf8("editingFinished()")), self.editingFinishedTitleEdit)
 		QtCore.QObject.connect(self.form.idEdit, QtCore.SIGNAL(_fromUtf8("editingFinished()")), self.editingFinishedIdEdit)
 
+		self.form.tabWidget.removeTab(2)
+
 		self.__fill()
 
 		self.dialog.exec_()
