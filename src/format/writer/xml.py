@@ -388,3 +388,11 @@ def attach():
 def detach():
 	for clazz in attachments:
 		del clazz.to_xml
+
+def write(filename, project):
+	attach()
+	retval = project.to_xml()
+	fd = open(filename, "w")
+	fd.write(retval)
+	fd.close()
+	detach()

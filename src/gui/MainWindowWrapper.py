@@ -118,12 +118,7 @@ class MainWindowWrapper(QtGui.QMainWindow):
 			if self.filename[-4:] != '.auc':
 				self.filename += ".auc"
 
-			format.writer.xml.attach()
-			retval = self.afefuc['project'].to_xml()
-			fd = open(self.filename, "w")
-			fd.write(retval)
-			fd.close()
-			format.writer.xml.detach()
+			format.writer.xml.write(self.filename, self.afefuc['project'])
 
 	def clickedSaveAs(self):
 		self.clickedSave(saveAs = True)
