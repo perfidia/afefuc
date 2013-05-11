@@ -70,17 +70,17 @@ class UseCaseFormWrapper():
 
 		self.mydelegate = Delegate(self.dialog)
 
-	def __fill(self):
+	def load(self):
 		pass
 #		if self.item is not None:
-#			print "__fill"
+#			print "load"
 #			self.form.titleEdit.setText(_fromUtf8(" ".join([str(i) for i in self.afefuc['project'].ucspec.usecases[self.item].title])))
 #			self.form.idEdit.setText(_fromUtf8(self.afefuc['project'].ucspec.usecases[self.item].identifier))
 
 	def show(self):
 		self.form.setupUi(self.dialog)
 
-		self.__fill()
+		self.load()
 
 		QtCore.QObject.connect(self.form.buttonBox, QtCore.SIGNAL(_fromUtf8("clicked(QAbstractButton*)")), self.buttonBox_clicked)
 

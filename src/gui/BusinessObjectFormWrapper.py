@@ -168,7 +168,7 @@ class BusinessObjectFormWrapper():
 		self.item = item[1]
 		self.item_orginal = item[0]
 
-	def __fill(self):
+	def load(self):
 		self.form.nameEdit.setText(_fromUtf8(converter.itemsToText(self.item.name, edit = True)))
 		self.form.idEdit.setText(_fromUtf8(self.item.identifier))
 		self.form.descriptionEdit.setPlainText(_fromUtf8(converter.itemsToText(self.item.description, edit = True)))
@@ -185,7 +185,7 @@ class BusinessObjectFormWrapper():
 		self.form.attributesView.verticalHeader().hide()
 		self.form.attributesView.setEditTriggers(QtGui.QAbstractItemView.CurrentChanged)
 
-		self.__fill()
+		self.load()
 
 		QtCore.QObject.connect(self.form.addButton, QtCore.SIGNAL(_fromUtf8("clicked()")), self.clickedAddButton)
 		QtCore.QObject.connect(self.form.deleteButton, QtCore.SIGNAL(_fromUtf8("clicked()")), self.clickedDeleteButton)

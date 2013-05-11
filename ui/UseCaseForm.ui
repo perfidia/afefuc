@@ -444,7 +444,7 @@
     </widget>
    </item>
    <item>
-    <widget class="QDialogButtonBox" name="buttonBox">
+    <widget class="QDialogButtonBox" name="boxButton">
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
      </property>

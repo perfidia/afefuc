@@ -386,7 +386,7 @@ class UseCaseFormWrapper():
 		self.item = item[1]
 		self.item_original = item[0]
 
-	def __fill(self):
+	def load(self):
 		self.form.titleEdit.setText(_fromUtf8(converter.itemsToText(self.item.title, edit = True)))
 		self.form.idEdit.setText(_fromUtf8(self.item.identifier))
 
@@ -457,7 +457,7 @@ class UseCaseFormWrapper():
 
 		self.form.tabWidget.removeTab(2)
 
-		self.__fill()
+		self.load()
 
 		self.dialog.exec_()
 

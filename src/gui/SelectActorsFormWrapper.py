@@ -70,7 +70,7 @@ class SelectActorsFormWrapper():
 		self.unselectable = unselectable
 		self.single = single
 
-	def __fill(self):
+	def load(self):
 		toSelect = [i.item for i in self.target]
 		tmp = self.form.itemsView.selectionModel()
 
@@ -98,7 +98,7 @@ class SelectActorsFormWrapper():
 		QtCore.QObject.connect(self.form.buttonBox, QtCore.SIGNAL(_fromUtf8("accepted()")), self.clickedOKButton)
 		QtCore.QObject.connect(self.form.buttonBox, QtCore.SIGNAL(_fromUtf8("rejected()")), self.clickedCancelButton)
 
-		self.__fill()
+		self.load()
 
 		self.dialog.exec_()
 

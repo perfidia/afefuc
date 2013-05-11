@@ -23,13 +23,13 @@ class GoalLevelFormWrapper():
 		self.item = item[1]
 		self.item_orginal = item[0]
 
-	def __fill(self):
+	def load(self):
 		self.form.nameEdit.setText(_fromUtf8(self.item.name))
 
 	def show(self):
 		self.form.setupUi(self.dialog)
 
-		self.__fill()
+		self.load()
 
 		QtCore.QObject.connect(self.form.boxButton, QtCore.SIGNAL(_fromUtf8("accepted()")), self.clickedOKButton)
 		QtCore.QObject.connect(self.form.boxButton, QtCore.SIGNAL(_fromUtf8("rejected()")), self.clickedCancelButton)

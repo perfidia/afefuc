@@ -24,7 +24,7 @@ class ActorFormWrapper():
 		self.item = item[1]
 		self.item_orginal = item[0]
 
-	def __fill(self):
+	def load(self):
 		self.form.nameEdit.setText(_fromUtf8(self.item.name))
 		self.form.idEdit.setText(_fromUtf8(self.item.identifier))
 
@@ -43,7 +43,7 @@ class ActorFormWrapper():
 
 		self.form.typeComboBox.addItems(["Human", "System"])
 
-		self.__fill()
+		self.laod()
 
 		QtCore.QObject.connect(self.form.boxButton, QtCore.SIGNAL(_fromUtf8("accepted()")), self.clickedOKButton)
 		QtCore.QObject.connect(self.form.boxButton, QtCore.SIGNAL(_fromUtf8("rejected()")), self.clickedCancelButton)
