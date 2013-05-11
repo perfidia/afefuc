@@ -41,9 +41,9 @@ class ActorFormWrapper():
 	def show(self):
 		self.form.setupUi(self.dialog)
 
-		self.form.typeComboBox.addItems(["Human", "System"])
+		self.form.typeComboBox.addItems(["Human - Business role", "Human - Support role", "System"])
 
-		self.laod()
+		self.load()
 
 		QtCore.QObject.connect(self.form.boxButton, QtCore.SIGNAL(_fromUtf8("accepted()")), self.clickedOKButton)
 		QtCore.QObject.connect(self.form.boxButton, QtCore.SIGNAL(_fromUtf8("rejected()")), self.clickedCancelButton)
