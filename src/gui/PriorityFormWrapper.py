@@ -31,14 +31,15 @@ class PriorityFormWrapper():
 
 		self.__fill()
 
-		QtCore.QObject.connect(self.form.boxButton, QtCore.SIGNAL(_fromUtf8("clicked(QAbstractButton*)")), self.clickedBoxButton)
+		QtCore.QObject.connect(self.form.boxButton, QtCore.SIGNAL(_fromUtf8("accepted()")), self.clickedOKButton)
+		QtCore.QObject.connect(self.form.boxButton, QtCore.SIGNAL(_fromUtf8("rejected()")), self.clickedCancelButton)
 
 		self.dialog.exec_()
 
 	def clickedCancelButton(self):
 		self.dialog.close()
 
-	def okBtn_clicked(self):
+	def clickedOKButton(self):
 		self.item.name = unicode(self.form.nameEdit.text().toUtf8(), "utf-8")
 
 		if self.item_orginal:
@@ -47,9 +48,3 @@ class PriorityFormWrapper():
 			self.parent.model.insertItem((self.item_orginal, self.item))
 
 		self.dialog.close()
-
-	def clickedBoxButton(self, btn):
-		{
-			'&Cancel': self.clickedCancelButton,
-			'&OK': self.okBtn_clicked,
-		}.get(str(btn.text()))()

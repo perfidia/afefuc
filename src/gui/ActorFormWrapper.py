@@ -45,11 +45,8 @@ class ActorFormWrapper():
 
 		self.__fill()
 
-		QtCore.QObject.connect(
-				self.form.boxButton,
-				QtCore.SIGNAL(_fromUtf8("clicked(QAbstractButton*)")),
-				self.clickedBoxButton
-		)
+		QtCore.QObject.connect(self.form.boxButton, QtCore.SIGNAL(_fromUtf8("accepted()")), self.clickedOKButton)
+		QtCore.QObject.connect(self.form.boxButton, QtCore.SIGNAL(_fromUtf8("rejected()")), self.clickedCancelButton)
 
 		self.dialog.exec_()
 
@@ -72,9 +69,3 @@ class ActorFormWrapper():
 			self.parent.model.insertItem((self.item_orginal, self.item))
 
 		self.dialog.close()
-
-	def clickedBoxButton(self, btn):
-		{
-			'&Cancel': self.clickedCancelButton,
-			'&OK': self.clickedOKButton,
-		}.get(str(btn.text()))()

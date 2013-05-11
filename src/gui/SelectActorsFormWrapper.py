@@ -95,7 +95,8 @@ class SelectActorsFormWrapper():
 		if self.single:
 			self.form.itemsView.setSelectionMode(QtGui.QAbstractItemView.SingleSelection)
 
-		QtCore.QObject.connect(self.form.boxButton, QtCore.SIGNAL(_fromUtf8("clicked(QAbstractButton*)")), self.clickedBoxButton)
+		QtCore.QObject.connect(self.form.buttonBox, QtCore.SIGNAL(_fromUtf8("accepted()")), self.clickedOKButton)
+		QtCore.QObject.connect(self.form.buttonBox, QtCore.SIGNAL(_fromUtf8("rejected()")), self.clickedCancelButton)
 
 		self.__fill()
 
@@ -113,9 +114,3 @@ class SelectActorsFormWrapper():
 			self.target.append(self.project.actors[i].get_ref())
 
 		self.dialog.close()
-
-	def clickedBoxButton(self, btn):
-		{
-			'&Cancel': self.clickedCancelButton,
-			'&OK': self.clickedOKButton,
-		}.get(str(btn.text()))()

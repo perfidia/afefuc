@@ -187,11 +187,12 @@ class BusinessObjectFormWrapper():
 
 		self.__fill()
 
-		QtCore.QObject.connect(self.form.boxButton, QtCore.SIGNAL(_fromUtf8("clicked(QAbstractButton*)")), self.clickedBoxButton)
 		QtCore.QObject.connect(self.form.addButton, QtCore.SIGNAL(_fromUtf8("clicked()")), self.clickedAddButton)
 		QtCore.QObject.connect(self.form.deleteButton, QtCore.SIGNAL(_fromUtf8("clicked()")), self.clickedDeleteButton)
 		QtCore.QObject.connect(self.form.moveUpButton, QtCore.SIGNAL(_fromUtf8("clicked()")), self.clickedMoveUpButton)
 		QtCore.QObject.connect(self.form.moveDownButton, QtCore.SIGNAL(_fromUtf8("clicked()")), self.clickedMoveDownButton)
+		QtCore.QObject.connect(self.form.boxButton, QtCore.SIGNAL(_fromUtf8("accepted()")), self.clickedOKButton)
+		QtCore.QObject.connect(self.form.boxButton, QtCore.SIGNAL(_fromUtf8("rejected()")), self.clickedCancelButton)
 
 		self.dialog.exec_()
 
@@ -215,12 +216,6 @@ class BusinessObjectFormWrapper():
 			self.parent.model.insertItem((self.item_orginal, self.item))
 
 		self.dialog.close()
-
-	def clickedBoxButton(self, btn):
-		{
-			'&Cancel': self.clickedCancelButton,
-			'&OK': self.clickedOKButton,
-		}.get(str(btn.text()))()
 
 	def clickedAddButton(self):
 		self.model.insertItem(model.Attribute())

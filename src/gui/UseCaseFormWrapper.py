@@ -439,8 +439,6 @@ class UseCaseFormWrapper():
 		self.form.mainScenarioView.setSelectionBehavior(QtGui.QAbstractItemView.SelectRows)
 		self.form.mainScenarioView.setSelectionMode(QtGui.QAbstractItemView.SingleSelection)
 
-		QtCore.QObject.connect(self.form.buttonBox, QtCore.SIGNAL(_fromUtf8("accepted()")), self.clickedOKButton)
-		QtCore.QObject.connect(self.form.buttonBox, QtCore.SIGNAL(_fromUtf8("rejected()")), self.clickedCancelButton)
 		QtCore.QObject.connect(self.form.actorMainSelectButton, QtCore.SIGNAL(_fromUtf8("clicked()")), self.clickedActorMainSelectButton)
 		QtCore.QObject.connect(self.form.actorOthersSelectButton, QtCore.SIGNAL(_fromUtf8("clicked()")), self.clickedActorOthersSelectButton)
 		QtCore.QObject.connect(self.form.insertStepMSButton, QtCore.SIGNAL(_fromUtf8("clicked()")), self.clickedInsertStepMSButton)
@@ -454,6 +452,8 @@ class UseCaseFormWrapper():
 		QtCore.QObject.connect(self.form.moveDownEvButton, QtCore.SIGNAL(_fromUtf8("clicked()")), self.clickedMoveDownEvButton)
 		QtCore.QObject.connect(self.form.titleEdit, QtCore.SIGNAL(_fromUtf8("editingFinished()")), self.editingFinishedTitleEdit)
 		QtCore.QObject.connect(self.form.idEdit, QtCore.SIGNAL(_fromUtf8("editingFinished()")), self.editingFinishedIdEdit)
+		QtCore.QObject.connect(self.form.buttonBox, QtCore.SIGNAL(_fromUtf8("accepted()")), self.clickedOKButton)
+		QtCore.QObject.connect(self.form.buttonBox, QtCore.SIGNAL(_fromUtf8("rejected()")), self.clickedCancelButton)
 
 		self.form.tabWidget.removeTab(2)
 
@@ -481,13 +481,6 @@ class UseCaseFormWrapper():
 			self.parent.model.insertItem((self.item_original, self.item))
 
 		self.dialog.close()
-
-	def clickedButtonBox(self, btn):
-		print "clickedButtonBox"
-		{
-			'&Cancel': self.clickedCancelButton,
-			'&OK':     self.clickedOKButton,
-		}.get(str(btn.text()))()
 
 	def clickedActorMainSelectButton(self):
 		SelectActorsFormWrapper(
