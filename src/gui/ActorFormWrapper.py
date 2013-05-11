@@ -4,9 +4,10 @@ Created on Apr 25, 2013
 @author: Bartosz Alchimowicz
 '''
 
+from collections import OrderedDict
 from PyQt4 import QtCore, QtGui
 from ui.ActorForm import Ui_ActorForm
-#from format import model
+from format import model
 from utils import converter
 
 try:
@@ -24,6 +25,11 @@ class ActorFormWrapper():
 		self.item = item[1]
 		self.item_orginal = item[0]
 
+		self.options = OrderedDict()
+		self.options[model.ActorType.HUMAN_BUSINESS] = "Human - Business role"
+		self.options[model.ActorType.HUMAN_SUPPORT]  = "Human - Support role"
+		self.options[model.ActorType.SYSTEM]         = "System"
+
 	def load(self):
 		self.form.nameEdit.setText(_fromUtf8(self.item.name))
 		self.form.idEdit.setText(_fromUtf8(self.item.identifier))
@@ -34,14 +40,16 @@ class ActorFormWrapper():
 				)
 		)
 
-		index = self.form.typeComboBox.findText(_fromUtf8(self.item.type))
+		index = self.form.typeComboBox.findData(QtCore.QVariant(self.item.type))
+
 		if index != -1:
 			self.form.typeComboBox.setCurrentIndex(index)
 
 	def show(self):
 		self.form.setupUi(self.dialog)
 
-		self.form.typeComboBox.addItems(["Human - Business role", "Human - Support role", "System"])
+		for k, v in self.options.items():
+			self.form.typeComboBox.addItem(v, QtCore.QVariant(k))
 
 		self.load()
 
@@ -61,7 +69,9 @@ class ActorFormWrapper():
 				unicode(self.form.descriptionEdit.toPlainText().toUtf8(), "utf-8")
 		)
 
-		self.item.type = unicode(self.form.typeComboBox.currentText().toUtf8(), "utf-8")
+		index = self.form.typeComboBox.currentIndex()
+
+		self.item.type = unicode(self.form.typeComboBox.itemData(index).toPyObject().toUtf8(), "utf-8")
 
 		if self.item_orginal:
 			self.parent.model.updateItem((self.item_orginal, self.item))

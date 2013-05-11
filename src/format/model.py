@@ -177,13 +177,18 @@ class Step(Referencable):
 		for e in self.events:
 			e.setParent(self)
 
+class ActorType(object):
+	HUMAN_BUSINESS = "Business"
+	HUMAN_SUPPORT  = "Support"
+	SYSTEM         = "System"
+
 class Actor(Referencable):
 	def __init__(self, name = None, identifier = None, description = []):
 		Referencable.__init__(self)
 
 		self.name = name						# str
 		self.identifier = identifier			# str
-		self.type = None						# str: Human|System
+		self.type = None						# str from ActorType
 		self.description = description			# Item{0..}
 		self.properties = None					# dict
 
