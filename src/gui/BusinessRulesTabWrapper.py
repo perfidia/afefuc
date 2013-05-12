@@ -135,7 +135,7 @@ class BusinessRulesTabWrapper():
 		form = BusinessRuleFormWrapper(self, self.afefuc, (None, model.BusinessRule()))
 		form.show()
 
-	def clickedSeleteButton(self):
+	def clickedDeleteButton(self):
 		if len(self.tab.itemsView.selectedIndexes()) == 2:
 			position = self.tab.itemsView.selectedIndexes()[0].row()
 
