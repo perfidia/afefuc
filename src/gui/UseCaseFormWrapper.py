@@ -376,6 +376,105 @@ class EventsTableModel(QtCore.QAbstractTableModel):
 #		if index.column() == 2:
 #			self.removeItem(index.row())
 
+class ConditionsTableModel(QtCore.QAbstractTableModel):
+	def __init__(self, parent, afefuc, items, conditions):
+		QtCore.QAbstractItemModel.__init__(self, parent)
+		self.afefuc = afefuc
+		self.conditions = conditions
+		self.item = items[1]
+		self.item_orginal = items[0]
+		self.parent = parent
+
+	def rowCount(self, parent):
+		return len(self.conditions)
+
+	def columnCount(self, parent):
+		return 2 #3
+
+	def data(self, index, role):
+		if not index.isValid():
+			return QtCore.QVariant()
+
+		column = index.column()
+		row = index.row()
+
+		if column == 0 and role == QtCore.Qt.DisplayRole:
+			return QtCore.QVariant(row + 1)
+		elif column == 1 and role in [QtCore.Qt.DisplayRole, QtCore.Qt.EditRole]:
+			return QtCore.QVariant(converter.itemsToText(self.conditions[row].items, role == QtCore.Qt.EditRole))
+
+		return QtCore.QVariant()
+
+	def flags(self, index):
+		flags = super(QtCore.QAbstractTableModel, self).flags(index)
+
+		if index.column() == 1:
+			flags |= QtCore.Qt.ItemIsEditable#|QtCore.Qt.ItemIsSelectable
+
+		return flags
+
+	def setData(self, index, value, role):
+		if index.isValid() and role == QtCore.Qt.EditRole:
+			value = unicode(value.toString().toUtf8(), 'utf-8')
+			items = converter.textToItems(self.afefuc['project'], value, (self.item_orginal, self.item))
+
+			self.conditions[index.row()].items = items
+
+			return True
+
+		return False
+
+	def insertItem(self, item, position = None):
+		if position is None:
+			first = self.rowCount(QtCore.QModelIndex())
+			last = self.rowCount(QtCore.QModelIndex())
+		else:
+			first = position
+			last = position
+
+		self.beginInsertRows(QtCore.QModelIndex(), first, last)
+
+		if position is None:
+			self.conditions.append(item)
+		else:
+			self.conditions.insert(position, item)
+
+		self.endInsertRows()
+
+	def removeItem(self, position):
+		hasEvents = False
+
+		self.beginRemoveRows(QtCore.QModelIndex(), position, position)
+
+		del(self.conditions[position])
+
+		self.endRemoveRows()
+
+		return True
+
+	def movePositionUp(self, position):
+		if position <= 0 or position == self.rowCount(QtCore.QModelIndex()):
+			return
+
+		pos1 = position
+		pos2 = position - 1
+
+		(
+				self.conditions[pos1],\
+				self.conditions[pos2] \
+		) = (\
+				self.conditions[pos2],\
+				self.conditions[pos1] \
+		)
+
+		self.emit(QtCore.SIGNAL("dataChanged(QModelIndex, QModelIndex)"),
+				self.createIndex(min(pos1, pos2), 0, None),
+				self.createIndex(max(pos1, pos2), 1, None)
+		)
+
+	def movePositionDown(self, position):
+		self.movePositionUp(position + 1)
+
 class UseCaseFormWrapper():
 	def __init__(self, parent, afefuc, item = None):
 		self.parent = parent
@@ -424,7 +523,6 @@ class UseCaseFormWrapper():
 		self.form.eventsView.setSelectionBehavior(QtGui.QAbstractItemView.SelectRows)
 		self.form.eventsView.setSelectionMode(QtGui.QAbstractItemView.SingleSelection)
 
-
 		self.modelMS = MainScenarioTableModel(self.form.mainScenarioView, self.afefuc, (self.item_original, self.item), self.modelEV)
 		self.form.mainScenarioView.setModel(self.modelMS)
 		#self.form.mainScenarioView.setItemDelegateForColumn(2, PushButtonDelegate(self.form.mainScenarioView, "E"))
@@ -439,6 +537,23 @@ class UseCaseFormWrapper():
 		self.form.mainScenarioView.setSelectionBehavior(QtGui.QAbstractItemView.SelectRows)
 		self.form.mainScenarioView.setSelectionMode(QtGui.QAbstractItemView.SingleSelection)
 
+		conditions = [
+				(self.form.triView, self.item.triggers),
+				(self.form.prcView, self.item.preconditions),
+				(self.form.pocView, self.item.postconditions),
+		]
+
+		for v, c in conditions:
+			m = ConditionsTableModel(v, self.afefuc, (self.item_original, self.item), c)
+			v.setModel(m)
+			v.horizontalHeader().hide()
+			v.verticalHeader().hide()
+			v.horizontalHeader().setResizeMode(0, QtGui.QHeaderView.ResizeToContents)
+			v.horizontalHeader().setResizeMode(1, QtGui.QHeaderView.Stretch)
+			v.setEditTriggers(QtGui.QAbstractItemView.CurrentChanged)
+			v.setSelectionBehavior(QtGui.QAbstractItemView.SelectRows)
+			v.setSelectionMode(QtGui.QAbstractItemView.SingleSelection)
+
 		QtCore.QObject.connect(self.form.actorMainSelectButton, QtCore.SIGNAL(_fromUtf8("clicked()")), self.clickedActorMainSelectButton)
 		QtCore.QObject.connect(self.form.actorOthersSelectButton, QtCore.SIGNAL(_fromUtf8("clicked()")), self.clickedActorOthersSelectButton)
 		QtCore.QObject.connect(self.form.insertStepMSButton, QtCore.SIGNAL(_fromUtf8("clicked()")), self.clickedInsertStepMSButton)
@@ -452,21 +567,31 @@ class UseCaseFormWrapper():
 		QtCore.QObject.connect(self.form.moveDownEvButton, QtCore.SIGNAL(_fromUtf8("clicked()")), self.clickedMoveDownEvButton)
 		QtCore.QObject.connect(self.form.titleEdit, QtCore.SIGNAL(_fromUtf8("editingFinished()")), self.editingFinishedTitleEdit)
 		QtCore.QObject.connect(self.form.idEdit, QtCore.SIGNAL(_fromUtf8("editingFinished()")), self.editingFinishedIdEdit)
+		QtCore.QObject.connect(self.form.insertTriButton, QtCore.SIGNAL(_fromUtf8("clicked()")), self.clickedInsertTriButton)
+		QtCore.QObject.connect(self.form.deleteTriButton, QtCore.SIGNAL(_fromUtf8("clicked()")), self.clickedDeleteTriButton)
+		QtCore.QObject.connect(self.form.moveUpTriButton, QtCore.SIGNAL(_fromUtf8("clicked()")), self.clickedMoveUpTriButton)
+		QtCore.QObject.connect(self.form.moveDownTriButton, QtCore.SIGNAL(_fromUtf8("clicked()")), self.clickedMoveDownTriButton)
+		QtCore.QObject.connect(self.form.insertPrCButton, QtCore.SIGNAL(_fromUtf8("clicked()")), self.clickedInsertPrCButton)
+		QtCore.QObject.connect(self.form.deletePrCButton, QtCore.SIGNAL(_fromUtf8("clicked()")), self.clickedDeletePrCButton)
+		QtCore.QObject.connect(self.form.moveUpPrCButton, QtCore.SIGNAL(_fromUtf8("clicked()")), self.clickedMoveUpPrCButton)
+		QtCore.QObject.connect(self.form.moveDownPrCButton, QtCore.SIGNAL(_fromUtf8("clicked()")), self.clickedMoveDownPrCButton)
+		QtCore.QObject.connect(self.form.insertPoCButton, QtCore.SIGNAL(_fromUtf8("clicked()")), self.clickedInsertPoCButton)
+		QtCore.QObject.connect(self.form.deletePoCButton, QtCore.SIGNAL(_fromUtf8("clicked()")), self.clickedDeletePoCButton)
+		QtCore.QObject.connect(self.form.moveUpPoCButton, QtCore.SIGNAL(_fromUtf8("clicked()")), self.clickedMoveUpPoCButton)
+		QtCore.QObject.connect(self.form.moveDownPoCButton, QtCore.SIGNAL(_fromUtf8("clicked()")), self.clickedMoveDownPoCButton)
 		QtCore.QObject.connect(self.form.boxButton, QtCore.SIGNAL(_fromUtf8("accepted()")), self.clickedOKButton)
 		QtCore.QObject.connect(self.form.boxButton, QtCore.SIGNAL(_fromUtf8("rejected()")), self.clickedCancelButton)
 
-		self.form.tabWidget.removeTab(2)
+		#self.form.tabWidget.removeTab(2)
 
 		self.load()
 
 		self.dialog.exec_()
 
 	def clickedCancelButton(self):
-		print "clickedCancelButton"
 		self.dialog.close()
 
 	def clickedOKButton(self):
-		print "clickedOKButton"
 		index = self.form.priorityComboBox.currentIndex()
 		priority = self.form.priorityComboBox.itemData(index).toPyObject()
 		self.item.priority = priority.get_ref()
@@ -586,3 +711,87 @@ class UseCaseFormWrapper():
 
 		self.modelEV.reset()
 		self.modelMS.reset()
+
+	def clickedInsertTriButton(self):
+		condition = model.Trigger()
+
+		if len(self.form.triView.selectedIndexes()) != 0:
+			position = self.form.triView.selectedIndexes()[0].row()
+
+			self.form.triView.model().insertItem(condition, position)
+		else:
+			self.form.triView.model().insertItem(condition)
+
+	def clickedDeleteTriButton(self):
+		if len(self.form.triView.selectedIndexes()) == 2:
+			position = self.form.triView.selectedIndexes()[0].row()
+
+			self.form.triView.model().removeItem(position)
+
+	def clickedMoveUpTriButton(self):
+		if len(self.form.triView.selectedIndexes()) == 2:
+			position = self.form.triView.selectedIndexes()[0].row()
+
+			self.form.triView.model().movePositionUp(position)
+
+	def clickedMoveDownTriButton(self):
+		if len(self.form.triView.selectedIndexes()) == 2:
+			position = self.form.triView.selectedIndexes()[0].row()
+
+			self.form.triView.model().movePositionDown(position)
+
+	def clickedInsertPrCButton(self):
+		condition = model.PreCondition()
+
+		if len(self.form.prcView.selectedIndexes()) != 0:
+			position = self.form.prcView.selectedIndexes()[0].row()
+
+			self.form.prcView.model().insertItem(condition, position)
+		else:
+			self.form.prcView.model().insertItem(condition)
+
+	def clickedDeletePrCButton(self):
+		if len(self.form.prcView.selectedIndexes()) == 2:
+			position = self.form.prcView.selectedIndexes()[0].row()
+
+			self.form.prcView.model().removeItem(position)
+
+	def clickedMoveUpPrCButton(self):
+		if len(self.form.prcView.selectedIndexes()) == 2:
+			position = self.form.prcView.selectedIndexes()[0].row()
+
+			self.form.prcView.model().movePositionUp(position)
+
+	def clickedMoveDownPrCButton(self):
+		if len(self.form.prcView.selectedIndexes()) == 2:
+			position = self.form.prcView.selectedIndexes()[0].row()
+
+			self.form.prcView.model().movePositionDown(position)
+
+	def clickedInsertPoCButton(self):
+		condition = model.PostCondition()
+
+		if len(self.form.pocView.selectedIndexes()) != 0:
+			position = self.form.pocView.selectedIndexes()[0].row()
+
+			self.form.pocView.model().insertItem(condition, position)
+		else:
+			self.form.pocView.model().insertItem(condition)
+
+	def clickedDeletePoCButton(self):
+		if len(self.form.pocView.selectedIndexes()) == 2:
+			position = self.form.pocView.selectedIndexes()[0].row()
+
+			self.form.pocView.model().removeItem(position)
+
+	def clickedMoveUpPoCButton(self):
+		if len(self.form.pocView.selectedIndexes()) == 2:
+			position = self.form.pocView.selectedIndexes()[0].row()
+
+			self.form.pocView.model().movePositionUp(position)
+
+	def clickedMoveDownPoCButton(self):
+		if len(self.form.pocView.selectedIndexes()) == 2:
+			position = self.form.pocView.selectedIndexes()[0].row()
+
+			self.form.pocView.model().movePositionDown(position)

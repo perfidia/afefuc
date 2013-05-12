@@ -175,9 +175,17 @@ def use_case(source, project):
 					target.scenario.items[step_id].events[event_id].scenario.items[substep_id].items = \
 							items(substep_co.items, source, target, project)
 
-		# self.triggers = copy.deepcopy(instance.triggers)
-		# self.preconditions = copy.deepcopy(instance.preconditions)
-		# self.postconditions = copy.deepcopy(instance.postconditions)
+		target.triggers = []
+		for i, t in enumerate(source.triggers):
+			target.triggers.append(format.model.Trigger(items(source.triggers[i].items, source, target, project)))
+
+		target.preconditions = []
+		for i, t in enumerate(source.preconditions):
+			target.preconditions.append(format.model.PreCondition(items(source.preconditions[i].items, source, target, project)))
+
+		target.postconditions = []
+		for i, t in enumerate(source.postconditions):
+			target.postconditions.append(format.model.PostCondition(items(source.postconditions[i].items, source, target, project)))
 
 		#self.testcases = copy.deepcopy(instance.testcases)
 

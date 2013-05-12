@@ -328,15 +328,15 @@ class Condition(object):
 		self.items = items						# Item{0..}
 
 class Trigger(Condition):
-	def __init__(self, items):
+	def __init__(self, items = []):
 		Condition.__init__(self, "trigger", items)
 
 class PreCondition(Condition):
-	def __init__(self, items):
+	def __init__(self, items = []):
 		Condition.__init__(self, "pre-condition", items)
 
 class PostCondition(Condition):
-	def __init__(self, items):
+	def __init__(self, items = []):
 		Condition.__init__(self, "post-condition", items)
 
 ##############
