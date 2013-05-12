@@ -8,6 +8,7 @@ from PyQt4 import QtCore, QtGui
 from ui.ItemsTab import Ui_ItemsTab
 from gui.GoalLevelFormWrapper import GoalLevelFormWrapper
 from format import model
+from utils import clone
 
 try:
 		_fromUtf8 = QtCore.QString.fromUtf8
@@ -128,7 +129,7 @@ class GoalLevelsTabWrapper():
 		self.model.reset()
 
 	def addButton_clicked(self):
-		form = GoalLevelFormWrapper(self, self.afefuc, (None, model.Priority()))
+		form = GoalLevelFormWrapper(self, self.afefuc, (None, model.GoalLevel()))
 		form.show()
 
 	def deleteButton_clicked(self):
@@ -140,10 +141,11 @@ class GoalLevelsTabWrapper():
 	def editButton_clicked(self):
 		if len(self.tab.itemsView.selectedIndexes()) == 1:
 			position = self.tab.itemsView.selectedIndexes()[0].row()
-			orginal = self.afefuc['project'].ucspec.goal_levels[position]
-			item = (orginal, model.Priority(instance = orginal))
 
-			GoalLevelFormWrapper(self, self.afefuc, item = item).show()
+			original = self.afefuc['project'].ucspec.goal_levels[position]
+			gl = clone.goal_level(original, self.afefuc['project'])
+
+			GoalLevelFormWrapper(self, self.afefuc, item = (original, gl)).show()
 
 	def clickedMoveUpButton(self):
 		if len(self.tab.itemsView.selectedIndexes()) == 1:

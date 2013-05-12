@@ -32,6 +32,13 @@ def priority(source, project):
 
 	return target
 
+def goal_level(source, project):
+	target = format.model.GoalLevel()
+
+	target.name = source.name
+
+	return target
+
 def actor(source, project):
 	target = format.model.Actor()
 
