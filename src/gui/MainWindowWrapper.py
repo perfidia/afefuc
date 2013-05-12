@@ -4,8 +4,6 @@ Created on Apr 25, 2013
 @author: Bartosz Alchimowicz
 '''
 
-import main
-
 from PyQt4 import QtCore, QtGui
 from ui.MainWindow import Ui_MainWindow
 from gui.ActorsTabWrapper import ActorsTabWrapper
@@ -37,7 +35,8 @@ class MainWindowWrapper(QtGui.QMainWindow):
 
 		self.mainWindow.setupUi(self)
 
-		self.afefuc = {'project': main.project}
+		self.afefuc["project"] = format.model.Project()
+		self.mainWindow.tabWidget.hide()
 
 		screen = QtGui.QApplication.desktop().screenGeometry()
 		self.move(screen.center() - self.rect().center())
@@ -75,14 +74,12 @@ class MainWindowWrapper(QtGui.QMainWindow):
 		self.testcasesTab = TestCasesTabWrapper(self, self.afefuc)
 		self.testcasesTab.show()
 
-		self.load()
-
 	def load(self):
 		self.propertiesTab.load()
 		self.prioritiesTab.load()
 		self.goalLevelTab.load()
 		self.businessObjectsTab.load()
-		#self.businessRulesTab.load()
+		self.businessRulesTab.load()
 		self.actorsTab.load()
 		self.usecasesTab.load()
 		self.testcasesTab.load()
