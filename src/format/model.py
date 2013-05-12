@@ -294,14 +294,26 @@ class BusinessObject(Referencable):
 
 		return converter.itemsToText(self.name)
 
+class BusinessRuleType(object):
+	NA = "N/A"
+	FACTS = "Facts"
+	CONSTRAINTS = "Constraints"
+	ACTION_ENABLERS = "Action Enablers"
+	COMPUTATIONS = "Computations"
+	INTERFACES = "Interfaces"
+
+class BusinessRuleDynamism(object):
+	NA = "N/A"
+	STATIC = "Static"
+	DYNAMIC = "Dynamic"
+
 class BusinessRule(Referencable):
-	def __init__(self, identifier = None, instance = None):
+	def __init__(self, identifier = None):
 		self.identifier = identifier			# str
 		self.description = []					# Item{0..}
-
-		if instance:
-			self.identifier = instance.identifier
-			self.description = copy.deepcopy(instance.description)
+		self.type = None						# BusinessRuleType
+		self.dynamism = None					# BusinessRuleDynamism
+		self.source = []						# Item{0..}
 
 class Attribute(object):
 	def __init__(self):

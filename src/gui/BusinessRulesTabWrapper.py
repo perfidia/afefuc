@@ -6,7 +6,10 @@ Created on Apr 25, 2013
 
 from PyQt4 import QtCore, QtGui
 from ui.ItemsTab import Ui_ItemsTab
+from gui.BusinessRuleFormWrapper import BusinessRuleFormWrapper
+from format import model
 from utils import converter
+from utils import clone
 
 try:
 		_fromUtf8 = QtCore.QString.fromUtf8
@@ -129,9 +132,8 @@ class BusinessRulesTabWrapper():
 		self.model.reset()
 
 	def addButton_clicked(self):
-		#form = BusinessObjectFormWrapper(self, self.afefuc, (None, model.BusinessObject()))
-		#form.show()
-		pass
+		form = BusinessRuleFormWrapper(self, self.afefuc, (None, model.BusinessRule()))
+		form.show()
 
 	def deleteButton_clicked(self):
 		if len(self.tab.itemsView.selectedIndexes()) == 2:
@@ -140,13 +142,14 @@ class BusinessRulesTabWrapper():
 			self.model.removeItem(position)
 
 	def editButton_clicked(self):
-		#if len(self.tab.itemsView.selectedIndexes()) == 2:
-		#	position = self.tab.itemsView.selectedIndexes()[0].row()
-		#	orginal = self.afefuc['project'].business_rules[position]
-		#	item = (orginal, model.BusinessRule(instance = orginal))
-		#
-		#	BusinessRuleFormWrapper(self, self.afefuc, item = item).show()
-		pass
+		if len(self.tab.itemsView.selectedIndexes()) == 2:
+			position = self.tab.itemsView.selectedIndexes()[0].row()
+
+			original = self.afefuc['project'].business_rules[position]
+
+			br = clone.business_rule(original, self.afefuc['project'])
+
+			BusinessRuleFormWrapper(self, self.afefuc, item = (original, br)).show()
 
 	def clickedMoveUpButton(self):
 		if len(self.tab.itemsView.selectedIndexes()) == 2:

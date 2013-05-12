@@ -324,6 +324,16 @@ def BusinesRule_att_to_xml(self, parent):
 	for u in self.description:
 		u.to_xml(description)
 
+	type = ET.SubElement(node, "type")
+	type.text = self.type
+
+	dynamism = ET.SubElement(node, "dynamism")
+	dynamism.text = self.dynamism
+
+	source = ET.SubElement(node, "source")
+	for u in self.source:
+		u.to_xml(source)
+
 	return node
 
 def Condition_att_to_xml(self, parent):

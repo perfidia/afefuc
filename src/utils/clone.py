@@ -45,6 +45,17 @@ def attribute(source, project):
 
 	return target
 
+def business_rule(source, project):
+	target = format.model.BusinessRule()
+
+	target.identifier = source.identifier
+	target.description = items(source.description, source, target, project)
+	target.type = source.type
+	target.dynamism = source.dynamism
+	target.source = items(source.source, source, target, project)
+
+	return target
+
 def business_object(source, project):
 	target = format.model.BusinessObject()
 
