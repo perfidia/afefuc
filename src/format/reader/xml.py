@@ -62,6 +62,34 @@ def read(filename = None):
 
 		return retval
 
+	def generic_list_iterator(project, node, func):
+		retval = []
+
+		for n in node.getchildren():
+			retval.append(func(project, n))
+
+		return retval
+
+	def priority(project, node):
+		if node.attrib.has_key('ref'):
+			return get_ref(node.attrib['ref'], model.Reference)
+
+		retval = model.Priority(node.text)
+
+		add_ref(node.attrib['id'], retval)
+
+		return retval
+
+	def goal_level(project, node):
+		if node.attrib.has_key('ref'):
+			return get_ref(node.attrib['ref'], model.Reference)
+
+		retval = model.GoalLevel(node.text)
+
+		add_ref(node.attrib['id'], retval)
+
+		return retval
+
 	def actor(project, node):
 		if node.attrib.has_key('ref'):
 			return get_ref(node.attrib['ref'], model.Reference)
@@ -87,60 +115,23 @@ def read(filename = None):
 
 		return retval
 
-	def usecase(project, node):
-		retval = model.UseCase()
-
-		add_ref(node.attrib['id'], retval)
-
-		for n in node.getchildren():
-			if n.tag == 'title':
-				retval.title = items(project, n)
-			elif n.tag == 'id':
-				retval.identifier = n.text
-			elif n.tag == 'main-actors':
-				retval.main_actors = generic_list_iterator(retval, n, actor)
-			elif n.tag == 'other-actors':
-				retval.other_actors = generic_list_iterator(retval, n, actor)
-			elif n.tag == 'goal-level':
-				retval.goal_level = goal_level(project, n)
-			elif n.tag == 'priority':
-				retval.priority = priority(project, n)
-			elif n.tag == 'triggers':
-				pass
-			elif n.tag == 'preconditions':
-				pass
-			elif n.tag == 'postconditions':
-				pass
-			elif n.tag == 'scenario':
-				retval.scenario = scenario(project, n)
-			elif n.tag == 'testcases':
-				pass
-			elif n.tag == 'events':
-				generic_list_iterator(retval, n, event)
-				# ignore returned value
-			else:
-				print n.tag
-				raise ValueError("Unsupported format file")
-
-		return retval
-
-	def attribute(project, node):
-		retval = model.Attribute()
-
-		for n in node.getchildren():
-			if n.tag == 'name':
-				retval.name = n.text
-			elif n.tag == 'type':
-				retval.type = n.text
-			elif n.tag == 'description':
-				retval.description = items(project, n)
-			else:
-				print n.tag
-				raise ValueError("Unsupported format file")
-
-		return retval
-
 	def business_object(project, node):
+		def attribute(project, node):
+			retval = model.Attribute()
+
+			for n in node.getchildren():
+				if n.tag == 'name':
+					retval.name = n.text
+				elif n.tag == 'type':
+					retval.type = n.text
+				elif n.tag == 'description':
+					retval.description = items(project, n)
+				else:
+					print n.tag
+					raise ValueError("Unsupported format file")
+
+			return retval
+
 		if node.attrib.has_key('ref'):
 			return get_ref(node.attrib['ref'], model.Reference)
 
@@ -190,78 +181,88 @@ def read(filename = None):
 
 		return retval
 
-	def priority(project, node):
-		if node.attrib.has_key('ref'):
-			return get_ref(node.attrib['ref'], model.Reference)
+	def usecase(project, node):
+		def scenario(project, node):
+			retval = model.Scenario()
 
-		retval = model.Priority(node.text)
+			# can not use generic_list_iterator since going through items list
+			for n in node.getchildren():
+				retval.items.append(step(project, n))
+
+			return retval
+
+		def step(project, node):
+			if node.attrib.has_key('ref'):
+				return get_ref(node.attrib['ref'], model.Reference)
+
+			retval = model.Step()
+
+			add_ref(node.attrib['id'], retval)
+
+			retval.items = items(project, node)
+
+			return retval
+
+		def event(project, node):
+			if node.attrib.has_key('ref'):
+				return get_ref(node.attrib['ref'], model.Reference)
+
+			retval = {
+				model.EventType.ALTERNATION: model.AlternationEvent,
+				model.EventType.EXTENSION:   model.ExtensionEvent,
+				model.EventType.EXCEPTION:   model.ExceptionEvent
+			}.get(node.attrib['type'])()
+
+			for n in node.getchildren():
+				if n.tag == 'title':
+					retval.title = items(project, n)
+				elif n.tag == 'scenario':
+					retval.scenario = scenario(project, n)
+				else:
+					print n.tag
+					raise ValueError("Unsupported format file")
+
+			add_ref(node.attrib['id'], retval)
+
+			step = get_ref(node.attrib['step'], model.Reference).item
+
+			step.events.append(retval)
+
+			# NO RETURN
+
+		retval = model.UseCase()
 
 		add_ref(node.attrib['id'], retval)
-
-		return retval
-
-	def goal_level(project, node):
-		if node.attrib.has_key('ref'):
-			return get_ref(node.attrib['ref'], model.Reference)
-
-		retval = model.GoalLevel(node.text)
-
-		add_ref(node.attrib['id'], retval)
-
-		return retval
-
-	def event(project, node):
-		if node.attrib.has_key('ref'):
-			return get_ref(node.attrib['ref'], model.Reference)
-
-		retval = {
-			model.EventType.ALTERNATION: model.AlternationEvent,
-			model.EventType.EXTENSION:   model.ExtensionEvent,
-			model.EventType.EXCEPTION:   model.ExceptionEvent
-		}.get(node.attrib['type'])()
 
 		for n in node.getchildren():
 			if n.tag == 'title':
 				retval.title = items(project, n)
+			elif n.tag == 'id':
+				retval.identifier = n.text
+			elif n.tag == 'main-actors':
+				retval.main_actors = generic_list_iterator(retval, n, actor)
+			elif n.tag == 'other-actors':
+				retval.other_actors = generic_list_iterator(retval, n, actor)
+			elif n.tag == 'goal-level':
+				retval.goal_level = goal_level(project, n)
+			elif n.tag == 'priority':
+				retval.priority = priority(project, n)
+			elif n.tag == 'triggers':
+				pass
+			elif n.tag == 'preconditions':
+				pass
+			elif n.tag == 'postconditions':
+				pass
 			elif n.tag == 'scenario':
 				retval.scenario = scenario(project, n)
+			elif n.tag == 'testcases':
+				pass
+			elif n.tag == 'events':
+				generic_list_iterator(retval, n, event)
+				# ignore returned value
 			else:
 				print n.tag
 				raise ValueError("Unsupported format file")
-
-		add_ref(node.attrib['id'], retval)
-
-		step = get_ref(node.attrib['step'], model.Reference).item
-
-		step.events.append(retval)
-
-		# NO RETURN
-
-	def step(project, node):
-		if node.attrib.has_key('ref'):
-			return get_ref(node.attrib['ref'], model.Reference)
-
-		retval = model.Step()
-
-		add_ref(node.attrib['id'], retval)
-
-		retval.items = items(project, node)
-
-		return retval
-
-	def scenario(project, node):
-		retval = model.Scenario()
-
-		for n in node.getchildren():
-			retval.items.append(step(project, n)) ################ items!!
-
-		return retval
-
-	def generic_list_iterator(project, node, func):
-		retval = []
-
-		for n in node.getchildren():
-			retval.append(func(project, n))
 
 		return retval
 
