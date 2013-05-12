@@ -1,7 +1,7 @@
 '''
 Created on Dec 24, 2012
 
-@author: perf
+@author: Bartosz Alchimowicz
 '''
 
 import StringIO
@@ -316,6 +316,8 @@ def Attribute_att_to_xml(self, parent):
 
 def BusinesRule_att_to_xml(self, parent):
 	node = ET.SubElement(parent, "business-rule")
+
+	node.set("id", str(id(self)))
 
 	identifier = ET.SubElement(node, "id")
 	identifier.text = self.identifier

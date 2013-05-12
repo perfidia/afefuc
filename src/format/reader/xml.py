@@ -165,6 +165,31 @@ def read(filename = None):
 
 		return retval
 
+	def business_rule(project, node):
+		if node.attrib.has_key('ref'):
+			return get_ref(node.attrib['ref'], model.Reference)
+
+		retval = model.BusinessRule()
+
+		add_ref(node.attrib['id'], retval)
+
+		for n in node.getchildren():
+			if n.tag == 'id':
+				retval.identifier = n.text
+			elif n.tag == 'description':
+				retval.description = items(project, n)
+			elif n.tag == 'type':
+				retval.type = n.text
+			elif n.tag == 'dynamism':
+				retval.dynamism = n.text
+			elif n.tag == 'source':
+				retval.source = retval.source = items(project, n)
+			else:
+				print n.tag
+				raise ValueError("Unsupported format file")
+
+		return retval
+
 	def priority(project, node):
 		if node.attrib.has_key('ref'):
 			return get_ref(node.attrib['ref'], model.Reference)
@@ -277,7 +302,7 @@ def read(filename = None):
 			elif n.tag == 'business-objects':
 				retval.business_objects = generic_list_iterator(retval, n, business_object)
 			elif n.tag == 'business-rules':
-				pass
+				retval.business_rules = generic_list_iterator(retval, n, business_rule)
 			elif n.tag == 'ucspec':
 				retval.ucspec = ucspec(retval, n)
 			elif n.tag == 'testcases':
