@@ -452,8 +452,8 @@ class UseCaseFormWrapper():
 		QtCore.QObject.connect(self.form.moveDownEvButton, QtCore.SIGNAL(_fromUtf8("clicked()")), self.clickedMoveDownEvButton)
 		QtCore.QObject.connect(self.form.titleEdit, QtCore.SIGNAL(_fromUtf8("editingFinished()")), self.editingFinishedTitleEdit)
 		QtCore.QObject.connect(self.form.idEdit, QtCore.SIGNAL(_fromUtf8("editingFinished()")), self.editingFinishedIdEdit)
-		QtCore.QObject.connect(self.form.buttonBox, QtCore.SIGNAL(_fromUtf8("accepted()")), self.clickedOKButton)
-		QtCore.QObject.connect(self.form.buttonBox, QtCore.SIGNAL(_fromUtf8("rejected()")), self.clickedCancelButton)
+		QtCore.QObject.connect(self.form.boxButton, QtCore.SIGNAL(_fromUtf8("accepted()")), self.clickedOKButton)
+		QtCore.QObject.connect(self.form.boxButton, QtCore.SIGNAL(_fromUtf8("rejected()")), self.clickedCancelButton)
 
 		self.form.tabWidget.removeTab(2)
 
