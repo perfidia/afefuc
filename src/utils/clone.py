@@ -39,23 +39,23 @@ def goal_level(source, project):
 
 	return target
 
-def actor(source, project):
-	target = format.model.Actor()
+def business_object(source, project):
+	def attribute(source, project):
+		target = format.model.Attribute()
 
-	target.name = source.name
+		target.name = source.name
+		target.type = source.type
+		target.description = items(source.description, source, target, project)
+
+		return target
+
+	target = format.model.BusinessObject()
+
+	target.name = items(source.name, source, target, project)
 	target.identifier = source.identifier
-	target.type = source.type
 	target.description = items(source.description, source, target, project)
+	target.attributes = [attribute(a, project) for a in source.attributes]
 	target.properties = copy.deepcopy(source.properties)
-
-	return target
-
-def attribute(source, project):
-	target = format.model.Attribute()
-
-	target.name = source.name
-	target.type = source.type
-	target.description = items(source.description, source, target, project)
 
 	return target
 
@@ -70,13 +70,13 @@ def business_rule(source, project):
 
 	return target
 
-def business_object(source, project):
-	target = format.model.BusinessObject()
+def actor(source, project):
+	target = format.model.Actor()
 
-	target.name = items(source.name, source, target, project)
+	target.name = source.name
 	target.identifier = source.identifier
+	target.type = source.type
 	target.description = items(source.description, source, target, project)
-	target.attributes = [attribute(a, project) for a in source.attributes]
 	target.properties = copy.deepcopy(source.properties)
 
 	return target
