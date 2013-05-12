@@ -8,6 +8,7 @@ from PyQt4 import QtCore, QtGui
 from ui.ItemsTab import Ui_ItemsTab
 from gui.PriorityFormWrapper import PriorityFormWrapper
 from format import model
+from utils import clone
 
 try:
 		_fromUtf8 = QtCore.QString.fromUtf8
@@ -140,10 +141,12 @@ class PrioritiesTabWrapper():
 	def clickedEditButton(self):
 		if len(self.tab.itemsView.selectedIndexes()) == 1:
 			position = self.tab.itemsView.selectedIndexes()[0].row()
-			orginal = self.afefuc['project'].ucspec.priorities[position]
-			item = (orginal, model.Priority(instance = orginal))
 
-			PriorityFormWrapper(self, self.afefuc, item = item).show()
+			original = self.afefuc['project'].ucspec.priorities[position]
+
+			br = clone.priority(original, self.afefuc['project'])
+
+			PriorityFormWrapper(self, self.afefuc, item = (original, br)).show()
 
 	def clickedMoveUpButton(self):
 		if len(self.tab.itemsView.selectedIndexes()) == 1:

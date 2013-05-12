@@ -36,13 +36,10 @@ class GoalLevel(Configuration, Referencable):
 		self.name = name						# str
 
 class Priority(Configuration, Referencable):
-	def __init__(self, name = None, instance = None):
+	def __init__(self, name = None):
 		Referencable.__init__(self)
 
 		self.name = name						# str
-
-		if instance:
-			self.name = instance.name
 
 ##############
 # Independable

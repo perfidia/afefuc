@@ -25,6 +25,13 @@ def items(items, source, target, project):
 
 	return retval
 
+def priority(source, project):
+	target = format.model.Priority()
+
+	target.name = source.name
+
+	return target
+
 def actor(source, project):
 	target = format.model.Actor()
 
