@@ -120,9 +120,9 @@ class BusinessRulesTabWrapper():
 		self.tab.itemsView.setSelectionBehavior(QtGui.QAbstractItemView.SelectRows)
 		self.tab.itemsView.setSelectionMode(QtGui.QAbstractItemView.SingleSelection)
 
-		QtCore.QObject.connect(self.tab.addButton, QtCore.SIGNAL(_fromUtf8("clicked()")), self.addButton_clicked)
-		QtCore.QObject.connect(self.tab.deleteButton, QtCore.SIGNAL(_fromUtf8("clicked()")), self.deleteButton_clicked)
-		QtCore.QObject.connect(self.tab.editButton, QtCore.SIGNAL(_fromUtf8("clicked()")), self.editButton_clicked)
+		QtCore.QObject.connect(self.tab.addButton, QtCore.SIGNAL(_fromUtf8("clicked()")), self.clickedAddButton)
+		QtCore.QObject.connect(self.tab.deleteButton, QtCore.SIGNAL(_fromUtf8("clicked()")), self.clickedDeleteButton)
+		QtCore.QObject.connect(self.tab.editButton, QtCore.SIGNAL(_fromUtf8("clicked()")), self.clickedEditButton)
 		QtCore.QObject.connect(self.tab.moveUpButton, QtCore.SIGNAL(_fromUtf8("clicked()")), self.clickedMoveUpButton)
 		QtCore.QObject.connect(self.tab.moveDownButton, QtCore.SIGNAL(_fromUtf8("clicked()")), self.clickedMoveDownButton)
 
@@ -131,17 +131,17 @@ class BusinessRulesTabWrapper():
 	def load(self):
 		self.model.reset()
 
-	def addButton_clicked(self):
+	def clickedAddButton(self):
 		form = BusinessRuleFormWrapper(self, self.afefuc, (None, model.BusinessRule()))
 		form.show()
 
-	def deleteButton_clicked(self):
+	def clickedSeleteButton(self):
 		if len(self.tab.itemsView.selectedIndexes()) == 2:
 			position = self.tab.itemsView.selectedIndexes()[0].row()
 
 			self.model.removeItem(position)
 
-	def editButton_clicked(self):
+	def clickedEditButton(self):
 		if len(self.tab.itemsView.selectedIndexes()) == 2:
 			position = self.tab.itemsView.selectedIndexes()[0].row()
 
