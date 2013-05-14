@@ -1,0 +1,134 @@
+<start>[start]
+ <actor>[actor]
+  <action action="">clicks
+   <name>[name]
+    <object type="button">button</object>
+   </name>
+   <name>[name]
+    <object type="link">link</object>
+   </name>
+   <name>[name]
+    <object type="radio button">radio
+     <object type="radio button">button</object>
+    </object>
+   </name>
+  </action>
+  <action action="">sets
+   <name>[name]
+    <object type="window">window</object>
+   </name>
+  </action>
+  <action action="">enters
+   <value>[value]
+    <text>in
+     <name>[name]
+      <object type="text field">text
+       <object type="text field">field</object>
+      </object>
+     </name>
+    </text>
+   </value>
+  </action>
+  <action action="">returns
+   <text>to
+    <object type="step">step
+     <number>[number]
+      <text>and
+       <text>repeat</text>
+      </text>
+     </number>
+    </object>
+   </text>
+  </action>
+  <action action="">uncheks
+   <name>[name]
+    <object type="checkbox">checkbox</object>
+   </name>
+  </action>
+  <action action="">presses
+   <text>the
+    <name>[name]
+     <object type="button">button</object>
+    </name>
+    <name>[name]
+     <object type="link">link</object>
+    </name>
+    <name>[name]
+     <object type="radio button">radio
+      <object type="radio button">button</object>
+     </object>
+    </name>
+   </text>
+  </action>
+  <action action="">selects
+   <object type="item">item
+    <name>[name]</name>
+    <name>[name]
+     <text>from
+      <text>the
+       <text>list
+        <name>[name]</name>
+       </text>
+      </text>
+     </text>
+    </name>
+   </object>
+  </action>
+  <action action="">checks
+   <name>[name]
+    <object type="checkbox">checkbox</object>
+   </name>
+  </action>
+  <action action="">switches
+   <text>to
+    <name>[name]
+     <object type="screen">screen</object>
+    </name>
+   </text>
+  </action>
+  <action action="">verifies
+   <text>that
+    <name>[name]
+     <object type="page">page
+      <text>displays
+       <value>[value]
+        <text>message</text>
+       </value>
+      </text>
+     </object>
+    </name>
+   </text>
+  </action>
+  <action action="">opens
+   <name>[name]
+    <object type="screen">screen</object>
+   </name>
+   <object type="url">URL
+    <url>[url]</url>
+   </object>
+  </action>
+  <action action="">navigates
+   <text>to
+    <text>the
+     <name>[name]
+      <object type="page">page</object>
+     </name>
+     <object type="url">URL
+      <url>[url]</url>
+     </object>
+    </text>
+   </text>
+  </action>
+  <action action="">displays
+   <name>[name]
+    <object type="screen">screen</object>
+   </name>
+   <name>[name]
+    <object type="menu">menu</object>
+   </name>
+   <object type="page">page
+    <url>[url]</url>
+   </object>
+  </action>
+ </actor>
+</start>
