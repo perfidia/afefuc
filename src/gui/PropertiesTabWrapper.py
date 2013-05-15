@@ -5,7 +5,7 @@ Created on Apr 25, 2013
 '''
 
 from PyQt4 import QtCore, QtGui
-from ui.PropertiesTab import Ui_PropertiesTab
+from generated.ui.PropertiesTab import Ui_PropertiesTab
 
 try:
 		_fromUtf8 = QtCore.QString.fromUtf8

@@ -6,7 +6,7 @@ Created on Apr 25, 2013
 
 from collections import OrderedDict
 from PyQt4 import QtCore, QtGui
-from ui.ActorForm import Ui_ActorForm
+from generated.ui.ActorForm import Ui_ActorForm
 from format import model
 from utils import converter
 

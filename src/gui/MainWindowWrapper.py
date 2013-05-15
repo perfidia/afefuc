@@ -7,7 +7,7 @@ Created on Apr 25, 2013
 import os
 
 from PyQt4 import QtCore, QtGui
-from ui.MainWindow import Ui_MainWindow
+from generated.ui.MainWindow import Ui_MainWindow
 from gui.ActorsTabWrapper import ActorsTabWrapper
 from gui.PropertiesTabWrapper import PropertiesTabWrapper
 from gui.UseCasesTabWrapper import UseCasesTabWrapper

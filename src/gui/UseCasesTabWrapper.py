@@ -5,7 +5,7 @@ Created on Apr 25, 2013
 '''
 
 from PyQt4 import QtCore, QtGui
-from ui.ItemsTab import Ui_ItemsTab
+from generated.ui.ItemsTab import Ui_ItemsTab
 from gui.UseCaseFormWrapper import UseCaseFormWrapper
 
 from format import model

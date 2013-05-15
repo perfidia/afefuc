@@ -5,7 +5,7 @@ Created on Apr 25, 2013
 '''
 
 from PyQt4 import QtCore, QtGui
-from ui.BusinessObjectForm import Ui_BusinessObjectForm
+from generated.ui.BusinessObjectForm import Ui_BusinessObjectForm
 from format import model
 from utils import converter
 

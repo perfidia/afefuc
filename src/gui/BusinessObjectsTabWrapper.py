@@ -6,7 +6,7 @@ Created on Apr 25, 2013
 
 from PyQt4 import QtCore, QtGui
 from format import model
-from ui.ItemsTab import Ui_ItemsTab
+from generated.ui.ItemsTab import Ui_ItemsTab
 from gui.BusinessObjectFormWrapper import BusinessObjectFormWrapper
 from utils import converter
 from utils import clone

@@ -8,7 +8,7 @@ import re
 import inspect
 
 from PyQt4 import QtCore, QtGui
-from ui.UseCaseForm import Ui_UseCaseForm
+from generated.ui.UseCaseForm import Ui_UseCaseForm
 from format import model
 from utils import converter
 from SelectActorsFormWrapper import SelectActorsFormWrapper

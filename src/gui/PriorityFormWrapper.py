@@ -5,7 +5,7 @@ Created on Apr 25, 2013
 '''
 
 from PyQt4 import QtCore, QtGui
-from ui.LineEditForm import Ui_LineEditForm
+from generated.ui.LineEditForm import Ui_LineEditForm
 #from format import model
 
 try:
