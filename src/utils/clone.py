@@ -83,6 +83,11 @@ def actor(source, project):
 
 def use_case(source, project):
 	def items(items, source, target, project):
+		"""
+		Copies items which are allowed to use in step.
+
+		This functions differs from the one above.
+		"""
 		assert isinstance(items, list)
 
 		retval = []
