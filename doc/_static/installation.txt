@@ -1,8 +1,40 @@
-Installation
-============
+Installation from scratch
+=========================
 
-Linux:
+Linux
+-----
 
-    * python 2.7 (tested on python 2.7.3)
-    * Python User Interface Compiler 4.9.3 for Qt version 4.8.2 - pyuic4 (apt-get install pyqt4-dev-tools)
-    * make 3.81 (apt-get install make)
+**Debian**::
+
+	$ su
+	# apt-get install python2.7 python-qt4 python-lxml
+	# apt-get install make pyqt4-dev-tools
+	$ cd afefuc
+	$ make
+
+
+Mac OS
+------
+
+Using backports::
+
+	port qt4
+	port py27-pyqt4
+	pip lmxl
+
+Use ``pyuic4`` to generate GUI.
+
+
+MS Windows
+----------
+
+Download:
+	* Python 2.7 (Python + setuptools + pypm is available at http://www.activestate.com/activepython)
+Install:
+	* Python 2.7
+	* PyQT and lxml::
+
+		pypm install pyqt4
+		pypm install lxml
+
+Use ``pyuic4`` to generate GUI.

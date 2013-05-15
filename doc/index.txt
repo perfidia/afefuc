@@ -12,6 +12,7 @@ Contents:
    :maxdepth: 2
 
 
+   _static/installation.txt
 
 Indices and tables
 ==================
