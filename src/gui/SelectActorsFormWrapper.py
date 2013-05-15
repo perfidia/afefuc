@@ -95,8 +95,8 @@ class SelectActorsFormWrapper():
 		if self.single:
 			self.form.itemsView.setSelectionMode(QtGui.QAbstractItemView.SingleSelection)
 
-		QtCore.QObject.connect(self.form.buttonBox, QtCore.SIGNAL(_fromUtf8("accepted()")), self.clickedOKButton)
-		QtCore.QObject.connect(self.form.buttonBox, QtCore.SIGNAL(_fromUtf8("rejected()")), self.clickedCancelButton)
+		QtCore.QObject.connect(self.form.boxButton, QtCore.SIGNAL(_fromUtf8("accepted()")), self.clickedOKButton)
+		QtCore.QObject.connect(self.form.boxButton, QtCore.SIGNAL(_fromUtf8("rejected()")), self.clickedCancelButton)
 
 		self.load()
 
