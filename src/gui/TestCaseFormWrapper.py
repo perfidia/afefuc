@@ -21,6 +21,162 @@ try:
 except AttributeError:
 			 _fromUtf8 = lambda s: s
 
+#wstawic tabele
+#jako pole tabeli dac comboBox
+
+class CompleteTextEditDelegate(QtGui.QItemDelegate):
+	def __init__(self, parent, item): #item trzyma informacje o naszym modelu
+		QtGui.QItemDelegate.__init__(self, parent)
+		self.item = item
+
+
+	def createEditor(self, parent, option, index):
+		editor = TextEdit(parent)
+		self.completer = QtGui.QCompleter(self)
+
+		sb = sentenceBuilder('testcases/Models/sentencesStructure.XML')
+		editor.setSentenceBuilder(sb)
+		output = sb.getNext('')
+		words = []
+		for element in output[1]:
+			words.append(element.getValue())
+		self.completer.setModel(QtGui.QStringListModel(words, self.completer))
+		self.completer.setModelSorting(QtGui.QCompleter.CaseInsensitivelySortedModel)
+		self.completer.setCaseSensitivity(QtCore.Qt.CaseInsensitive)
+		self.completer.setWrapAround(False)
+		editor.setCompleter(self.completer)
+		
+
+		return editor
+
+	def setEditorData(self, editor, index):	#transfers data from internal model to editor
+		editor.setHtml(self.item.path[index.row()])
+		print 'setEditorData placeholder'
+
+	def setModelData(self, editor, model, index):	#Ttransfers data from editor to internal model
+		self.item.path[index.row()] = editor.toPlainText()
+		#self.item.html = editor.toHtml()
+		#model.setData(index, QtCore.QVariant('self.item.text'), QtCore.Qt.EditRole) #po co?
+		print 'setModelData placeholder'
+
+	def updateEditorGeometry(self, editor, option, index):
+		editor.setGeometry(option.rect)
+
+
+class SampleTableModel(QtCore.QAbstractTableModel):
+	def __init__(self, parent, afefuc, items):
+		QtCore.QAbstractItemModel.__init__(self,parent)
+		self.afefuc = afefuc
+		self.parent = parent
+		self.item = items[1]
+		self.item_original = items[0]
+		self.headerdata = ["No", "Description"]
+
+	def headerData(self, column, orientation, role):
+		if orientation == QtCore.Qt.Horizontal and role == QtCore.Qt.DisplayRole:
+			return QtCore.QVariant(self.headerdata[column])
+		return QtCore.QVariant()
+
+	def rowCount(self, index):
+		return len(self.item.path)
+
+	def columnCount(self, parent):
+		return 2
+
+	def index(self, row, column, parent): #TODO ok (?)
+		if not parent.isValid():
+			return self.createIndex(row, column, None)
+
+	def data(self, index, role): #kod wyswietlajacy zawartosc elementu z modelu
+		column = index.column()
+		row = index.row()
+		
+		if column == 0 and role == QtCore.Qt.DisplayRole:
+			return QtCore.QVariant(row+1)
+		elif column == 1 and role in [QtCore.Qt.DisplayRole, QtCore.Qt.EditRole]:
+			#step = self.item.scenario.items[row]
+			#TODO converter
+			step = self.item.path[row]
+			return QtCore.QVariant(step)
+
+	def parent(self, index):
+		return QtCore.QModelIndex()
+
+	def flags(self, index):
+		flags = super(QtCore.QAbstractTableModel, self).flags(index)
+
+		if(index.column() == 1):
+			flags |= QtCore.Qt.ItemIsEditable|QtCore.Qt.ItemIsSelectable
+			
+		return flags	
+
+	def setData(self, index, value, role):
+		if index.isValid() and role == QtCore.Qt.EditRole:
+			value = unicode(value.toString().toUtf8(), 'utf-8')
+			#kod wstawiajacy czesc elementu do naszego modelu
+			#if index.column() == 0:
+			#	self.item.attributes[index.row()].name = value
+			#elif index.column() == 1:
+			#	self.item.attributes[index.row()].type = value
+			#elif index.column() == 2:
+			#	self.item.attributes[index.row()].description = converter.textToItems(self.afefuc['project'], value)
+			self.item.path[index.row()] = items
+			return True
+
+		return False
+
+	def insertItem(self, item, position = None):
+		if position is None:
+			first = self.rowCount(QtCore.QModelIndex())
+			last = self.rowCount(QtCore.QModelIndex())
+		else:
+			first = position 	#wstawianie wiersza pomiedzy inne wiersze
+			last = position
+
+		self.beginInsertRows(QtCore.QModelIndex(), first, last)
+#TODO item.scenario.items (lista)
+		if position is None: #dodanie nowego wezla do modelu
+			#self.item.scenario.items.append(item)
+			self.item.path.append(item)
+			print 'position is None'
+		else: #dodanie nowego wezla w srodek modelu
+			#self.item.scenario.items.insert(position, item)
+			self.item.path.insert(position, item)
+			print 'position is not None'
+
+		self.endInsertRows()
+
+	def removeItem(self, position):
+		self.beginRemoveRows(QtCore.QModelIndex(), position, position)
+		#TODO usuwanie danych z modelu
+		#del(self.item.scenario.items[position])
+		self.endRemoveRows()
+		return True
+
+	def movePositionUp(self, position):
+		if position <= 0 or position == self.rowCount(QtCore.QModelIndex()):
+			return
+
+		pos1 = position
+		pos2 = position - 1
+		#kod zamieniajacy dwa elementy miejscami w modelu
+		(
+				self.item.path[pos1],\
+				self.item.path[pos2] \
+		) = (\
+				self.item.path[pos2],\
+				self.item.path[pos1] \
+		)
+
+		self.emit(
+				QtCore.SIGNAL("dataChanged(QModelIndex, QModelIndex)"),
+				self.createIndex(min(pos1, pos2), 0, None),
+				self.createIndex(max(pos1, pos2), 1, None)
+		)
+
+	def movePositionDown(self, position):
+		self.movePositionUp(position + 1)
+
 class Test(QtGui.QWidget):
 	def __init__( self, labelText, parent=None):
 		super(Test, self).__init__(parent)
@@ -178,6 +334,8 @@ class TestCaseFormWrapper():
 		self.afefuc = afefuc
 		self.item = item[1]
 		self.item_original = item[0]
+		#self.foo = self.form.boxButton
+		#self.model = SampleTableModel(self.form.stepView, self.afefuc, self.item)
 
 	def load(self):
 		pass
@@ -189,7 +347,7 @@ class TestCaseFormWrapper():
 
 		#self.addButton = QtGui.QPushButton('button to add other widgets')
 #       self.form.widget.addWidget(self.addButton2)
-		self.form.insertStep.clicked.connect(self.addWidget)
+		#self.form.insertStep.clicked.connect(self.addWidget)
 
 		# scroll area widget contents - layout
 		self.scrollLayout = QtGui.QFormLayout()
@@ -208,7 +366,7 @@ class TestCaseFormWrapper():
 
 		# add all main to the main vLayout
 		#self.form.widget.addWidget(self.addButton)
-		self.form.widget.addWidget(self.scrollArea)
+		#self.form.widget.addWidget(self.scrollArea)
 
 		# central widget
 #       self.centralWidget = QtGui.QWidget()
@@ -219,11 +377,37 @@ class TestCaseFormWrapper():
 
 		QtCore.QObject.connect(self.form.boxButton, QtCore.SIGNAL(_fromUtf8("accepted()")), self.clickedOKButton)
 		QtCore.QObject.connect(self.form.boxButton, QtCore.SIGNAL(_fromUtf8("rejected()")), self.clickedCancelButton)
+		QtCore.QObject.connect(self.form.insertStepButton, QtCore.SIGNAL(_fromUtf8("clicked()")), self.clickedInsertStepButton)
+
+		self.modelTC = SampleTableModel(self.form.stepView, self.afefuc, (self.item_original, self.item))
+		self.form.stepView.setModel(self.modelTC)
+		self.form.stepView.setItemDelegateForColumn(1, CompleteTextEditDelegate(self.form.stepView, self.item))
+		
+		self.form.stepView.horizontalHeader().setResizeMode(0, QtGui.QHeaderView.ResizeToContents)
+		self.form.stepView.horizontalHeader().setResizeMode(1, QtGui.QHeaderView.Stretch)
+		self.form.stepView.setColumnWidth(2, 20)
+		#self.form.stepView.horizontalHeader().hide()
+		#self.form.stepView.verticalHeader().hide()
+		#self.form.stepView.setEditTriggers(QtGui.QAbstractItemView.CurrentChanged)
+		#self.form.stepView.setSelectionBehavior(QtGui.QAbstractItemView.SelectRows)
+		#self.form.stepView.setSelectionMode(QtGui.QAbstractItemView.SingleSelection)
+
 
 		self.dialog.exec_()
 
-	def addWidget(self):
-		self.scrollLayout.addRow(Test('testowy tekst'))
+	def clickedInsertStepButton(self):
+		step = model.Step()
+		step.setParent(self.item)
+
+		if len(self.form.stepView.selectedIndexes()) != 0:
+			position = self.form.stepView.selectedIndexes()[0].row()
+
+			self.modelTC.insertItem(step, position)
+		else:
+			self.modelTC.insertItem(step)
+
+	#def addWidget(self):
+	#	self.scrollLayout.addRow(Test('testowy tekst'))
 
 	def getTextAttribute(self, node):
 		if node.attributes:

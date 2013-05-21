@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>609</width>
-    <height>623</height>
+    <width>617</width>
+    <height>590</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -16,8 +16,8 @@
   <widget class="QDialogButtonBox" name="boxButton">
    <property name="geometry">
     <rect>
-     <x>410</x>
-     <y>580</y>
+     <x>420</x>
+     <y>530</y>
      <width>176</width>
      <height>27</height>
     </rect>
@@ -29,29 +29,136 @@
     <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
    </property>
   </widget>
-  <widget class="QPushButton" name="insertStep">
+  <widget class="QTableView" name="stepView">
    <property name="geometry">
     <rect>
-     <x>460</x>
-     <y>90</y>
-     <width>141</width>
-     <height>25</height>
+     <x>20</x>
+     <y>130</y>
+     <width>441</width>
+     <height>381</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="moveDownButton">
+   <property name="geometry">
+    <rect>
+     <x>480</x>
+     <y>316</y>
+     <width>97</width>
+     <height>27</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Move down</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="moveUpButton">
+   <property name="geometry">
+    <rect>
+     <x>480</x>
+     <y>283</y>
+     <width>97</width>
+     <height>27</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Move up</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="insertStepButton">
+   <property name="geometry">
+    <rect>
+     <x>480</x>
+     <y>214</y>
+     <width>97</width>
+     <height>27</height>
     </rect>
    </property>
    <property name="text">
     <string>Insert step</string>
    </property>
   </widget>
-  <widget class="QWidget" name="verticalLayoutWidget">
+  <widget class="QPushButton" name="deleteButton">
    <property name="geometry">
     <rect>
-     <x>10</x>
-     <y>20</y>
-     <width>441</width>
-     <height>521</height>
+     <x>480</x>
+     <y>250</y>
+     <width>97</width>
+     <height>27</height>
     </rect>
    </property>
-   <layout class="QVBoxLayout" name="widget"/>
+   <property name="text">
+    <string>Delete</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="TitleLabel">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>20</y>
+     <width>101</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Test Case Title</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="IdLabel">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>50</y>
+     <width>91</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Test Case Id</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="RUCIdLabel">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>80</y>
+     <width>91</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Related UC Id</string>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="titleEdit">
+   <property name="geometry">
+    <rect>
+     <x>120</x>
+     <y>20</y>
+     <width>241</width>
+     <height>27</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="idEdit">
+   <property name="geometry">
+    <rect>
+     <x>120</x>
+     <y>50</y>
+     <width>241</width>
+     <height>27</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="RUCIdEdit">
+   <property name="geometry">
+    <rect>
+     <x>120</x>
+     <y>80</y>
+     <width>241</width>
+     <height>27</height>
+    </rect>
+   </property>
   </widget>
  </widget>
  <resources/>

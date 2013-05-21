@@ -396,6 +396,8 @@ class TestCases(object):
 class TestCase(object):
 	def __init__(self, path = None):
 		self.path = path						# Step{0..}
+		if path is None : self.path = []
+		#self.scenario = Scenario()
 
 	def __len__(self):
 		return len(self.path)
