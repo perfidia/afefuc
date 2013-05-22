@@ -12,6 +12,7 @@ from generated.ui.UseCaseForm import Ui_UseCaseForm
 from format import model
 from utils import converter
 from SelectActorsFormWrapper import SelectActorsFormWrapper
+from EventPropertiesFormWrapper import EventPropertiesFormWrapper
 
 try:
 		_fromUtf8 = QtCore.QString.fromUtf8
@@ -569,6 +570,7 @@ class UseCaseFormWrapper():
 		QtCore.QObject.connect(self.form.deleteEvButton, QtCore.SIGNAL(_fromUtf8("clicked()")), self.clickedDeleteEvButton)
 		QtCore.QObject.connect(self.form.moveUpEvButton, QtCore.SIGNAL(_fromUtf8("clicked()")), self.clickedMoveUpEvButton)
 		QtCore.QObject.connect(self.form.moveDownEvButton, QtCore.SIGNAL(_fromUtf8("clicked()")), self.clickedMoveDownEvButton)
+		QtCore.QObject.connect(self.form.propertiesEvButton, QtCore.SIGNAL(_fromUtf8("clicked()")), self.clickedPropertiesEvButton)
 		QtCore.QObject.connect(self.form.titleEdit, QtCore.SIGNAL(_fromUtf8("editingFinished()")), self.editingFinishedTitleEdit)
 		QtCore.QObject.connect(self.form.idEdit, QtCore.SIGNAL(_fromUtf8("editingFinished()")), self.editingFinishedIdEdit)
 		QtCore.QObject.connect(self.form.insertTriButton, QtCore.SIGNAL(_fromUtf8("clicked()")), self.clickedInsertTriButton)
@@ -690,6 +692,16 @@ class UseCaseFormWrapper():
 			position = self.form.eventsView.selectedIndexes()[0].row()
 
 			self.modelEV.removeItem(position)
+
+	def clickedPropertiesEvButton(self):
+		if len(self.form.eventsView.selectedIndexes()) == 2:
+			position = self.form.eventsView.selectedIndexes()[0].row()
+
+			EventPropertiesFormWrapper(
+					self,
+					self.afefuc['project'],
+					position
+			).show()
 
 	def clickedMoveUpEvButton(self):
 		if len(self.form.eventsView.selectedIndexes()) == 2:

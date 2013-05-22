@@ -356,16 +356,23 @@ class PostCondition(Condition):
 ######
 
 class EventType(object):
-	ALTERNATION = "Alternation"
-	EXTENSION   = "Extension"
-	EXCEPTION   = "Exception"
+	ALTERNATION = "alternation"
+	EXTENSION   = "extension"
+	EXCEPTION   = "exception"
+
+class EventAnchor(object):
+	PRE_STEP     = "pre-step"
+	POST_STEP    = "post-step"
+	PRE_SCENARIO = "pre-scenario"
+	IN_STEP      = "in-step"
 
 class Event(Referencable):
-	def __init__(self, event_type = None, title = []):
+	def __init__(self, type = None, title = []):
 		Referencable.__init__(self)
-		self.title = title						# Item{0..}
-		self.event_type = event_type			# EventType
-		self.scenario = Scenario()				# Scenario
+		self.title = title					# Item{0..}
+		self.type = type					# EventType
+		self.anchor = EventAnchor.PRE_STEP	# EventAnchor
+		self.scenario = Scenario()			# Scenario
 
 	def getPath(self):
 		step = self.parent

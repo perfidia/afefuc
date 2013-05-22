@@ -233,14 +233,18 @@ def TextItem_att_to_xml(self, parent):
 def Event_att_to_xml(self, parent, step):
 	event = ET.SubElement(parent, "event")
 
-	event.set("type", self.event_type)
 	event.set("id", str(id(self)))
 	event.set("step", str(id(step)))
 
 	title = ET.SubElement(event, "title")
-
 	for s in self.title:
 		s.to_xml(title)
+
+	type = ET.SubElement(event, "type")
+	type.text = self.type
+
+	anchor = ET.SubElement(event, "anchor")
+	anchor.text = self.anchor
 
 	self.scenario.to_xml(event)
 

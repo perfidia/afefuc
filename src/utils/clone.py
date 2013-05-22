@@ -144,14 +144,7 @@ def use_case(source, project):
 			step = format.model.Step()
 
 			for e in s.events:
-				if isinstance(e, format.model.AlternationEvent):
-					event = format.model.AlternationEvent()
-				elif isinstance(e, format.model.ExtensionEvent):
-					event = format.model.ExtensionEvent()
-				elif isinstance(e, format.model.ExceptionEvent):
-					event = format.model.ExceptionEvent()
-				else:
-					event = format.model.AlternationEvent() # TODO: to remove
+				event = format.model.Event()
 
 				for ss in e.scenario.items:
 					event.scenario.items.append(format.model.Step())
@@ -178,6 +171,12 @@ def use_case(source, project):
 			for event_id, event_co in enumerate(step_co.events):
 				target.scenario.items[step_id].events[event_id].title =\
 						items(event_co.title, source, target, project)
+
+				target.scenario.items[step_id].events[event_id].type =\
+						source.scenario.items[step_id].events[event_id].type
+
+				target.scenario.items[step_id].events[event_id].anchor =\
+						source.scenario.items[step_id].events[event_id].anchor
 
 				for substep_id, substep_co in enumerate(event_co.scenario.items):
 					target.scenario.items[step_id].events[event_id].scenario.items[substep_id].items = \

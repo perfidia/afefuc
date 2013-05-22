@@ -109,7 +109,6 @@ def read(filename = None):
 						"Support": model.ActorType.HUMAN_SUPPORT,
 						"System": model.ActorType.SYSTEM,
 				}.get(n.text, model.ActorCommunication.NA)
-
 			elif n.tag == 'communication':
 				retval.communication = {
 						"Puts data": model.ActorCommunication.PUTS_DATA,
@@ -218,15 +217,22 @@ def read(filename = None):
 			if node.attrib.has_key('ref'):
 				return get_ref(node.attrib['ref'], model.Reference)
 
-			retval = {
-				model.EventType.ALTERNATION: model.AlternationEvent,
-				model.EventType.EXTENSION:   model.ExtensionEvent,
-				model.EventType.EXCEPTION:   model.ExceptionEvent
-			}.get(node.attrib['type'])()
+			retval = model.Event()
 
 			for n in node.getchildren():
 				if n.tag == 'title':
 					retval.title = items(project, n)
+				elif n.tag == 'type':
+					retval.type = {
+							"extension": model.EventType.EXTENSION,
+							"exception": model.EventType.EXCEPTION
+					}.get(n.text, model.EventType.ALTERNATION)
+				elif n.tag == 'anchor':
+					retval.anchor = {
+							"post-step":    model.EventAnchor.POST_STEP,
+							"pre-scenario": model.EventAnchor.PRE_SCENARIO,
+							"in-step":      model.EventAnchor.IN_STEP
+					}.get(n.text, model.EventAnchor.PRE_STEP)
 				elif n.tag == 'scenario':
 					retval.scenario = scenario(project, n)
 				else:
