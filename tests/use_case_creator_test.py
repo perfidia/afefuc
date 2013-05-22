@@ -24,8 +24,8 @@ class UseCaseCreatorTest(unittest.TestCase):
         self.assertEquals(len(useCase.scenario.items[2].events), 0)
         self.assertEquals(len(useCase.scenario.items[3].events), 0)
         self.assertEquals(len(useCase.scenario.items[4].events), 0)
-        self.assertIsInstance(useCase.scenario.items[0].events[0], AlternationEvent)
-        self.assertIsInstance(useCase.scenario.items[0].events[1], AlternationEvent)
+        self.assertIsInstance(useCase.scenario.items[0].events[0], Event)
+        self.assertIsInstance(useCase.scenario.items[0].events[1], Event)
 
         event0Steps = useCase.scenario.items[0].events[0].scenario.items
         event1Steps = useCase.scenario.items[0].events[1].scenario.items
@@ -44,8 +44,8 @@ class UseCaseCreatorTest(unittest.TestCase):
         self.assertEquals(len(useCase.scenario.items[3].events), 1)
         self.assertEquals(len(useCase.scenario.items[4].events), 0)
 
-        self.assertIsInstance(useCase.scenario.items[1].events[0], AlternationEvent)
-        self.assertIsInstance(useCase.scenario.items[3].events[0], AlternationEvent)
+        self.assertIsInstance(useCase.scenario.items[1].events[0], Event)
+        self.assertIsInstance(useCase.scenario.items[3].events[0], Event)
 
         event1Steps = useCase.scenario.items[1].events[0].scenario.items
         event3Steps = useCase.scenario.items[3].events[0].scenario.items

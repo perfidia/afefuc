@@ -39,7 +39,7 @@ def createUseCase(usecaseTitle, mainScenario, alternationEventGoTo=[], alternati
     #        Alternation evenets With GoToCommand in the end
     for i in xrange(len(alternationEventGoTo)):
         eventGoTo_steps = []
-        eventGoTo = AlternationEvent([TextItem(u"Alternation EventGoTo " + str(i))])
+        eventGoTo = Event(EventType.ALTERNATION, [TextItem(u"Alternation EventGoTo " + str(i))])
         eventGoTo.scenario = Scenario()
         for j in xrange(alternationEventGoTo[i][2] - 1):                 # (-1) - because add GoTo step in the end
             newStep = Step([TextItem("Alternation1 Step" + str(j))])
@@ -51,7 +51,7 @@ def createUseCase(usecaseTitle, mainScenario, alternationEventGoTo=[], alternati
     #        Alternation evenets With EoUCCommand in the end
     for i in xrange(len(alternationEventEnd)):
         eventEnd_steps = []
-        eventEnd = AlternationEvent([TextItem(u"Alternation EventEnd " + str(i))])
+        eventEnd = Event(EventType.ALTERNATION, [TextItem(u"Alternation EventEnd " + str(i))])
         eventEnd.scenario = Scenario()
         for j in xrange(alternationEventEnd[i][1] - 1):                # (-1) - because add EoUC step in the end
             newStep = Step([TextItem("Alternation1 Step" + str(j))])

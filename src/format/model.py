@@ -382,18 +382,6 @@ class Event(Referencable):
 		for step in self.scenario.items:
 			step.setParent(self)
 
-class AlternationEvent(Event):
-	def __init__(self, title = None):
-		Event.__init__(self, EventType.ALTERNATION, title)
-
-class ExtensionEvent(Event):
-	def __init__(self, title = None):
-		Event.__init__(self, EventType.EXTENSION, title)
-
-class ExceptionEvent(Event):
-	def __init__(self, title = None):
-		Event.__init__(self, EventType.EXCEPTION, title)
-
 ##############
 # TestCases
 ######
