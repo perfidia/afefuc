@@ -114,6 +114,14 @@ def UseCase_att_to_xml(self, parent):
 	for a in self.title:
 		a.to_xml(title)
 
+	title = ET.SubElement(usecase, "summary")
+	for a in self.summary:
+		a.to_xml(title)
+
+	title = ET.SubElement(usecase, "remarks")
+	for a in self.remarks:
+		a.to_xml(title)
+
 	#goal_level = ET.SubElement(usecase, "goal-level")
 	if self.goal_level:
 		self.goal_level.to_xml(usecase)

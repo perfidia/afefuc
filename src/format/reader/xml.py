@@ -243,6 +243,10 @@ def read(filename = None):
 				retval.main_actors = generic_list_iterator(retval, n, actor)
 			elif n.tag == 'other-actors':
 				retval.other_actors = generic_list_iterator(retval, n, actor)
+			elif n.tag == 'summary':
+				retval.summary = items(project, n)
+			elif n.tag == 'remarks':
+				retval.remarks = items(project, n)
 			elif n.tag == 'goal-level':
 				retval.goal_level = goal_level(project, n)
 			elif n.tag == 'priority':

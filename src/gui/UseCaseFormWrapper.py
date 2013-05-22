@@ -492,6 +492,10 @@ class UseCaseFormWrapper():
 		self.form.actorMainEdit.setText(_fromUtf8(", ".join(["[%s] %s" % (a.item.identifier, a.item.name) for a in self.item.main_actors])))
 		self.form.actorOtherEdit.setText(_fromUtf8(", ".join(["[%s] %s" % (a.item.identifier, a.item.name) for a in self.item.other_actors])))
 
+		self.form.summaryTextEdit.setPlainText(_fromUtf8(converter.itemsToText(self.item.summary, edit = True)))
+		self.form.remarksTextEdit.setPlainText(_fromUtf8(converter.itemsToText(self.item.remarks, edit = True)))
+
+
 		if self.item.priority:
 			index = self.form.priorityComboBox.findText(_fromUtf8(self.item.priority.item.name))
 			if index != -1:
@@ -599,6 +603,15 @@ class UseCaseFormWrapper():
 		index = self.form.goalLevelComboBox.currentIndex()
 		priority = self.form.goalLevelComboBox.itemData(index).toPyObject()
 		self.item.goal_level = priority.get_ref()
+
+		self.item.remarks = converter.textToItems(
+				self.afefuc['project'],
+				unicode(self.form.remarksTextEdit.toPlainText().toUtf8(), "utf-8")
+		)
+		self.item.summary = converter.textToItems(
+				self.afefuc['project'],
+				unicode(self.form.summaryTextEdit.toPlainText().toUtf8(), "utf-8")
+		)
 
 		if self.item_original:
 			self.parent.model.updateItem((self.item_original, self.item))

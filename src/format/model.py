@@ -125,6 +125,9 @@ class UseCase(Referencable):
 
 		self.testcases = []						# TestCase{0..}
 
+		self.summary = []						# Item{0..}
+		self.remarks = []						# Item{0..}
+
 	def getPath(self):
 		for i, u in enumerate(self.parent.ucspec.usecases):
 			if u == self:

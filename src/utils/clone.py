@@ -167,6 +167,8 @@ def use_case(source, project):
 		target.other_actors = [r.item.get_ref() for r in source.other_actors]
 
 		target.title = items(source.title, source, target, project)
+		target.summary = items(source.summary, source, target, project)
+		target.remarks = items(source.remarks, source, target, project)
 
 		# scenario
 		for step_id, step_co in enumerate(source.scenario.items):

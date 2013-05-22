@@ -104,7 +104,7 @@
    <item>
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>2</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="propertiesTab">
       <attribute name="title">
@@ -130,6 +130,26 @@
        </item>
        <item row="1" column="1">
         <widget class="QComboBox" name="goalLevelComboBox"/>
+       </item>
+       <item row="2" column="0">
+        <widget class="QLabel" name="summaryLabel">
+         <property name="text">
+          <string>Summary</string>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="1">
+        <widget class="QPlainTextEdit" name="summaryTextEdit"/>
+       </item>
+       <item row="3" column="1">
+        <widget class="QPlainTextEdit" name="remarksTextEdit"/>
+       </item>
+       <item row="3" column="0">
+        <widget class="QLabel" name="remarksLabel">
+         <property name="text">
+          <string>Remarks</string>
+         </property>
+        </widget>
        </item>
       </layout>
      </widget>
