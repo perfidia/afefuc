@@ -108,7 +108,7 @@ def use_case(source, project):
 					if item.item == source:
 						retval.append(format.model.GoToCommand(target))
 					else:
-						assert 0 == 2
+						retval.append(format.model.GoToCommand(item.item))
 				elif isinstance(item.item, format.model.Step):
 					if isinstance(item.item.parent, format.model.UseCase):
 						if item.item.parent == source:

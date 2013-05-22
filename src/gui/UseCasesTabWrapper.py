@@ -7,10 +7,10 @@ Created on Apr 25, 2013
 from PyQt4 import QtCore, QtGui
 from generated.ui.ItemsTab import Ui_ItemsTab
 from gui.UseCaseFormWrapper import UseCaseFormWrapper
-
 from format import model
 from utils import converter
 from utils import clone
+from utils import update
 
 try:
 		_fromUtf8 = QtCore.QString.fromUtf8
@@ -70,7 +70,8 @@ class UseCasesTableModel(QtCore.QAbstractTableModel):
 		for i, uc in enumerate(self.afefuc['project'].ucspec.usecases):
 			if uc is usecase[0]:
 				counter = i
-				self.afefuc['project'].ucspec.usecases[i] = usecase[1]
+				update.usecase(self.afefuc['project'].ucspec.usecases[i], usecase[1])
+
 				break
 
 		self.emit(QtCore.SIGNAL("dataChanged(index, index)"),
