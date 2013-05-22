@@ -205,3 +205,11 @@ def test_case(source, project):
 	target = format.model.TestCase()
 
 	return target
+
+def term(source, project):
+	target = format.model.Term()
+
+	target.name = source.name
+	target.definition = items(source.definition, source, target, project)
+
+	return target

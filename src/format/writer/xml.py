@@ -41,6 +41,9 @@ def Project_att_to_xml(self, parent = None):
 	name = ET.SubElement(node, "name")
 	name.text = self.name
 
+	abbreviation = ET.SubElement(node, "abbreviation")
+	abbreviation.text = self.abbreviation
+
 	version = ET.SubElement(node, "version")
 	version.text = self.version
 

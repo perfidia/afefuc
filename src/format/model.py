@@ -48,12 +48,14 @@ class Priority(Configuration, Referencable):
 class Project(object):
 	def __init__(self):
 		self.name = ""							# str
+		self.abbreviation = ""					# str
 		self.language = "en"					# str, according to ISO 639-1 (http://en.wikipedia.org/wiki/ISO_639-1)
 		self.version = ""						# str
 		self.actors = []						# Actor
 		self.business_objects = []				# BusinessObject
 		self.business_rules = []				# BusinessRule
 		self.ucspec = UCSpec()                  # UCSpec
+		self.glossary = []						# Term{0..}
 
 	def _getItemByName(self, item, storage, name, replace):
 		if replace:
@@ -396,6 +398,18 @@ class TestCases(object):
 class TestCase(object):
 	def __init__(self, path = None):
 		self.path = path						# Step{0..}
+		if path is None : self.path = []
+		#self.scenario = Scenario()
 
 	def __len__(self):
 		return len(self.path)
+
+##############
+# Glossary
+######
+
+class Term(Referencable):
+	def __init__(self, name = None, definition = []):
+		Referencable.__init__(self)
+		self.name = name						# str
+		self.definition = definition			# Item{0..}

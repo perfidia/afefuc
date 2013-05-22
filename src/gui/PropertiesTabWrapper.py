@@ -22,6 +22,7 @@ class PropertiesTabWrapper():
 	def load(self):
 		self.tab.projectNameEdit.setText(_fromUtf8(self.afefuc['project'].name))
 		self.tab.versionEdit.setText(_fromUtf8(self.afefuc['project'].version))
+		self.tab.abbreviationEdit.setText(_fromUtf8(self.afefuc['project'].abbreviation))
 
 		index = self.tab.languageComboBox.findText(_fromUtf8(self.afefuc['project'].language))
 		if index != -1:

@@ -13,51 +13,55 @@
   <property name="windowTitle">
    <string>PropertiesTab</string>
   </property>
-  <widget class="QWidget" name="formLayoutWidget">
-   <property name="geometry">
-    <rect>
-     <x>9</x>
-     <y>9</y>
-     <width>285</width>
-     <height>98</height>
-    </rect>
-   </property>
-   <layout class="QFormLayout" name="widget">
-    <property name="fieldGrowthPolicy">
-     <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
-    </property>
-    <item row="0" column="0">
-     <widget class="QLabel" name="projectNameLabel">
-      <property name="text">
-       <string>Project name</string>
-      </property>
-     </widget>
-    </item>
-    <item row="0" column="1">
-     <widget class="QLineEdit" name="projectNameEdit"/>
-    </item>
-    <item row="1" column="0">
-     <widget class="QLabel" name="versionLabel">
-      <property name="text">
-       <string>Version</string>
-      </property>
-     </widget>
-    </item>
-    <item row="1" column="1">
-     <widget class="QLineEdit" name="versionEdit"/>
-    </item>
-    <item row="2" column="0">
-     <widget class="QLabel" name="languageLabel">
-      <property name="text">
-       <string>Language</string>
-      </property>
-     </widget>
-    </item>
-    <item row="2" column="1">
-     <widget class="QComboBox" name="languageComboBox"/>
-    </item>
-   </layout>
-  </widget>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <layout class="QFormLayout" name="widget">
+     <property name="fieldGrowthPolicy">
+      <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
+     </property>
+     <item row="0" column="0">
+      <widget class="QLabel" name="projectNameLabel">
+       <property name="text">
+        <string>Project name</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="1">
+      <widget class="QLineEdit" name="projectNameEdit"/>
+     </item>
+     <item row="1" column="0">
+      <widget class="QLabel" name="abbreviationLabel">
+       <property name="text">
+        <string>Abbreviation</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="1">
+      <widget class="QLineEdit" name="abbreviationEdit"/>
+     </item>
+     <item row="2" column="0">
+      <widget class="QLabel" name="versionLabel">
+       <property name="text">
+        <string>Version</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="1">
+      <widget class="QLineEdit" name="versionEdit"/>
+     </item>
+     <item row="3" column="0">
+      <widget class="QLabel" name="languageLabel">
+       <property name="text">
+        <string>Language</string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="1">
+      <widget class="QComboBox" name="languageComboBox"/>
+     </item>
+    </layout>
+   </item>
+  </layout>
  </widget>
  <resources/>
  <connections/>
