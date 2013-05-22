@@ -59,9 +59,8 @@ class ActorsTableModel(QtCore.QAbstractTableModel):
 		for i, uc in enumerate(self.afefuc['project'].actors):
 			if uc is actor[0]:
 				counter = i
-				#self.afefuc['project'].actors[i] = actor[1]
-
 				update.actor(self.afefuc['project'].actors[i], actor[1])
+
 				break
 		else:
 			assert 1 == 2 and "actor not found"
