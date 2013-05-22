@@ -12,6 +12,7 @@ def actor(target, source):
 	target.name = source.name
 	target.identifier = source.identifier
 	target.type = source.type
+	target.communication = source.communication
 	target.description = source.description
 	target.properties = source.properties
 

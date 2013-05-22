@@ -261,6 +261,9 @@ def Actor_att_to_xml(self, parent):
 	name = ET.SubElement(actor, "type")
 	name.text = self.type
 
+	name = ET.SubElement(actor, "communication")
+	name.text = self.communication
+
 	description = ET.SubElement(actor, "description")
 
 	for u in self.description:

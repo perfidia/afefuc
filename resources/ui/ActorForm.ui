@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>546</width>
-    <height>307</height>
+    <height>382</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -30,7 +30,7 @@
        </property>
       </widget>
      </item>
-     <item row="3" column="0">
+     <item row="4" column="0">
       <widget class="QLabel" name="descriptionLabel">
        <property name="text">
         <string>Description</string>
@@ -43,7 +43,7 @@
      <item row="1" column="1">
       <widget class="QLineEdit" name="idEdit"/>
      </item>
-     <item row="3" column="1">
+     <item row="4" column="1">
       <widget class="QPlainTextEdit" name="descriptionEdit">
        <property name="plainText">
         <string/>
@@ -59,6 +59,16 @@
      </item>
      <item row="2" column="1">
       <widget class="QComboBox" name="typeComboBox"/>
+     </item>
+     <item row="3" column="0">
+      <widget class="QLabel" name="communicationLabel">
+       <property name="text">
+        <string>Communication</string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="1">
+      <widget class="QComboBox" name="communicationComboBox"/>
      </item>
     </layout>
    </item>

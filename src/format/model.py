@@ -184,6 +184,12 @@ class ActorType(object):
 	HUMAN_SUPPORT  = "Support"
 	SYSTEM         = "System"
 
+class ActorCommunication(object):
+	NA            = "N/A"
+	PUTS_DATA     = "Puts data"
+	GETS_DATA     = "Gets data"
+	BIDIRECTIONAL = "Bidirectional"
+
 class Actor(Referencable):
 	def __init__(self, name = None, identifier = None, description = []):
 		Referencable.__init__(self)
@@ -191,6 +197,7 @@ class Actor(Referencable):
 		self.name = name						# str
 		self.identifier = identifier			# str
 		self.type = None						# str from ActorType
+		self.communication = None				# str from ActorCommunication
 		self.description = description			# Item{0..}
 		self.properties = None					# dict
 

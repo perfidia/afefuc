@@ -104,7 +104,18 @@ def read(filename = None):
 			elif n.tag == 'id':
 				retval.identifier = n.text
 			elif n.tag == 'type':
-				retval.type = n.text
+				retval.type = {
+						"Business": model.ActorType.HUMAN_BUSINESS,
+						"Support": model.ActorType.HUMAN_SUPPORT,
+						"System": model.ActorType.SYSTEM,
+				}.get(n.text, model.ActorCommunication.NA)
+
+			elif n.tag == 'communication':
+				retval.communication = {
+						"Puts data": model.ActorCommunication.PUTS_DATA,
+						"Gets data": model.ActorCommunication.GETS_DATA,
+						"Bidirectional": model.ActorCommunication.BIDIRECTIONAL
+				}.get(n.text, model.ActorCommunication.NA)
 			elif n.tag == 'description':
 				retval.description = items(project, n)
 			elif n.tag == 'properties':

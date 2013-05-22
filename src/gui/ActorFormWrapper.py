@@ -25,10 +25,16 @@ class ActorFormWrapper():
 		self.item = item[1]
 		self.item_orginal = item[0]
 
-		self.options = OrderedDict()
-		self.options[model.ActorType.HUMAN_BUSINESS] = "Human - Business role"
-		self.options[model.ActorType.HUMAN_SUPPORT]  = "Human - Support role"
-		self.options[model.ActorType.SYSTEM]         = "System"
+		self.typesOfActor = OrderedDict()
+		self.typesOfActor[model.ActorType.HUMAN_BUSINESS] = "Human - Business role"
+		self.typesOfActor[model.ActorType.HUMAN_SUPPORT]  = "Human - Support role"
+		self.typesOfActor[model.ActorType.SYSTEM]         = "System"
+
+		self.typesOfCommunication = OrderedDict()
+		self.typesOfCommunication[model.ActorCommunication.NA]            = "N/A"
+		self.typesOfCommunication[model.ActorCommunication.PUTS_DATA]     = "Only provides data"
+		self.typesOfCommunication[model.ActorCommunication.GETS_DATA]     = "Only gets data"
+		self.typesOfCommunication[model.ActorCommunication.BIDIRECTIONAL] = "Provides and gets data"
 
 	def load(self):
 		self.form.nameEdit.setText(_fromUtf8(self.item.name))
@@ -41,15 +47,21 @@ class ActorFormWrapper():
 		)
 
 		index = self.form.typeComboBox.findData(QtCore.QVariant(self.item.type))
-
 		if index != -1:
 			self.form.typeComboBox.setCurrentIndex(index)
+
+		index = self.form.communicationComboBox.findData(QtCore.QVariant(self.item.communication))
+		if index != -1:
+			self.form.communicationComboBox.setCurrentIndex(index)
 
 	def show(self):
 		self.form.setupUi(self.dialog)
 
-		for k, v in self.options.items():
+		for k, v in self.typesOfActor.items():
 			self.form.typeComboBox.addItem(v, QtCore.QVariant(k))
+
+		for k, v in self.typesOfCommunication.items():
+			self.form.communicationComboBox.addItem(v, QtCore.QVariant(k))
 
 		self.load()
 
@@ -70,8 +82,10 @@ class ActorFormWrapper():
 		)
 
 		index = self.form.typeComboBox.currentIndex()
-
 		self.item.type = unicode(self.form.typeComboBox.itemData(index).toPyObject().toUtf8(), "utf-8")
+
+		index = self.form.communicationComboBox.currentIndex()
+		self.item.communication = unicode(self.form.communicationComboBox.itemData(index).toPyObject().toUtf8(), "utf-8")
 
 		if self.item_orginal:
 			self.parent.model.updateItem((self.item_orginal, self.item))

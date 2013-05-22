@@ -76,6 +76,7 @@ def actor(source, project):
 	target.name = source.name
 	target.identifier = source.identifier
 	target.type = source.type
+	target.communication = source.communication
 	target.description = items(source.description, source, target, project)
 	target.properties = copy.deepcopy(source.properties)
 
