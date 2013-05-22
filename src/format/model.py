@@ -48,6 +48,7 @@ class Priority(Configuration, Referencable):
 class Project(object):
 	def __init__(self):
 		self.name = ""							# str
+		self.abbreviation = ""					# str
 		self.language = "en"					# str, according to ISO 639-1 (http://en.wikipedia.org/wiki/ISO_639-1)
 		self.version = ""						# str
 		self.actors = []						# Actor

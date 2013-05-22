@@ -294,6 +294,8 @@ def read(filename = None):
 		for n in node.getchildren():
 			if n.tag == 'name':
 				retval.name = n.text
+			elif n.tag == 'abbreviation':
+				retval.abbreviation = n.text
 			elif n.tag == 'version':
 				retval.version = n.text
 			elif n.tag == 'language':
