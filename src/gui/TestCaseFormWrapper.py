@@ -33,8 +33,8 @@ class CompleteTextEditDelegate(QtGui.QItemDelegate):
 		editor = TextEdit(parent)
 		self.completer = QtGui.QCompleter(self)
 
-		sb = sentenceBuilder('testcases/Models/sentencesStructure.XML')
-		editor.setSentenceBuilder(sb)
+		sb = highlighter('generated/testcases/en.xml')
+		editor.setHighlighter(sb)
 		output = sb.getNext('')
 		words = []
 		for element in output[1]:
@@ -184,7 +184,7 @@ class Test(QtGui.QWidget):
 		self.completer = QtGui.QCompleter(self)
 
 		sb = highlighter('./generated/testcases/en.xml')
-		self.completingTextEdit.sethighlighter(sb)
+		self.completingTextEdit.setHighlighter(sb)
 		output = sb.getNext('')
 		words = []
 		for element in output[1]:
@@ -223,7 +223,7 @@ class TextEdit(QtGui.QTextEdit):
 	def completer(self):
 		return self._completer
 
-	def sethighlighter(self, s):
+	def setHighlighter(self, s):
 		self._highlighter = s
 
 	def highlighter(self):

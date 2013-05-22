@@ -10,15 +10,15 @@ Output XML file structure:
 --------------------------
 
 + main element -> [start]
-++ children elements:
-++ actor
-++ text
-++ action -> has attributes:
-+++ action 
-++ value 
-++ name 
-++ url 
-++ object -> has attributes:
-+++ type 
-++ number
++* children elements:
++* actor
++* text
++* action -> has attributes:
++*- action 
++* value 
++* name 
++* url 
++* object -> has attributes:
++*- type 
++* number
 
