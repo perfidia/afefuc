@@ -9,28 +9,29 @@ import re
 import format.model
 
 def textToItems(project, text, replace = None):
-	def itemFromText(project, text, replace = None):
-		t = re.match(r"@(actor):(\w+)", text)
+	RE_ACTOR = re.compile(r"@(actor):(\w+)")
+	RE_BUSINESS_OBJECT = re.compile(r"@(bo):(\w+)")
+	RE_EOUC = re.compile(r"@(eouc)")
+	RE_GOTO = re.compile(r"@(goto):((\w+.)*\w+)")
 
+	def helper(project, text, replace = None):
+		t = RE_ACTOR.match(text)
 		if t:
 			actor = project.getActorByIdentifier(t.groups()[1])
 
 			return actor.get_ref()
 
-		t = re.match(r"@(bo):(\w+)", text)
-
+		t = RE_BUSINESS_OBJECT.match(text)
 		if t:
 			bo = project.getBusinessObjectByIdentifier(t.groups()[1])
 
 			return bo.get_ref()
 
-		t = re.match(r"@(eouc)", text)
-
+		t = RE_EOUC.match(text)
 		if t:
 			return format.model.EoUCCommand()
 
-		t = re.match(r"@(goto):((\w+.)*\w+)", text)
-
+		t = RE_GOTO.match(text)
 		if t:
 			tmp = t.groups()[1].split(".")
 
@@ -66,7 +67,7 @@ def textToItems(project, text, replace = None):
 	symbols = ".,"
 
 	items = []
-	items2 = []
+	retval = []
 
 	for i in tmp:
 		if len(i) > 0:
@@ -89,20 +90,20 @@ def textToItems(project, text, replace = None):
 			items.append(i)
 
 	for i in items:
-		n = itemFromText(project, i, replace)
+		n = helper(project, i, replace)
 
-		if len(items2) > 0:
-			if isinstance(n, format.model.TextItem) and isinstance(items2[-1], format.model.TextItem):
+		if len(retval) > 0:
+			if isinstance(n, format.model.TextItem) and isinstance(retval[-1], format.model.TextItem):
 				if len(n.text) == 1 and n.text in symbols:
-					items2[-1].text += n.text
+					retval[-1].text += n.text
 				else:
-					items2[-1].text += " " + n.text
+					retval[-1].text += " " + n.text
 			else:
-				items2.append(n)
+				retval.append(n)
 		else:
-			items2.append(n)
+			retval.append(n)
 
-	return items2
+	return retval
 
 def itemsToText(items, edit = False):
 	assert isinstance(items, list)
@@ -116,6 +117,7 @@ def itemsToText(items, edit = False):
 		elif isinstance(item, format.model.Referencable):
 			retval.append(item.toIdentifierText(edit))
 		else:
+			print i, item
 			assert 1 == 2 and "unknown type"
 
 		if i < lastIdx:
