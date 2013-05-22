@@ -13,8 +13,7 @@ import sip
 from os import path
 from sys import argv, exit
 from xml.dom import minidom
-from testcases.Models.sentenceBuilder import sentenceBuilder
-from testcases.Models.sentenceBuilder import sentenceElement
+from testcases.highlighter import highlighter
 
 try:
 	_fromUtf8 = QtCore.QString.fromUtf8
@@ -28,8 +27,8 @@ class Test(QtGui.QWidget):
 		self.completingTextEdit = TextEdit()
 		self.completer = QtGui.QCompleter(self)
 
-		sb = sentenceBuilder('testcases/Models/sentencesStructure.XML')
-		self.completingTextEdit.setSentenceBuilder(sb)
+		sb = highlighter('./generated/testcases/en.xml')
+		self.completingTextEdit.sethighlighter(sb)
 		output = sb.getNext('')
 		words = []
 		for element in output[1]:
@@ -52,7 +51,7 @@ class TextEdit(QtGui.QTextEdit):
 		super(TextEdit, self).__init__(parent)
 
 		self._completer = None
-		self._sentenceBuilder = None
+		self._highlighter = None
 
 	def setCompleter(self, c):
 		if self._completer is not None:
@@ -68,11 +67,11 @@ class TextEdit(QtGui.QTextEdit):
 	def completer(self):
 		return self._completer
 
-	def setSentenceBuilder(self, s):
-		self._sentenceBuilder = s
+	def sethighlighter(self, s):
+		self._highlighter = s
 
-	def sentenceBuilder(self):
-		return self._sentenceBuilder
+	def highlighter(self):
+		return self._highlighter
 
 	def textUnderCursor(self):
 		tc = self.textCursor()
@@ -111,8 +110,8 @@ class TextEdit(QtGui.QTextEdit):
 		tekstWyjsciowy = ""
 		licznik = 0
 
-		#sb = sentenceBuilder('XMLConverter/sentencesStructure.XML')
-		output = self._sentenceBuilder.getNext(self.lineUnderCursor())
+		#sb = highlighter('XMLConverter/sentencesStructure.XML')
+		output = self._highlighter.getNext(self.lineUnderCursor())
 		#print self.lineUnderCursor()
 		#print output[2]
 
@@ -132,7 +131,7 @@ class TextEdit(QtGui.QTextEdit):
 		#print e.key()
 		if e.key() != 16777220 and e.key() != 32:
 			self.formatInput()
-		#output = self._sentenceBuilder.getNext(self.lineUnderCursor())
+		#output = self._highlighter.getNext(self.lineUnderCursor())
 		#tc = self.textCursor()
 		#tc.select(QtGui.QTextCursor.LineUnderCursor)
 		#tc.removeSelectedText()
@@ -151,7 +150,7 @@ class TextEdit(QtGui.QTextEdit):
 		if self._completer is None or not isShortcut:
 			super(TextEdit, self).keyPressEvent(e)
 
-		output = self._sentenceBuilder.getNext(self.lineUnderCursor())
+		output = self._highlighter.getNext(self.lineUnderCursor())
 		words = []
 		for element in output[1]:
 			words.append(element.getValue())
