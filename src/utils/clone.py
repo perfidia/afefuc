@@ -8,7 +8,7 @@ import copy
 
 import format.model
 
-def items(items, source, target, project):
+def _items(items, source, target, project):
 	retval = []
 
 	for item in items:
@@ -45,15 +45,15 @@ def business_object(source, project):
 
 		target.name = source.name
 		target.type = source.type
-		target.description = items(source.description, source, target, project)
+		target.description = _items(source.description, source, target, project)
 
 		return target
 
 	target = format.model.BusinessObject()
 
-	target.name = items(source.name, source, target, project)
+	target.name = _items(source.name, source, target, project)
 	target.identifier = source.identifier
-	target.description = items(source.description, source, target, project)
+	target.description = _items(source.description, source, target, project)
 	target.attributes = [attribute(a, project) for a in source.attributes]
 	target.properties = copy.deepcopy(source.properties)
 
@@ -63,10 +63,10 @@ def business_rule(source, project):
 	target = format.model.BusinessRule()
 
 	target.identifier = source.identifier
-	target.description = items(source.description, source, target, project)
+	target.description = _items(source.description, source, target, project)
 	target.type = source.type
 	target.dynamism = source.dynamism
-	target.source = items(source.source, source, target, project)
+	target.source = _items(source.source, source, target, project)
 
 	return target
 
@@ -77,7 +77,7 @@ def actor(source, project):
 	target.identifier = source.identifier
 	target.type = source.type
 	target.communication = source.communication
-	target.description = items(source.description, source, target, project)
+	target.description = _items(source.description, source, target, project)
 	target.properties = copy.deepcopy(source.properties)
 
 	return target
@@ -212,6 +212,6 @@ def term(source, project):
 	target = format.model.Term()
 
 	target.name = source.name
-	target.definition = items(source.definition, source, target, project)
+	target.definition = _items(source.definition, source, target, project)
 
 	return target
