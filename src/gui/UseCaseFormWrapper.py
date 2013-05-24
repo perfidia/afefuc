@@ -50,7 +50,7 @@ class MainScenarioTableModel(QtCore.QAbstractTableModel):
 		return 2 #4
 
 	def data(self, index, role):
-		if not index.isValid():
+		if not index.isValid() and role not in [QtCore.Qt.DisplayRole, QtCore.Qt.EditRole]:
 			return QtCore.QVariant()
 
 		column = index.column()

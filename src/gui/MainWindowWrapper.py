@@ -146,8 +146,8 @@ class MainWindowWrapper(QtGui.QMainWindow):
 		self.close()
 
 	def clickedDump(self):
-		format.writer.xml.attach();
-		retval = self.afefuc['project'].to_xml();
-		open("tmp.auc", "w").write(retval)
+		format.writer.xml.write("tmp.auc", self.afefuc['project'])
 
-		format.writer.xml.detach()
+		import objgraph
+		objgraph.show_refs(self.afefuc['project'], refcounts=True, filename='project-refs.png')
+		#objgraph.show_backrefs(self.afefuc['project'], filename='project-backref.png')

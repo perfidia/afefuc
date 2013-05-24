@@ -82,12 +82,12 @@ def actor(source, project):
 
 	return target
 
-def use_case(source, project):
+def usecase_content(target, source, project):
 	def items(items, source, target, project):
 		"""
-		Copies items which are allowed to use in step.
+		Copies items which are allowed to use in a step.
 
-		This functions differs from the one above.
+		This functions differs from the one above (i.e. _items).
 		"""
 		assert isinstance(items, list)
 
@@ -113,12 +113,17 @@ def use_case(source, project):
 					if isinstance(item.item.parent, format.model.UseCase):
 						if item.item.parent == source:
 							i, j = item.item.getPath()
+
+							print i, j
+
 							retval.append(format.model.GoToCommand(target.scenario.items[j]))
 						else:
 							retval.append(format.model.GoToCommand(item.item))
 					elif isinstance(item.item.parent, format.model.Event):
 						if item.item.parent.parent.parent == source:
 							i, j, k, l = item.item.getPath()
+
+							print i, j, k, l
 
 							retval.append(
 									format.model.GoToCommand(
@@ -139,67 +144,83 @@ def use_case(source, project):
 
 		return retval
 
-	def structure(source, target):
-		for s in source.scenario.items:
-			step = format.model.Step()
+	target.identifier = source.identifier
+	target.goal_level = source.goal_level.item.get_ref()
+	target.priority = source.priority.item.get_ref()
+	target.main_actors = [r.item.get_ref() for r in source.main_actors]
+	target.other_actors = [r.item.get_ref() for r in source.other_actors]
 
-			for e in s.events:
-				event = format.model.Event()
+	target.title = items(source.title, source, target, project)
+	target.summary = items(source.summary, source, target, project)
+	target.remarks = items(source.remarks, source, target, project)
 
-				for ss in e.scenario.items:
-					event.scenario.items.append(format.model.Step())
+	# scenario
+	for step_id, step_co in enumerate(source.scenario.items):
+		target.scenario.items[step_id].items = items(step_co.items, source, target, project)
 
-				step.events.append(event)
+		for event_id, event_co in enumerate(step_co.events):
+			target.scenario.items[step_id].events[event_id].title =\
+					items(event_co.title, source, target, project)
 
-			target.scenario.items.append(step)
+			target.scenario.items[step_id].events[event_id].type =\
+					source.scenario.items[step_id].events[event_id].type
 
-	def content(source, target, project):
-		target.identifier = source.identifier
-		target.goal_level = source.goal_level.item.get_ref()
-		target.priority = source.priority.item.get_ref()
-		target.main_actors = [r.item.get_ref() for r in source.main_actors]
-		target.other_actors = [r.item.get_ref() for r in source.other_actors]
+			target.scenario.items[step_id].events[event_id].anchor =\
+					source.scenario.items[step_id].events[event_id].anchor
 
-		target.title = items(source.title, source, target, project)
-		target.summary = items(source.summary, source, target, project)
-		target.remarks = items(source.remarks, source, target, project)
+			for substep_id, substep_co in enumerate(event_co.scenario.items):
+				target.scenario.items[step_id].events[event_id].scenario.items[substep_id].items = \
+						items(substep_co.items, source, target, project)
 
-		# scenario
-		for step_id, step_co in enumerate(source.scenario.items):
-			target.scenario.items[step_id].items = items(step_co.items, source, target, project)
+	# TODO: the structure should be copied in structure function!!!!
+	target.triggers = []
+	for i, t in enumerate(source.triggers):
+		target.triggers.append(format.model.Trigger(items(source.triggers[i].items, source, target, project)))
 
-			for event_id, event_co in enumerate(step_co.events):
-				target.scenario.items[step_id].events[event_id].title =\
-						items(event_co.title, source, target, project)
+	target.preconditions = []
+	for i, t in enumerate(source.preconditions):
+		target.preconditions.append(format.model.PreCondition(items(source.preconditions[i].items, source, target, project)))
 
-				target.scenario.items[step_id].events[event_id].type =\
-						source.scenario.items[step_id].events[event_id].type
+	target.postconditions = []
+	for i, t in enumerate(source.postconditions):
+		target.postconditions.append(format.model.PostCondition(items(source.postconditions[i].items, source, target, project)))
 
-				target.scenario.items[step_id].events[event_id].anchor =\
-						source.scenario.items[step_id].events[event_id].anchor
 
-				for substep_id, substep_co in enumerate(event_co.scenario.items):
-					target.scenario.items[step_id].events[event_id].scenario.items[substep_id].items = \
-							items(substep_co.items, source, target, project)
+def usecase(source, project):
+	def structure(target, source):
+		refs = {}
 
-		target.triggers = []
-		for i, t in enumerate(source.triggers):
-			target.triggers.append(format.model.Trigger(items(source.triggers[i].items, source, target, project)))
+		for step_org in source.scenario.items:
+			step_cpy = format.model.Step()
 
-		target.preconditions = []
-		for i, t in enumerate(source.preconditions):
-			target.preconditions.append(format.model.PreCondition(items(source.preconditions[i].items, source, target, project)))
+			refs[step_cpy] = step_org
 
-		target.postconditions = []
-		for i, t in enumerate(source.postconditions):
-			target.postconditions.append(format.model.PostCondition(items(source.postconditions[i].items, source, target, project)))
+			for event_org in step_org.events:
+				event_cpy = format.model.Event()
+
+				refs[event_cpy] = event_org
+
+				for ss_org in event_org.scenario.items:
+					ss_cpy = format.model.Step()
+
+					refs[ss_cpy] = ss_org
+
+					event_cpy.scenario.items.append(ss_cpy)
+
+				step_cpy.events.append(event_cpy)
+
+			target.scenario.items.append(step_cpy)
+
+		target.refs = refs
+
+		return refs
 
 		#self.testcases = copy.deepcopy(instance.testcases)
 
 	target = format.model.UseCase()
 
-	structure(source, target)
-	content(source, target, project)
+	structure(target, source)
+	usecase_content(target, source, project)
 
 	return target
 

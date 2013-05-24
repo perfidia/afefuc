@@ -70,8 +70,9 @@ class Project(object):
 
 	def _getItemByIdentifier(self, item, storage, identifier, replace):
 		if replace:
+			storage = list(storage)
+
 			if replace[0] is not None:
-				storage = list(storage)
 				storage[storage.index(replace[0])] = replace[1]
 			else:
 				storage.append(replace[1])
@@ -135,8 +136,9 @@ class UseCase(Referencable):
 
 		return (i, )
 
-	def setParent(self, parent):
-		self.parent = parent
+	def setParent(self, parent = None):
+		if parent is not None:
+			self.parent = parent
 
 		for step in self.scenario.items:
 			step.setParent(self)

@@ -5,6 +5,7 @@ Created on May 9, 2013
 '''
 
 import copy
+import clone
 
 import format.model
 
@@ -28,18 +29,32 @@ def business_object(target, source):
 	return target
 
 def usecase(target, source):
-	target.title = source.title
-	target.identifier = source.identifier
-	target.main_actors = source.main_actors
-	target.other_actors = source.other_actors
-	target.goal_level = source.goal_level
-	target.priority = source.priority
-	target.triggers = source.triggers
-	target.preconditions = source.preconditions
-	target.postconditions = source.postconditions
-	target.scenario = source.scenario
-	target.testcases = source.testcases
-	target.summary = source.summary
-	target.remarks = source.remarks
+	refs = source.refs
+
+	items = []
+
+	# reuse structure in order not to fix all references
+
+	for step in source.scenario.items:
+		if refs.has_key(step):
+			items.append(refs[step])
+
+			del refs[step]
+		else:
+			items.append(format.model.Step())
+
+#	print source.scenario.items
+#	print target.scenario.items
+	print items
+
+
+	target.scenario.items = items
+
+	# copy content
+	clone.usecase_content(target, source, None)
+
+	target.setParent()
+
+	print target.scenario.items
 
 	return target

@@ -149,7 +149,7 @@ class UseCasesTabWrapper():
 
 			original = self.afefuc['project'].ucspec.usecases[position]
 
-			uc = clone.use_case(original, self.afefuc['project'])
+			uc = clone.usecase(original, self.afefuc['project'])
 			uc.setParent(original.parent)
 
 			UseCaseFormWrapper(self, self.afefuc, item = (original, uc)).show()
