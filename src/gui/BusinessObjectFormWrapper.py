@@ -4,6 +4,7 @@ Created on Apr 25, 2013
 @author: Bartosz Alchimowicz
 '''
 
+from collections import OrderedDict
 from PyQt4 import QtCore, QtGui
 from generated.ui.BusinessObjectForm import Ui_BusinessObjectForm
 from format import model
@@ -18,12 +19,15 @@ class ComboBoxDelegate(QtGui.QItemDelegate):
 	def __init__(self, parent, item):
 		QtGui.QItemDelegate.__init__(self, parent)
 		self.item = item
-		self.options = ["Main", "Supplementary"]
+
+		self.typesOfAttribute = OrderedDict()
+		self.typesOfAttribute[model.AttributeType.MAIN] = "Main"
+		self.typesOfAttribute[model.AttributeType.SUPPLEMENTARY]  = "Supplementary"
 
 	def paint(self, painter, option, index):
-		idx = self.item.attributes[index.row()].type
-		idx = 0 if idx is None else self.options.index(idx)
-		value = self.options[idx]
+
+
+		value = converter.businessObjectTypeToText(self.item.attributes[index.row()].type)
 
 		style = QtGui.QApplication.style()
 
@@ -36,18 +40,21 @@ class ComboBoxDelegate(QtGui.QItemDelegate):
 
 	def createEditor(self, parent, option, index):
 		editor = QtGui.QComboBox(parent)
-		editor.addItems(self.options)
+		for k, v in self.typesOfAttribute.items():
+			editor.addItem(v, QtCore.QVariant(k))
 
 		return editor
 
 	def setEditorData(self, editor, index):
-		idx = self.item.attributes[index.row()].type
-		idx = 0 if idx is None else self.options.index(idx)
-
-		editor.setCurrentIndex(idx)
+		idx = editor.findData(QtCore.QVariant(self.item.attributes[index.row()].type))
+		if index != -1:
+			editor.setCurrentIndex(idx)
 
 	def setModelData(self, editor, model, index):
-		value = self.options[editor.currentIndex()]
+		idx = editor.currentIndex()
+		value = editor.itemData(idx).toPyObject()
+		print value
+		#model.setData(index, QtCore.QVariant(value), QtCore.Qt.EditRole)
 		model.setData(index, QtCore.QVariant(value), QtCore.Qt.EditRole)
 
 	def updateEditorGeometry(self, editor, option, index):

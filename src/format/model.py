@@ -327,10 +327,14 @@ class BusinessRule(Referencable):
 		self.dynamism = None					# BusinessRuleDynamism
 		self.source = []						# Item{0..}
 
+class AttributeType(object):
+	MAIN = "Main"
+	SUPPLEMENTARY = "Supplementary"
+
 class Attribute(object):
 	def __init__(self):
 		self.name = None						# str
-		self.type = None						# str: Main|Supp
+		self.type = None						# AttributeType
 		self.description = []					# Item{0..}
 
 ##############

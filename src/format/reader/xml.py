@@ -133,7 +133,10 @@ def read(filename = None):
 				if n.tag == 'name':
 					retval.name = n.text
 				elif n.tag == 'type':
-					retval.type = n.text
+					retval.type = {
+						"Main": model.AttributeType.MAIN,
+						"Supplementary": model.AttributeType.SUPPLEMENTARY,
+					}.get(n.text, model.AttributeType.MAIN)
 				elif n.tag == 'description':
 					retval.description = items(project, n)
 				else:
