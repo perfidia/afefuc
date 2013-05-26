@@ -297,6 +297,7 @@ class BusinessObject(Referencable):
 		self.identifier = identifier			# str
 		self.description = []					# Item{0..}
 		self.attributes = []					# Attribute{0..}
+		self.state_diagram = None				# ??
 		self.properties = None					# dict
 
 	def toText(self, edit):
