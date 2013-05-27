@@ -21,6 +21,7 @@ from gui.WikiExportWrapper import WikiExportWrapper
 import format.writer.xml
 import format.reader.xml
 import format.model
+from utils.clipboard import Clipboard
 
 try:
 	_fromUtf8 = QtCore.QString.fromUtf8
@@ -28,10 +29,11 @@ except AttributeError:
 	_fromUtf8 = lambda s: s
 
 class MainWindowWrapper(QtGui.QMainWindow):
-	def __init__(self, parent=None):
+	def __init__(self, parent=None, application=None):
 		QtGui.QWidget.__init__(self, parent)
 		self.mainWindow = Ui_MainWindow()
 		self.afefuc = {'project': None}
+		self.afefuc = {'clipboard': Clipboard(application)}
 		self.filename = None
 
 	def show(self):

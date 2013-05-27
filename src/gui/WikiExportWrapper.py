@@ -50,7 +50,7 @@ class WikiExportWrapper():
 		self.dialog.exec_()
 
 	def clickedCopyButton(self):
-		pass
+		self.afefuc['clipboard'].send(unicode(self.form.outputEdit.toPlainText().toUtf8(), "utf-8"))
 
 	def clickedGenerateButton(self):
 		index = self.form.typeComboBox.currentIndex()

@@ -198,8 +198,8 @@ class Actor(Referencable):
 
 		self.name = name						# str
 		self.identifier = identifier			# str
-		self.type = None						# str from ActorType
-		self.communication = None				# str from ActorCommunication
+		self.type = None						# ActorType
+		self.communication = None				# ActorCommunication
 		self.description = description			# Item{0..}
 		self.properties = None					# dict
 

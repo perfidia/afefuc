@@ -18,6 +18,6 @@ if __name__ == "__main__":
 	signal.signal(signal.SIGINT, signal.SIG_DFL)
 
 	app = QtGui.QApplication(sys.argv)
-	myapp = MainWindowWrapper()
+	myapp = MainWindowWrapper(application = app)
 	myapp.show()
 	sys.exit(app.exec_())
