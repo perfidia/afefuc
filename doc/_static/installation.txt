@@ -7,8 +7,9 @@ Linux
 **Debian**::
 
 	$ su
-	# apt-get install python2.7 python-qt4 python-lxml
+	# apt-get install python2.7 python-qt4 python-lxml python-jinja2
 	# apt-get install make pyqt4-dev-tools
+	# exit
 	$ cd afefuc
 	$ make
 
@@ -21,6 +22,7 @@ Using backports::
 	port qt4
 	port py27-pyqt4
 	pip lmxl
+	pip jinja2
 
 Use ``pyuic4`` to generate GUI.
 
@@ -36,5 +38,6 @@ Install:
 
 		pypm install pyqt4
 		pypm install lxml
+		pypm install jinja2
 
 Use ``pyuic4`` to generate GUI.

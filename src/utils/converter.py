@@ -127,3 +127,53 @@ def itemsToText(items, edit = False):
 				retval.append(" ")
 
 	return "".join(retval)
+
+def nameToText(type):
+	if isinstance(type, format.model.Reference):
+		type = type.item
+
+	return type.name
+
+def actorsToText(items):
+	retval = []
+
+	for a in items:
+		retval.append(nameToText(a))
+
+	return ", ".join(retval)
+
+def actorTypeToText(type):
+	return {
+			format.model.ActorType.HUMAN_BUSINESS: "Human - Business role",
+			format.model.ActorType.HUMAN_SUPPORT:  "Human - Support role",
+			format.model.ActorType.SYSTEM:         "System",
+	}.get(type, "N/A")
+
+
+def actorCommunicationToText(type):
+	return {
+		format.model.ActorCommunication.PUTS_DATA:     "Only provides data",
+		format.model.ActorCommunication.GETS_DATA:     "Only gets data",
+		format.model.ActorCommunication.BIDIRECTIONAL: "Provides and gets data",
+	}.get(type, "N/A")
+
+def businessObjectTypeToText(type):
+	return {
+		format.model.AttributeType.MAIN: 'Main',
+		format.model.AttributeType.SUPPLEMENTARY: "Supplementary"
+	}.get(type, "N/A")
+
+def businessRuleTypeToText(type):
+	return {
+			format.model.BusinessRuleType.FACTS: "Facts",
+			format.model.BusinessRuleType.CONSTRAINTS: "Constraints",
+			format.model.BusinessRuleType.ACTION_ENABLERS: "Action Enablers",
+			format.model.BusinessRuleType.COMPUTATIONS: "Computations",
+			format.model.BusinessRuleType.INTERFACES: "Interfaces",
+	}.get(type, "N/A")
+
+def businessRuleDynamismToText(type):
+	return {
+			format.model.BusinessRuleDynamism.STATIC: "Static",
+			format.model.BusinessRuleDynamism.DYNAMIC: "Dynamic",
+	}.get(type, "N/A")

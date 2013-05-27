@@ -17,6 +17,7 @@ from gui.BusinessObjectsTabWrapper import BusinessObjectsTabWrapper
 from gui.BusinessRulesTabWrapper import BusinessRulesTabWrapper
 from gui.TestCasesTabWrapper import TestCasesTabWrapper
 from gui.GlossaryTabWrapper import GlossaryTabWrapper
+from gui.WikiExportWrapper import WikiExportWrapper
 import format.writer.xml
 import format.reader.xml
 import format.model
@@ -52,6 +53,7 @@ class MainWindowWrapper(QtGui.QMainWindow):
 		self.mainWindow.actionClose.triggered.connect(self.clickedClose)
 		self.mainWindow.actionQuit.triggered.connect(self.clickedQuit)
 		self.mainWindow.actionDump.triggered.connect(self.clickedDump)
+		self.mainWindow.actionExport.triggered.connect(self.clickedExport)
 
 		self.propertiesTab = PropertiesTabWrapper(self, self.afefuc)
 		self.propertiesTab.show()
@@ -144,6 +146,10 @@ class MainWindowWrapper(QtGui.QMainWindow):
 
 	def clickedQuit(self):
 		self.close()
+
+	def clickedExport(self):
+		if self.afefuc['project']:
+			WikiExportWrapper(self, self.afefuc).show()
 
 	def clickedDump(self):
 		format.writer.xml.write("tmp.auc", self.afefuc['project'])
