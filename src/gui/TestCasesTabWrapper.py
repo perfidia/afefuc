@@ -56,7 +56,7 @@ class TestCasesTableModel(QtCore.QAbstractTableModel):
 
 	def removeItem(self, position):
 		self.beginRemoveRows(QtCore.QModelIndex(), position, position);
-
+		del(self.afefuc['project'].testcases.tests[position])
 #       del(self.afefuc['project'].ucspec.usecases[position])
 
 		self.endRemoveRows();
@@ -102,6 +102,13 @@ class TestCasesTableModel(QtCore.QAbstractTableModel):
 		pos1 = position
 		pos2 = position - 1
 
+		(
+			self.afefuc['project'].testcases.tests[pos1],
+			self.afefuc['project'].testcases.tests[pos2]
+		) = (
+			self.afefuc['project'].testcases.tests[pos2],
+			self.afefuc['project'].testcases.tests[pos1]
+		)
 #       (
 #               self.afefuc['project'].ucspec.usecases[pos1],
 #               self.afefuc['project'].ucspec.usecases[pos2]
