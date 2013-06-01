@@ -94,16 +94,16 @@ def usecase_content(target, source, project):
 		retval = []
 
 		for item in items:
-			if isinstance(item, format.model.TextItem):
+			if isinstance(item, format.model.TextItem):  #kopiowanie zawartosci textitem
 				retval.append(copy.copy(item))
-			elif isinstance(item, format.model.Reference):
+			elif isinstance(item, format.model.Reference): #reference
 				if type(item.item) in [format.model.BusinessObject, format.model.Actor]:
 					retval.append(item.item.get_ref())
 				else:
 					assert 1 == 2
-			elif isinstance(item, format.model.EoUCCommand):
+			elif isinstance(item, format.model.EoUCCommand): #EoUC
 				retval.append(format.model.EoUCCommand())
-			elif isinstance(item, format.model.GoToCommand):
+			elif isinstance(item, format.model.GoToCommand): #goto
 				if isinstance(item.item, format.model.UseCase):
 					if item.item == source:
 						retval.append(format.model.GoToCommand(target))
@@ -172,7 +172,7 @@ def usecase_content(target, source, project):
 				target.scenario.items[step_id].events[event_id].scenario.items[substep_id].items = \
 						items(substep_co.items, source, target, project)
 
-	# TODO: the structure should be copied in structure function!!!!
+	# TODO: the structure should be copied in structure function!
 	target.triggers = []
 	for i, t in enumerate(source.triggers):
 		target.triggers.append(format.model.Trigger(items(source.triggers[i].items, source, target, project)))
@@ -224,6 +224,21 @@ def usecase(source, project):
 
 	return target
 
+def testcase(source, project):
+	target = format.model.TestCase()
+
+	target.identifier = source.identifier #str
+	target.title = source.title #str
+	target.uc_ref = source.uc_ref
+
+	for step_org in source.path:
+		step_cpy = format.model.TestStep()
+		step_cpy.ucstep = step_org.ucstep #kopiowanie adresu! do zmiany jesli bedziemy modyfikowac UCstep
+		step_cpy.tcstep = step_org.tcstep
+		target.path.append(step_cpy)
+
+
+	return target
 def test_case(source, project):
 	target = format.model.TestCase()
 

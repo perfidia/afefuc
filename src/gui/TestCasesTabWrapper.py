@@ -72,12 +72,18 @@ class TestCasesTableModel(QtCore.QAbstractTableModel):
 
 		#self.afefuc['project'].ucspec.usecases.append(usecase[1])
 		self.afefuc['project'].testcases.tests.append(testcase[1])
-
 		self.endInsertRows()
 
-	def updateItem(self, usecase):
+	def updateItem(self, testcase): #testcase = (original,new)
 		counter = 0
 
+		print 'tests len', len(self.afefuc['project'].testcases.tests)
+
+		for i, tc in enumerate(self.afefuc['project'].testcases.tests):
+			if tc is testcase[0]:
+				counter = i
+				self.afefuc['project'].testcases.tests[i] = testcase[1]
+				break
 #       for i, uc in enumerate(self.afefuc['project'].ucspec.usecases):
 #           if uc is usecase[0]:
 #               counter = i
@@ -157,15 +163,15 @@ class TestCasesTabWrapper():
 	def clickedEditButton(self):
 		if len(self.tab.itemsView.selectedIndexes()) == 2:
 			position = self.tab.itemsView.selectedIndexes()[0].row()
-			#original = self.afefuc['project'].testcases.tests[position]
-
-			#tc = clone.
+			original = self.afefuc['project'].testcases.tests[position]
+			#print 'position', position
+			tc = clone.testcase(original, self.afefuc['project'])
 #           original = self.afefuc['project'].ucspec.test[position]
 
 #           uc = clone.test_case(original, self.afefuc['project'])
 #           uc.setParent(original.parent)
 
-#           TestCaseFormWrapper(self, self.afefuc, item = (original, uc)).show()
+			TestCaseFormWrapper(self, self.afefuc, item = (original, tc)).show()
 
 	def clickedMoveUpButton(self):
 		if len(self.tab.itemsView.selectedIndexes()) == 2:

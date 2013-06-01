@@ -135,6 +135,7 @@ class SampleTableModel(QtCore.QAbstractTableModel):
 		self.parent = parent
 		self.item = items[1]
 		self.item_original = items[0]
+		print 'dlugosc listy krokow', len(self.item.path)
 		self.headerdata = ["No", "Description", "Ref UC step"]
 
 	def headerData(self, column, orientation, role):
@@ -424,21 +425,32 @@ class TestCaseFormWrapper():
 		#self.model = SampleTableModel(self.form.stepView, self.afefuc, self.item)
 
 	def load(self):
-		pass
+		self.form.titleEdit.setText(self.item.title)
+		self.form.idEdit.setText(self.item.identifier)
+
+		if self.item.uc_ref is not None:
+			index = self.form.ucChoice.findText(self.item.uc_ref.identifier)
+			if index != -1:
+				self.form.ucChoice.setCurrentIndex(index)
+
 
 	def show(self):
 		self.form.setupUi(self.dialog)
 
-		self.load()
+		
 		#self.form.ucChoice.addItems(["en", "pl"])
 		self.form.ucChoice.addItems(["no use case reference"])
 		#self.form.ucChoice.addItems(self.afefuc['project'].ucspec.usecases)
 		for usecase in self.afefuc['project'].ucspec.usecases:
 			#print usecase.title[0].toText() + usecase.title[2].toText()
 			#print usecase.identifier
-			print converter.itemsToText(usecase.title)
+			print usecase.identifier
 			self.form.ucChoice.addItem(usecase.identifier, usecase)
 
+		if self.item_original is not None: self.load()
+
+		testIndex = self.form.ucChoice.findText('BC_001')
+		print 'testIndex', testIndex
 		#self.addButton = QtGui.QPushButton('button to add other widgets')
 		#self.form.widget.addWidget(self.addButton2)
 		#self.form.insertStep.clicked.connect(self.addWidget)
