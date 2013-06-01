@@ -408,13 +408,26 @@ class TestCases(object):
 		return len(self.tests)
 
 class TestCase(object):
-	def __init__(self, path = None):
-		self.path = path						# Step{0..}
-		if path is None : self.path = []
+	def __init__(self, path = None):	#path - lista krokow z UC
+		#self.path = path						# Step{0..}
+		#if path is None : self.path = []
+
+		self.path = []
+		if path is not None:
+			for step in path:
+				self.path.append(TestStep(step))
+
+		self.uc_ref = None
 		#self.scenario = Scenario()
 
 	def __len__(self):
 		return len(self.path)
+
+class TestStep(object):
+	def __init__(self, ucstep=None, tcstep=None):
+		self.ucstep = ucstep
+		self.tcstep = tcstep
+
 
 ##############
 # Glossary

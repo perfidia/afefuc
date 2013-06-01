@@ -1,6 +1,7 @@
 import re
 import inspect
 
+from collections import OrderedDict
 from PyQt4 import QtCore, QtGui
 from generated.ui.TestCaseForm import Ui_TestCaseForm
 from format import model
@@ -14,6 +15,7 @@ from os import path
 from sys import argv, exit
 from xml.dom import minidom
 from testcases.highlighter import highlighter
+from testcases.paths.all_paths_algorithm import Algorithm
 
 try:
 	_fromUtf8 = QtCore.QString.fromUtf8
@@ -44,23 +46,87 @@ class CompleteTextEditDelegate(QtGui.QItemDelegate):
 		self.completer.setCaseSensitivity(QtCore.Qt.CaseInsensitive)
 		self.completer.setWrapAround(False)
 		editor.setCompleter(self.completer)
-		
 
+		
 		return editor
 
 	def setEditorData(self, editor, index):	#transfers data from internal model to editor
-		editor.setHtml(self.item.path[index.row()])
-		print 'setEditorData placeholder'
+		#editor.setHtml(self.item.path[index.row()])
+		step = self.item.path[index.row()].tcstep
+		print step
+		if step is not None:
+			editor.setHtml(step)
+		else:
+			editor.setHtml('')
 
 	def setModelData(self, editor, model, index):	#Ttransfers data from editor to internal model
-		self.item.path[index.row()] = editor.toPlainText()
+		self.item.path[index.row()].tcstep = editor.toPlainText()
+		#converter.textToItems(self.afefuc['project'], editor.toPlainText, (self.item_orginal, self.item))
 		#self.item.html = editor.toHtml()
 		#model.setData(index, QtCore.QVariant('self.item.text'), QtCore.Qt.EditRole) #po co?
-		print 'setModelData placeholder'
 
 	def updateEditorGeometry(self, editor, option, index):
 		editor.setGeometry(option.rect)
 
+
+class ComboBoxDelegate(QtGui.QItemDelegate):
+	def __init__(self, parent, item): #parent = main class of testCaseFormWrapper #item = testCase
+		QtGui.QItemDelegate.__init__(self, parent)
+		self.item = item
+
+	def paint(self, painter, option, index):
+		value = 'No reference to UC step'
+		if(len(self.item.path) > index.row()): 
+			step = self.item.path[index.row()].ucstep
+			if step is not None:
+				value = converter.itemsToText(step.items)
+		
+		style = QtGui.QApplication.style()
+
+		opt = QtGui.QStyleOptionComboBox()
+		opt.currentText = value
+		opt.rect = option.rect
+
+		style.drawComplexControl(QtGui.QStyle.CC_ComboBox, opt, painter)
+		style.drawControl(QtGui.QStyle.CE_ComboBoxLabel, opt, painter)
+
+	def createEditor(self, parent, option, index):
+		editor = QtGui.QComboBox(parent)
+
+		if self.item.uc_ref is None:
+			editor.addItem('No reference to UC step')
+		else :
+			for step in self.item.uc_ref.scenario.items:
+				editor.addItem(converter.itemsToText(step.items), step) #QtCore.QVariant
+			print len(self.item.path)
+
+		return editor
+
+	def setEditorData(self, editor, index):
+		#step = self.item.uc_ref.scenario.items[index.row()]
+		step = self.item.path[index.row()].ucstep
+		idx = -1 
+
+		if step is not None:
+			print 'step', step #converter.itemsToText(step.items)
+			idx = editor.findData((step)) #TODO nie znajduje step mimo ze obiekty maja takie same adresy w pamieci
+			print 'idx', idx
+
+		if index != -1:
+			editor.setCurrentIndex(idx)
+
+	def setModelData(self, editor, model, index):
+		idx = editor.currentIndex()
+		value = editor.itemData(idx).toPyObject()
+		print value
+		self.item.path[index.row()].ucstep = value 
+		
+		#print converter.itemsToText(self.item.path[idx].ucstep.items)
+		#model.setData(index, QtCore.QVariant(value), QtCore.Qt.EditRole)
+		model.setData(index, QtCore.QVariant(value), QtCore.Qt.EditRole)
+
+	def updateEditorGeometry(self, editor, option, index):
+		editor.setGeometry(option.rect)
 
 class SampleTableModel(QtCore.QAbstractTableModel):
 	def __init__(self, parent, afefuc, items):
@@ -69,7 +135,7 @@ class SampleTableModel(QtCore.QAbstractTableModel):
 		self.parent = parent
 		self.item = items[1]
 		self.item_original = items[0]
-		self.headerdata = ["No", "Description"]
+		self.headerdata = ["No", "Description", "Ref UC step"]
 
 	def headerData(self, column, orientation, role):
 		if orientation == QtCore.Qt.Horizontal and role == QtCore.Qt.DisplayRole:
@@ -77,25 +143,24 @@ class SampleTableModel(QtCore.QAbstractTableModel):
 		return QtCore.QVariant()
 
 	def rowCount(self, index):
-		return len(self.item.path)
+		return len(self.item.path) 
 
 	def columnCount(self, parent):
-		return 2
+		return 3
 
-	def index(self, row, column, parent): #TODO ok (?)
+	def index(self, row, column, parent):
 		if not parent.isValid():
 			return self.createIndex(row, column, None)
 
 	def data(self, index, role): #kod wyswietlajacy zawartosc elementu z modelu
 		column = index.column()
 		row = index.row()
+		step = self.item.path[row]
 		
 		if column == 0 and role == QtCore.Qt.DisplayRole:
-			return QtCore.QVariant(row+1)
-		elif column == 1 and role in [QtCore.Qt.DisplayRole, QtCore.Qt.EditRole]:
-			#step = self.item.scenario.items[row]
-			#TODO converter
-			step = self.item.path[row]
+			return QtCore.QVariant(row + 1)
+		elif column == 1 and role in [QtCore.Qt.DisplayRole]:
+			step = self.item.path[row].tcstep
 			return QtCore.QVariant(step)
 
 	def parent(self, index):
@@ -104,7 +169,7 @@ class SampleTableModel(QtCore.QAbstractTableModel):
 	def flags(self, index):
 		flags = super(QtCore.QAbstractTableModel, self).flags(index)
 
-		if(index.column() == 1):
+		if(index.column() == 1 or index.column() == 2):
 			flags |= QtCore.Qt.ItemIsEditable|QtCore.Qt.ItemIsSelectable
 			
 		return flags	
@@ -112,6 +177,8 @@ class SampleTableModel(QtCore.QAbstractTableModel):
 	def setData(self, index, value, role):
 		if index.isValid() and role == QtCore.Qt.EditRole:
 			value = unicode(value.toString().toUtf8(), 'utf-8')
+			print 'setData'
+			print value
 			#kod wstawiajacy czesc elementu do naszego modelu
 			#if index.column() == 0:
 			#	self.item.attributes[index.row()].name = value
@@ -119,7 +186,23 @@ class SampleTableModel(QtCore.QAbstractTableModel):
 			#	self.item.attributes[index.row()].type = value
 			#elif index.column() == 2:
 			#	self.item.attributes[index.row()].description = converter.textToItems(self.afefuc['project'], value)
-			self.item.path[index.row()] = items
+			
+			#self.item.path[index.row()] = items
+
+			###self.item.path[index.row()].tcstep = model.Step()
+			#self.item.path[index.row()].tcstep = ''
+			#self.item.path[index.row()].tcstep = converter.textToItems()
+			#converter.textToItems(
+			#	self.afefuc['project'],
+			#	unicode(
+			#			self.form.titleEdit.text().toUtf8(),
+			#			'utf-8'
+			#	),
+			#	(
+			#			self.item_original,
+			#			self.item
+			#	)
+			#)
 			return True
 
 		return False
@@ -129,18 +212,19 @@ class SampleTableModel(QtCore.QAbstractTableModel):
 			first = self.rowCount(QtCore.QModelIndex())
 			last = self.rowCount(QtCore.QModelIndex())
 		else:
-			first = position 	#wstawianie wiersza pomiedzy inne wiersze
-			last = position
+			first = position
+			last = first
 
 		self.beginInsertRows(QtCore.QModelIndex(), first, last)
-#TODO item.scenario.items (lista)
+		
 		if position is None: #dodanie nowego wezla do modelu
 			#self.item.scenario.items.append(item)
-			self.item.path.append(item)
+
+			self.item.path.append(model.TestStep(None, item))
 			print 'position is None'
 		else: #dodanie nowego wezla w srodek modelu
 			#self.item.scenario.items.insert(position, item)
-			self.item.path.insert(position, item)
+			self.item.path.insert(position, model.TestStep(None, item))
 			print 'position is not None'
 
 		self.endInsertRows()
@@ -175,6 +259,8 @@ class SampleTableModel(QtCore.QAbstractTableModel):
 
 	def movePositionDown(self, position):
 		self.movePositionUp(position + 1)
+
+
 
 class Test(QtGui.QWidget):
 	def __init__( self, labelText, parent=None):
@@ -323,15 +409,16 @@ class TextEdit(QtGui.QTextEdit):
 		self._completer.complete(cr)
 
 class TestCaseFormWrapper():
-	def __init__(self, parent, afefuc, item=None):
+	def __init__(self, parent, afefuc, item=None): #item[1] to testCase object
 		self.parent = parent
 
 		self.dialog = QtGui.QDialog()
 		self.form = Ui_TestCaseForm()
-#self.form.handler.add(buttonAddingEditTexts)
-#self.form.handler.add(ourTextEdit)
+		#self.form.handler.add(buttonAddingEditTexts)
+		#self.form.handler.add(ourTextEdit)
 		self.afefuc = afefuc
 		self.item = item[1]
+
 		self.item_original = item[0]
 		#self.foo = self.form.boxButton
 		#self.model = SampleTableModel(self.form.stepView, self.afefuc, self.item)
@@ -343,9 +430,17 @@ class TestCaseFormWrapper():
 		self.form.setupUi(self.dialog)
 
 		self.load()
+		#self.form.ucChoice.addItems(["en", "pl"])
+		self.form.ucChoice.addItems(["no use case reference"])
+		#self.form.ucChoice.addItems(self.afefuc['project'].ucspec.usecases)
+		for usecase in self.afefuc['project'].ucspec.usecases:
+			#print usecase.title[0].toText() + usecase.title[2].toText()
+			#print usecase.identifier
+			print converter.itemsToText(usecase.title)
+			self.form.ucChoice.addItem(usecase.identifier, usecase)
 
 		#self.addButton = QtGui.QPushButton('button to add other widgets')
-#       self.form.widget.addWidget(self.addButton2)
+		#self.form.widget.addWidget(self.addButton2)
 		#self.form.insertStep.clicked.connect(self.addWidget)
 
 		# scroll area widget contents - layout
@@ -368,23 +463,32 @@ class TestCaseFormWrapper():
 		#self.form.widget.addWidget(self.scrollArea)
 
 		# central widget
-#       self.centralWidget = QtGui.QWidget()
-#       self.centralWidget.setLayout(self.mainLayout)
+		#self.centralWidget = QtGui.QWidget()
+		#self.centralWidget.setLayout(self.mainLayout)
 
 		# set central widget
-# 		self.setCentralWidget(self.centralWidget)
+		#self.setCentralWidget(self.centralWidget)
 
 		QtCore.QObject.connect(self.form.boxButton, QtCore.SIGNAL(_fromUtf8("accepted()")), self.clickedOKButton)
 		QtCore.QObject.connect(self.form.boxButton, QtCore.SIGNAL(_fromUtf8("rejected()")), self.clickedCancelButton)
 		QtCore.QObject.connect(self.form.insertStepButton, QtCore.SIGNAL(_fromUtf8("clicked()")), self.clickedInsertStepButton)
+		QtCore.QObject.connect(self.form.ucChoice, QtCore.SIGNAL(_fromUtf8("currentIndexChanged(int)")), self.choseUseCase)
 
 		self.modelTC = SampleTableModel(self.form.stepView, self.afefuc, (self.item_original, self.item))
 		self.form.stepView.setModel(self.modelTC)
-		self.form.stepView.setItemDelegateForColumn(1, CompleteTextEditDelegate(self.form.stepView, self.item))
+
+		self.cted = CompleteTextEditDelegate(self.form.stepView, self.item)
+		self.cbd = ComboBoxDelegate(self.form.stepView, self.item)
+
+		#self.form.stepView.setItemDelegateForColumn(1, CompleteTextEditDelegate(self.form.stepView, self.item))
+		self.form.stepView.setItemDelegateForColumn(1, self.cted) #zeby garbage collector nie spowodowal segfault
+		self.form.stepView.setItemDelegateForColumn(2, self.cbd)
 		
 		self.form.stepView.horizontalHeader().setResizeMode(0, QtGui.QHeaderView.ResizeToContents)
 		self.form.stepView.horizontalHeader().setResizeMode(1, QtGui.QHeaderView.Stretch)
-		self.form.stepView.setColumnWidth(2, 20)
+		self.form.stepView.horizontalHeader().setResizeMode(2, QtGui.QHeaderView.Stretch)
+		self.form.stepView.setColumnWidth(1, 2)
+		#self.form.stepView.setColumnWidth(3,15)
 		#self.form.stepView.horizontalHeader().hide()
 		#self.form.stepView.verticalHeader().hide()
 		#self.form.stepView.setEditTriggers(QtGui.QAbstractItemView.CurrentChanged)
@@ -393,10 +497,28 @@ class TestCaseFormWrapper():
 
 
 		self.dialog.exec_()
+	def choseUseCase(self, arg):
+		uc = self.form.ucChoice.itemData(arg).toPyObject()
+		self.item.uc_ref = uc
+
+		#if uc is not None: 
+		#	print uc.identifier  #referencja na usecase
+		
+		#	for item in uc.scenario.items:
+		#		print item
+		#algorithm = Algorithm()
+		#result = algorithm.execute(uc)
+
+		#for test in result.tests:
+		#	self.item = test
+		#	for step in test.path:
+		#		print converter.itemsToText(step.ucstep.items)
+		
 
 	def clickedInsertStepButton(self):
-		step = model.Step()
-		step.setParent(self.item)
+		#step = model.Step()
+		#step.setParent(self.item)
+		step = ''
 
 		if len(self.form.stepView.selectedIndexes()) != 0:
 			position = self.form.stepView.selectedIndexes()[0].row()
