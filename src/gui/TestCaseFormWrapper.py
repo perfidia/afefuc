@@ -53,7 +53,7 @@ class CompleteTextEditDelegate(QtGui.QItemDelegate):
 	def setEditorData(self, editor, index):	#transfers data from internal model to editor
 		#editor.setHtml(self.item.path[index.row()])
 		step = self.item.path[index.row()].tcstep
-		print step
+		#print step
 		if step is not None:
 			editor.setHtml(step)
 		else:
@@ -98,7 +98,7 @@ class ComboBoxDelegate(QtGui.QItemDelegate):
 		else :
 			for step in self.item.uc_ref.scenario.items:
 				editor.addItem(converter.itemsToText(step.items), step) #QtCore.QVariant
-			print len(self.item.path)
+			#print len(self.item.path)
 
 		return editor
 
@@ -108,9 +108,9 @@ class ComboBoxDelegate(QtGui.QItemDelegate):
 		idx = -1 
 
 		if step is not None:
-			print 'step', step #converter.itemsToText(step.items)
+			#print 'step', step #converter.itemsToText(step.items)
 			idx = editor.findData((step)) #TODO nie znajduje step mimo ze obiekty maja takie same adresy w pamieci
-			print 'idx', idx
+			#print 'idx', idx
 
 		if index != -1:
 			editor.setCurrentIndex(idx)
@@ -118,7 +118,7 @@ class ComboBoxDelegate(QtGui.QItemDelegate):
 	def setModelData(self, editor, model, index):
 		idx = editor.currentIndex()
 		value = editor.itemData(idx).toPyObject()
-		print value
+		#print value
 		self.item.path[index.row()].ucstep = value 
 		
 		#print converter.itemsToText(self.item.path[idx].ucstep.items)
@@ -135,7 +135,7 @@ class SampleTableModel(QtCore.QAbstractTableModel):
 		self.parent = parent
 		self.item = items[1]
 		self.item_original = items[0]
-		print 'dlugosc listy krokow', len(self.item.path)
+		#print 'dlugosc listy krokow', len(self.item.path)
 		self.headerdata = ["No", "Description", "Ref UC step"]
 
 	def headerData(self, column, orientation, role):
@@ -178,8 +178,8 @@ class SampleTableModel(QtCore.QAbstractTableModel):
 	def setData(self, index, value, role):
 		if index.isValid() and role == QtCore.Qt.EditRole:
 			value = unicode(value.toString().toUtf8(), 'utf-8')
-			print 'setData'
-			print value
+			#print 'setData'
+			#print value
 			#kod wstawiajacy czesc elementu do naszego modelu
 			#if index.column() == 0:
 			#	self.item.attributes[index.row()].name = value
@@ -222,18 +222,17 @@ class SampleTableModel(QtCore.QAbstractTableModel):
 			#self.item.scenario.items.append(item)
 
 			self.item.path.append(model.TestStep(None, item))
-			print 'position is None'
+			#print 'position is None'
 		else: #dodanie nowego wezla w srodek modelu
 			#self.item.scenario.items.insert(position, item)
 			self.item.path.insert(position, model.TestStep(None, item))
-			print 'position is not None'
+			#print 'position is not None'
 
 		self.endInsertRows()
 
 	def removeItem(self, position):
 		self.beginRemoveRows(QtCore.QModelIndex(), position, position)
-		#TODO usuwanie danych z modelu
-		#del(self.item.scenario.items[position])
+		del(self.item.path[position])
 		self.endRemoveRows()
 		return True
 
@@ -444,13 +443,13 @@ class TestCaseFormWrapper():
 		for usecase in self.afefuc['project'].ucspec.usecases:
 			#print usecase.title[0].toText() + usecase.title[2].toText()
 			#print usecase.identifier
-			print usecase.identifier
+			#print usecase.identifier
 			self.form.ucChoice.addItem(usecase.identifier, usecase)
 
 		if self.item_original is not None: self.load()
 
 		testIndex = self.form.ucChoice.findText('BC_001')
-		print 'testIndex', testIndex
+		#print 'testIndex', testIndex
 		#self.addButton = QtGui.QPushButton('button to add other widgets')
 		#self.form.widget.addWidget(self.addButton2)
 		#self.form.insertStep.clicked.connect(self.addWidget)
@@ -487,6 +486,10 @@ class TestCaseFormWrapper():
 		QtCore.QObject.connect(self.form.ucChoice, QtCore.SIGNAL(_fromUtf8("currentIndexChanged(int)")), self.choseUseCase)
 		QtCore.QObject.connect(self.form.idEdit, QtCore.SIGNAL(_fromUtf8("editingFinished()")), self.editingFinishedIdEdit)
 		QtCore.QObject.connect(self.form.titleEdit, QtCore.SIGNAL(_fromUtf8("editingFinished()")), self.editingFinishedTitleEdit)
+		QtCore.QObject.connect(self.form.deleteButton, QtCore.SIGNAL(_fromUtf8("clicked()")), self.clickedDeleteButton)
+		QtCore.QObject.connect(self.form.moveUpButton, QtCore.SIGNAL(_fromUtf8("clicked()")), self.clickedMoveUpButton)
+		QtCore.QObject.connect(self.form.moveDownButton, QtCore.SIGNAL(_fromUtf8("clicked()")), self.clickedMoveDownButton)
+		
 		self.modelTC = SampleTableModel(self.form.stepView, self.afefuc, (self.item_original, self.item))
 		self.form.stepView.setModel(self.modelTC)
 
@@ -548,6 +551,21 @@ class TestCaseFormWrapper():
 
 	#def addWidget(self):
 	#	self.scrollLayout.addRow(Test('testowy tekst'))
+
+	def clickedDeleteButton(self):
+		position = self.form.stepView.selectedIndexes()[0].row()
+		self.modelTC.removeItem(position)
+		
+
+	def clickedMoveUpButton(self):
+		position = self.form.stepView.selectedIndexes()[0].row()
+		self.modelTC.movePositionUp(position)
+
+	def clickedMoveDownButton(self):
+		position = self.form.stepView.selectedIndexes()[0].row()
+
+		self.modelTC.movePositionDown(position)
+
 
 	def getTextAttribute(self, node):
 		if node.attributes:
