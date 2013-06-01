@@ -24,9 +24,9 @@ class TestCasesTableModel(QtCore.QAbstractTableModel):
 		self.parent = parent
 
 	def rowCount(self, index):
-#       return len(self.afefuc['project'].ucspec.testcases)
+		return len(self.afefuc['project'].testcases.tests)
 
-		return 0
+		#return 0
 
 	def columnCount(self, parent):
 		return 2
@@ -38,12 +38,18 @@ class TestCasesTableModel(QtCore.QAbstractTableModel):
 	def data(self, index, role):
 		column = index.column()
 
-#       if column == 0 and role == QtCore.Qt.DisplayRole:
-#           return QtCore.QVariant(self.afefuc['project'].ucspec.usecases[index.row()].identifier)
-#       elif column == 1 and role == QtCore.Qt.DisplayRole:
-#           return QtCore.QVariant(converter.itemsToText(self.afefuc['project'].ucspec.usecases[index.row()].title))
+		if column == 0 and role == QtCore.Qt.DisplayRole:
+			return QtCore.QVariant(self.afefuc['project'].testcases.tests[index.row()].identifier)
+		elif column == 1 and role == QtCore.Qt.DisplayRole:
+			return QtCore.QVariant(self.afefuc['project'].testcases.tests[index.row()].title)
 
-		return QtCore.QVariant()
+		#if column == 0 and role == QtCore.Qt.DisplayRole:
+        #	return QtCore.QVariant(self.afefuc['project'].testcases[index.row()].identifier)
+    	#elif column == 1 and role == QtCore.Qt.DisplayRole:
+        #	return QtCore.QVariant(converter.itemsToText(self.afefuc['project'].testcases[index.row()].title))
+
+    	
+		#return QtCore.QVariant()
 
 	def parent(self, index):
 		return QtCore.QModelIndex()
@@ -57,14 +63,15 @@ class TestCasesTableModel(QtCore.QAbstractTableModel):
 
 		return True;
 
-	def insertItem(self, usecase):
+	def insertItem(self, testcase):
 		self.beginInsertRows(
 				QtCore.QModelIndex(),
 				self.rowCount(QtCore.QModelIndex()),
 				self.rowCount(QtCore.QModelIndex())
 		)
 
-#       self.afefuc['project'].ucspec.usecases.append(usecase[1])
+		#self.afefuc['project'].ucspec.usecases.append(usecase[1])
+		self.afefuc['project'].testcases.tests.append(testcase[1])
 
 		self.endInsertRows()
 
@@ -150,7 +157,9 @@ class TestCasesTabWrapper():
 	def clickedEditButton(self):
 		if len(self.tab.itemsView.selectedIndexes()) == 2:
 			position = self.tab.itemsView.selectedIndexes()[0].row()
+			#original = self.afefuc['project'].testcases.tests[position]
 
+			#tc = clone.
 #           original = self.afefuc['project'].ucspec.test[position]
 
 #           uc = clone.test_case(original, self.afefuc['project'])

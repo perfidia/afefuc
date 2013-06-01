@@ -55,6 +55,8 @@ class Project(object):
 		self.business_objects = []				# BusinessObject
 		self.business_rules = []				# BusinessRule
 		self.ucspec = UCSpec()                  # UCSpec
+		self.testcases = TestCases()
+			#TODO TCSpec()
 		self.glossary = []						# Term{0..}
 
 	def _getItemByName(self, item, storage, name, replace):
@@ -411,6 +413,9 @@ class TestCase(object):
 	def __init__(self, path = None):	#path - lista krokow z UC
 		#self.path = path						# Step{0..}
 		#if path is None : self.path = []
+
+		self.title = None						# Item{0..}
+		self.identifier = None					# str
 
 		self.path = []
 		if path is not None:

@@ -473,7 +473,8 @@ class TestCaseFormWrapper():
 		QtCore.QObject.connect(self.form.boxButton, QtCore.SIGNAL(_fromUtf8("rejected()")), self.clickedCancelButton)
 		QtCore.QObject.connect(self.form.insertStepButton, QtCore.SIGNAL(_fromUtf8("clicked()")), self.clickedInsertStepButton)
 		QtCore.QObject.connect(self.form.ucChoice, QtCore.SIGNAL(_fromUtf8("currentIndexChanged(int)")), self.choseUseCase)
-
+		QtCore.QObject.connect(self.form.idEdit, QtCore.SIGNAL(_fromUtf8("editingFinished()")), self.editingFinishedIdEdit)
+		QtCore.QObject.connect(self.form.titleEdit, QtCore.SIGNAL(_fromUtf8("editingFinished()")), self.editingFinishedTitleEdit)
 		self.modelTC = SampleTableModel(self.form.stepView, self.afefuc, (self.item_original, self.item))
 		self.form.stepView.setModel(self.modelTC)
 
@@ -497,6 +498,12 @@ class TestCaseFormWrapper():
 
 
 		self.dialog.exec_()
+	def editingFinishedIdEdit(self):
+		self.item.identifier = self.form.idEdit.text()		  
+
+	def editingFinishedTitleEdit(self):
+		self.item.title = self.form.titleEdit.text()
+
 	def choseUseCase(self, arg):
 		uc = self.form.ucChoice.itemData(arg).toPyObject()
 		self.item.uc_ref = uc
@@ -612,4 +619,31 @@ class TestCaseFormWrapper():
 		self.dialog.close()
 
 	def clickedOKButton(self):
+
+		#index = self.form.priorityComboBox.currentIndex()
+		#priority = self.form.priorityComboBox.itemData(index).toPyObject()
+		#self.item.priority = priority.get_ref()
+
+		#index = self.form.goalLevelComboBox.currentIndex()
+		#priority = self.form.goalLevelComboBox.itemData(index).toPyObject()
+		#self.item.goal_level = priority.get_ref()
+
+		#self.item.remarks = converter.textToItems(
+		#		self.afefuc['project'],
+		#		unicode(self.form.remarksTextEdit.toPlainText().toUtf8(), "utf-8")
+		#)
+		#self.item.summary = converter.textToItems(
+		#		self.afefuc['project'],
+		#		unicode(self.form.summaryTextEdit.toPlainText().toUtf8(), "utf-8")
+		#)
+		#self.item.identifier = 'id'
+		#self.item.title = 'title'
+
+		if self.item_original:
+			self.parent.model.updateItem((self.item_original, self.item))
+		else:
+			self.parent.model.insertItem((self.item_original, self.item))
+
+		
+
 		self.dialog.close()
