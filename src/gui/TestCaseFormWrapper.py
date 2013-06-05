@@ -378,7 +378,7 @@ class TextEdit(QtGui.QTextEdit):
 		#tc.select(QtGui.QTextCursor.LineUnderCursor)
 		#tc.removeSelectedText()
 		#tc.insertHtml(output[2])
-		#self.formatInput()
+		self.formatInput()
 		#return
 
 	def keyPressEvent(self, e):
@@ -392,6 +392,7 @@ class TextEdit(QtGui.QTextEdit):
 		if self._completer is None or not isShortcut:
 			super(TextEdit, self).keyPressEvent(e)
 
+		self.formatInput()
 		output = self._highlighter.getNext(self.lineUnderCursor())
 		words = []
 		for element in output[1]:
