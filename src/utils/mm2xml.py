@@ -109,31 +109,32 @@ class element(object):
 				output += '</' + self.elementClass + '>'
 		return output
 
-if len(argv) == 3:
-	inputFileName = argv[1]
-	outputFileName = argv[2]
-else:
-	raise Exception('Wrong arguments. Try: ./converter.py [input file] [output file]')
+if __name__ == "__main__":
+	if len(argv) == 3:
+		inputFileName = argv[1]
+		outputFileName = argv[2]
+	else:
+		raise Exception('Wrong arguments. Try: ./converter.py [input file] [output file]')
 
-if path.isfile(inputFileName):
-	DOMTree = minidom.parse(inputFileName)
-	cNodes = DOMTree.childNodes[0].childNodes
+	if path.isfile(inputFileName):
+		DOMTree = minidom.parse(inputFileName)
+		cNodes = DOMTree.childNodes[0].childNodes
 
-	xml = None;
+		xml = None;
 
-	for el in cNodes:
-		if el.nodeType == 1 and el.tagName == 'node' and el.getAttribute('TEXT') == '[start]':
-			xml = element(el)
-	if xml == None:
-		raise Exception('No START element found in input file.')
+		for el in cNodes:
+			if el.nodeType == 1 and el.tagName == 'node' and el.getAttribute('TEXT') == '[start]':
+				xml = element(el)
+		if xml == None:
+			raise Exception('No START element found in input file.')
 
-	output = xml.toXML()
+		output = xml.toXML()
 
-	try:
-		outputFile = open(outputFileName, 'w')
-		outputFile.write(output)
-		outputFile.close()
-	except IOError as e:
-		raise Exception('I/O error({0}): {1}'.format(e.errno, e.strerror))
-else:
-	raise Exception('Input file doesn\'t exist')
+		try:
+			outputFile = open(outputFileName, 'w')
+			outputFile.write(output)
+			outputFile.close()
+		except IOError as e:
+			raise Exception('I/O error({0}): {1}'.format(e.errno, e.strerror))
+	else:
+		raise Exception('Input file doesn\'t exist')
