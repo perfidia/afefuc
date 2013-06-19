@@ -25,6 +25,11 @@ def _is_empty(text):
 
 	return True
 
+def _is_identifier(text):
+	# pattern [A-Z]+[A-Z_]*[0-9]*
+
+	return True
+
 def priority(project, item):
 	errors = {}
 
