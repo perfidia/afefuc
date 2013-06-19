@@ -22,3 +22,6 @@ dist: clean generate doc
 		cp -r doc/_build/html dist
 		mv dist/html dist/doc
 		cp resources/call/afefuc.sh dist
+		cp resources/call/afefuc.bat dist
+		-rm dist.zip
+		zip dist.zip -r dist/*
