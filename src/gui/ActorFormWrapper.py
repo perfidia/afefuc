@@ -9,6 +9,7 @@ from PyQt4 import QtCore, QtGui
 from generated.ui.ActorForm import Ui_ActorForm
 from format import model
 from utils import converter
+from utils import validation
 
 try:
 		_fromUtf8 = QtCore.QString.fromUtf8
@@ -86,6 +87,16 @@ class ActorFormWrapper():
 
 		index = self.form.communicationComboBox.currentIndex()
 		self.item.communication = unicode(self.form.communicationComboBox.itemData(index).toPyObject().toUtf8(), "utf-8")
+
+		# validate
+
+		errors = validation.actor(self.afefuc['project'], self.item)
+
+		if errors:
+			validation._show(self.dialog, errors)
+			return
+
+		# save
 
 		if self.item_orginal:
 			self.parent.model.updateItem((self.item_orginal, self.item))
