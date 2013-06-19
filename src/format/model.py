@@ -430,8 +430,8 @@ class TestCase(object):
 
 class TestStep(object):
 	def __init__(self, ucstep=None, tcstep=None):
-		self.ucstep = ucstep
-		self.tcstep = tcstep
+		self.ucstep = ucstep 	# Step
+		self.tcstep = tcstep	# str
 
 
 ##############
