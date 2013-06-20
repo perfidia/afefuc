@@ -129,6 +129,10 @@ class MainWindowWrapper(QtGui.QMainWindow):
 			self.mainWindow.tabWidget.show()
 
 	def clickedSave(self, saveAs = False):
+		self.afefuc['project'].name         = unicode(self.propertiesTab.tab.projectNameEdit.text().toUtf8(), "utf-8")
+		self.afefuc['project'].version      = unicode(self.propertiesTab.tab.versionEdit.text().toUtf8(), "utf-8")
+		self.afefuc['project'].abbreviation = unicode(self.propertiesTab.tab.abbreviationEdit.text().toUtf8(), "utf-8")
+
 		if self.afefuc['project'] and (not self.filename or saveAs == True):
 			self.filename = QtGui.QFileDialog.getSaveFileName(self, "Save as", "", "AFEFUC (*.auc)")
 
