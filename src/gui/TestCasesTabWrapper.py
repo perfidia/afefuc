@@ -5,12 +5,14 @@ Created on Apr 25, 2013
 '''
 
 from PyQt4 import QtCore, QtGui
-from generated.ui.ItemsTab import Ui_ItemsTab
+from generated.ui.ItemsTabGen import Ui_ItemsTabGen
 from gui.TestCaseFormWrapper import TestCaseFormWrapper
+from gui.SelectUseCaseFormWrapper import SelectUseCaseFormWrapper
 
 from format import model
 from utils import converter
 from utils import clone
+import re
 
 try:
 		_fromUtf8 = QtCore.QString.fromUtf8
@@ -63,15 +65,20 @@ class TestCasesTableModel(QtCore.QAbstractTableModel):
 
 		return True;
 
-	def insertItem(self, testcase):
+	def insertItem(self, testcase, position = None):
 		self.beginInsertRows(
 				QtCore.QModelIndex(),
 				self.rowCount(QtCore.QModelIndex()),
 				self.rowCount(QtCore.QModelIndex())
 		)
-
+		
+		if position is None:
+			self.afefuc['project'].testcases.tests.append(testcase[1])
+		else:
+			self.afefuc['project'].testcases.tests.insert(position, testcase[1])
+			
 		#self.afefuc['project'].ucspec.usecases.append(usecase[1])
-		self.afefuc['project'].testcases.tests.append(testcase[1])
+		#self.afefuc['project'].testcases.tests.append(testcase[1])
 		self.endInsertRows()
 
 	def updateItem(self, testcase): #testcase = (original,new)
@@ -127,7 +134,8 @@ class TestCasesTabWrapper():
 		self.parent = parent
 
 		self.can = QtGui.QWidget(self.parent)
-		self.tab = Ui_ItemsTab()
+		self.tab = Ui_ItemsTabGen()
+		self.numRegEx = re.compile(r'(.*\()(\d+)(\))$')
 
 		self.afefuc = afefuc
 
@@ -143,7 +151,9 @@ class TestCasesTabWrapper():
 		self.tab.itemsView.setSelectionBehavior(QtGui.QAbstractItemView.SelectRows)
 		self.tab.itemsView.setSelectionMode(QtGui.QAbstractItemView.SingleSelection)
 
+		QtCore.QObject.connect(self.tab.generateButton, QtCore.SIGNAL(_fromUtf8("clicked()")), self.clickedGenerateButton)
 		QtCore.QObject.connect(self.tab.addButton, QtCore.SIGNAL(_fromUtf8("clicked()")), self.clickedAddButton)
+		QtCore.QObject.connect(self.tab.cloneButton, QtCore.SIGNAL(_fromUtf8("clicked()")), self.clickedCloneButton)
 		QtCore.QObject.connect(self.tab.deleteButton, QtCore.SIGNAL(_fromUtf8("clicked()")), self.clickedDeleteButton)
 		QtCore.QObject.connect(self.tab.editButton, QtCore.SIGNAL(_fromUtf8("clicked()")), self.clickedEditButton)
 		QtCore.QObject.connect(self.tab.moveUpButton, QtCore.SIGNAL(_fromUtf8("clicked()")), self.clickedMoveUpButton)
@@ -153,18 +163,63 @@ class TestCasesTabWrapper():
 
 	def load(self):
 		self.model.reset()
+		
+	def clickedGenerateButton(self):
+		form = SelectUseCaseFormWrapper(self, self.afefuc)
+		form.show()
 
 	def clickedAddButton(self):
 		tc = model.TestCase()
 #       uc.setParent(self.afefuc['project'])
-
 		TestCaseFormWrapper(self, self.afefuc, (None, tc)).show()
 		pass
+	
+	def clickedCloneButton(self):
+		if len(self.tab.itemsView.selectedIndexes()) == 2:
+			position = self.tab.itemsView.selectedIndexes()[0].row()
+			original = self.afefuc['project'].testcases.tests[position]
+			tc = clone.testcase(original, self.afefuc['project'])
+			
+			matchTitle = self.numRegEx.match(tc.title)
+			if matchTitle:
+				n = int(matchTitle.group(2))
+				n += 1
+			else:
+				n = 2
+				tc.title = tc.title + ' (2)'
+				matchTitle = self.numRegEx.match(tc.title)
+				
+			matchIdentifier = self.numRegEx.match(tc.identifier)
+			if matchIdentifier:
+				m = int(matchIdentifier.group(2))
+				m += 1
+			else:
+				m = 2
+				tc.identifier = tc.identifier + ' (2)'
+				matchIdentifier = self.numRegEx.match(tc.identifier)
+				
+			num = max(n, m)
+			
+			ok = False	
+			while ok is False:
+				ok = True
+				for test in self.afefuc['project'].testcases.tests:
+					newValue = r'\g<1>' + str(num) + r'\g<3>'
+					newTitle = self.numRegEx.sub(newValue, tc.title)
+					newIdentifier = self.numRegEx.sub(newValue, tc.identifier)
+					if test.title == newTitle or test.identifier == newIdentifier:
+						num += 1
+						ok = False
+						break
+			
+			tc.title = self.numRegEx.sub(r'\g<1>' + str(num) + r'\g<3>', tc.title)	
+			tc.identifier = self.numRegEx.sub(r'\g<1>' + str(num) + r'\g<3>', tc.identifier)
+					
+			self.model.insertItem((None,tc), position+1)
 
 	def clickedDeleteButton(self):
 		if len(self.tab.itemsView.selectedIndexes()) == 2:
 			position = self.tab.itemsView.selectedIndexes()[0].row()
-
 			self.model.removeItem(position)
 
 	def clickedEditButton(self):
