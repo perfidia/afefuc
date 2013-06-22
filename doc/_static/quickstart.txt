@@ -14,7 +14,7 @@ Flow
 	* actors (Tab: ``Actors``)
 #. Add use cases (Tab: ``Use Cases``)
 
-How to add n use case?
+How to add use case?
 ----------------------
 
 ::
@@ -35,9 +35,9 @@ How to add n use case?
 #. Provide main scenario and optional events in tab ``Scenario``
 	* Click ``Insert step`` to add new step
 	* Click column on the right of a number to start edit mode
-	* Type description of a step (the following tags are supported: ``@goto`` and ``bo``
-#. In order to add an event select step and click ``Add event`` button
-	* Provide name of an extension
+	* Type description of a step (the following tags are supported: ``@goto`` and ``@bo``)
+#. In order to add an event select step in ``scenario`` and click ``Add event`` button
+	* Provide name of an extension in ``events``
 	* Provide description of a step
 	* Use ``Properties`` button to select type of an extension (``Alternation``, ``Extension``, ``Exception``) and anchor (where an event may occure)
 #. Provide triggers/preconditions/postconditions in tab ``Conditions``
