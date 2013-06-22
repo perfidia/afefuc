@@ -9,9 +9,17 @@ from generated.ui.LineEditForm import Ui_LineEditForm
 from format import model
 
 try:
-		_fromUtf8 = QtCore.QString.fromUtf8
+	_fromUtf8 = QtCore.QString.fromUtf8
 except AttributeError:
-		_fromUtf8 = lambda s: s
+	_fromUtf8 = lambda s: s
+
+try:
+	_encoding = QtGui.QApplication.UnicodeUTF8
+	def _translate(context, text, disambig):
+		return QtGui.QApplication.translate(context, text, disambig, _encoding)
+except AttributeError:
+	def _translate(context, text, disambig):
+		return QtGui.QApplication.translate(context, text, disambig)
 
 class GoalLevelFormWrapper():
 	def __init__(self, parent, afefuc, item = None):
@@ -28,6 +36,7 @@ class GoalLevelFormWrapper():
 
 	def show(self):
 		self.form.setupUi(self.dialog)
+		self.dialog.setWindowTitle(_translate("GaolLevelForm", "Goal level", None))
 
 		self.load()
 
