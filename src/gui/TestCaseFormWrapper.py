@@ -97,6 +97,12 @@ class ComboBoxDelegate(QtGui.QItemDelegate):
 			editor.addItem('No reference to UC step')
 		else :
 			for step in self.item.uc_ref.scenario.items:
+
+				for element in step.items:
+					if isinstance(element, model.GoToCommand):
+						for step_goto in element.item.scenario.items:
+							editor.addItem('<' + converter.itemsToText(element.item.title) + '>' +  converter.itemsToText(step_goto.items), step_goto)
+
 				editor.addItem(converter.itemsToText(step.items), step) #QtCore.QVariant
 			#print len(self.item.path)
 
@@ -528,18 +534,18 @@ class TestCaseFormWrapper():
 		for step in self.item.path:
 			step.ucstep = None
 
-		#if uc is not None: 
-		#	print uc.identifier  #referencja na usecase
+		# if uc is not None: 
+		# 	print uc.identifier  #referencja na usecase
 		
-		#	for item in uc.scenario.items:
-		#		print item
-		#algorithm = Algorithm()
-		#result = algorithm.execute(uc)
+		# 	for item in uc.scenario.items:
+		# 		print item
+		# algorithm = Algorithm()
+		# result = algorithm.execute(uc)
 
-		#for test in result.tests:
-		#	self.item = test
-		#	for step in test.path:
-		#		print converter.itemsToText(step.ucstep.items)
+		# for test in result.tests:
+		# 	self.item = test
+		# 	for step in test.path:
+		# 		print converter.itemsToText(step.ucstep.items)
 		
 
 	def clickedInsertStepButton(self):
