@@ -490,7 +490,7 @@ class TestCaseFormWrapper():
 		QtCore.QObject.connect(self.form.deleteButton, QtCore.SIGNAL(_fromUtf8("clicked()")), self.clickedDeleteButton)
 		QtCore.QObject.connect(self.form.moveUpButton, QtCore.SIGNAL(_fromUtf8("clicked()")), self.clickedMoveUpButton)
 		QtCore.QObject.connect(self.form.moveDownButton, QtCore.SIGNAL(_fromUtf8("clicked()")), self.clickedMoveDownButton)
-		
+
 		self.modelTC = SampleTableModel(self.form.stepView, self.afefuc, (self.item_original, self.item))
 		self.form.stepView.setModel(self.modelTC)
 
@@ -523,6 +523,10 @@ class TestCaseFormWrapper():
 	def choseUseCase(self, arg):
 		uc = self.form.ucChoice.itemData(arg).toPyObject()
 		self.item.uc_ref = uc
+
+		# change of related UC => delete all references to steps in previous UC
+		for step in self.item.path:
+			step.ucstep = None
 
 		#if uc is not None: 
 		#	print uc.identifier  #referencja na usecase
