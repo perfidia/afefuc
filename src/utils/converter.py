@@ -159,8 +159,9 @@ def actorCommunicationToText(type):
 
 def businessObjectTypeToText(type):
 	return {
-		format.model.AttributeType.MAIN: 'Main',
-	}.get(type, "")
+		format.model.AttributeType.MAIN:          'Main',
+		format.model.AttributeType.SUPPLEMENTARY: 'Supplementary',
+	}.get(type, "N/A")
 
 def businessRuleTypeToText(type):
 	return {
