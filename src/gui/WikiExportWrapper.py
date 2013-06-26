@@ -24,7 +24,7 @@ class WikiExportWrapper():
 		self.form = Ui_WikiExport()
 		self.afefuc = afefuc
 
-		self.generator = Environment(loader=PackageLoader('format.writer.wiki', 'templates'))
+		self.generator = Environment(loader=PackageLoader('format.writer.wiki', 'templates'), trim_blocks=True)
 		self.generator.filters['itemsToText'] = converter.itemsToText
 		self.generator.filters['actorTypeToText'] = converter.actorTypeToText
 		self.generator.filters['actorCommunicationToText'] = converter.actorCommunicationToText
