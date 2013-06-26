@@ -20,7 +20,7 @@ def _items(items, source, target, project):
 			else:
 				retval.append(item.item.get_ref())
 		else:
-			print type(item)
+#			print type(item)
 			assert 2 == 3
 
 	return retval
@@ -114,7 +114,7 @@ def usecase_content(target, source, project):
 						if item.item.parent == source:
 							i, j = item.item.getPath()
 
-							print i, j
+#							print i, j
 
 							retval.append(format.model.GoToCommand(target.scenario.items[j]))
 						else:
@@ -123,7 +123,7 @@ def usecase_content(target, source, project):
 						if item.item.parent.parent.parent == source:
 							i, j, k, l = item.item.getPath()
 
-							print i, j, k, l
+#							print i, j, k, l
 
 							retval.append(
 									format.model.GoToCommand(
@@ -133,13 +133,13 @@ def usecase_content(target, source, project):
 						else:
 							assert 1 == 4
 					else:
-						print type(item.item.parent)
-						assert 7 ==1
+#						print type(item.item.parent)
+						assert 7 == 1
 				else:
-					print type(item.item)
+#					print type(item.item)
 					assert 7 == 2
 			else:
-				print type(item)
+#				print type(item)
 				assert 2 == 3
 
 		return retval
@@ -159,6 +159,8 @@ def usecase_content(target, source, project):
 		target.scenario.items[step_id].items = items(step_co.items, source, target, project)
 
 		for event_id, event_co in enumerate(step_co.events):
+#			print event_id
+
 			target.scenario.items[step_id].events[event_id].title =\
 					items(event_co.title, source, target, project)
 
@@ -209,6 +211,9 @@ def usecase(source, project):
 
 				step_cpy.events.append(event_cpy)
 
+			print 'a', len(step_org.events)
+			print 'b', len(step_cpy.events)
+
 			target.scenario.items.append(step_cpy)
 
 		target.refs = refs
@@ -237,8 +242,8 @@ def testcase(source, project):
 		step_cpy.tcstep = step_org.tcstep
 		target.path.append(step_cpy)
 
-
 	return target
+
 def test_case(source, project):
 	target = format.model.TestCase()
 

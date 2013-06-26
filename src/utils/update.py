@@ -45,7 +45,7 @@ def usecase(target, source):
 
 #	print source.scenario.items
 #	print target.scenario.items
-	print items
+#	print items
 
 
 	target.scenario.items = items
@@ -55,6 +55,6 @@ def usecase(target, source):
 
 	target.setParent()
 
-	print target.scenario.items
+#	print target.scenario.items
 
 	return target
