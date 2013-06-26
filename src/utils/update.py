@@ -29,32 +29,43 @@ def business_object(target, source):
 	return target
 
 def usecase(target, source):
-	refs = source.refs
-
-	items = []
-
+	def structure(target, source):
 	# reuse structure in order not to fix all references
+		refs = source.refs
 
-	for step in source.scenario.items:
-		if refs.has_key(step):
-			items.append(refs[step])
+		target.scenario.items = items = []
 
-			del refs[step]
-		else:
-			items.append(format.model.Step())
+		for step_id, step_co in enumerate(source.scenario.items):
+			if refs.has_key(step_co):
+				items.append(refs[step_co])
 
-#	print source.scenario.items
-#	print target.scenario.items
-#	print items
+				del refs[step_co]
+			else:
+				items.append(format.model.Step())
 
+			items[step_id].events = events = []
 
-	target.scenario.items = items
+			for event_id, event_co in enumerate(step_co.events):
+				if refs.has_key(event_co):
+					events.append(refs[event_co])
 
-	# copy content
-	clone.usecase_content(target, source, None)
+					del refs[event_co]
+				else:
+					events.append(format.model.Event())
+
+				items[step_id].events[event_id].scenario.items = ssteps = []
+
+				for sstep_id, sstep_co in enumerate(event_co.scenario.items):
+					if refs.has_key(sstep_co):
+						ssteps.append(refs[sstep_co])
+
+						del refs[sstep_co]
+					else:
+						ssteps.append(format.model.Step())
+
+	structure(target, source)                   # reuse structure
+	clone.usecase_content(target, source, None) # copy content
 
 	target.setParent()
-
-#	print target.scenario.items
 
 	return target

@@ -211,9 +211,6 @@ def usecase(source, project):
 
 				step_cpy.events.append(event_cpy)
 
-			print 'a', len(step_org.events)
-			print 'b', len(step_cpy.events)
-
 			target.scenario.items.append(step_cpy)
 
 		target.refs = refs
