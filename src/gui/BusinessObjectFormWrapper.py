@@ -25,17 +25,17 @@ class ComboBoxDelegate(QtGui.QItemDelegate):
 		self.typesOfAttribute[model.AttributeType.SUPPLEMENTARY]  = "Supplementary"
 
 	def paint(self, painter, option, index):
-
-
 		value = converter.businessObjectTypeToText(self.item.attributes[index.row()].type)
 
 		style = QtGui.QApplication.style()
 
 		opt = QtGui.QStyleOptionComboBox()
+
 		opt.currentText = value
 		opt.rect = option.rect
+		opt.state = QtGui.QStyle.State_Active | QtGui.QStyle.State_Enabled;
 
-		style.drawComplexControl(QtGui.QStyle.CC_ComboBox, opt, painter)
+		#style.drawComplexControl(QtGui.QStyle.CC_ComboBox, opt, painter)
 		style.drawControl(QtGui.QStyle.CE_ComboBoxLabel, opt, painter)
 
 	def createEditor(self, parent, option, index):
@@ -53,8 +53,6 @@ class ComboBoxDelegate(QtGui.QItemDelegate):
 	def setModelData(self, editor, model, index):
 		idx = editor.currentIndex()
 		value = editor.itemData(idx).toPyObject()
-		print value
-		#model.setData(index, QtCore.QVariant(value), QtCore.Qt.EditRole)
 		model.setData(index, QtCore.QVariant(value), QtCore.Qt.EditRole)
 
 	def updateEditorGeometry(self, editor, option, index):
@@ -89,7 +87,7 @@ class AttributesTableModel(QtCore.QAbstractTableModel):
 
 		if column == 0 and role in [QtCore.Qt.DisplayRole, QtCore.Qt.EditRole]:
 			return QtCore.QVariant(self.item.attributes[index.row()].name)
-		elif column == 1 and role == QtCore.Qt.DisplayRole:
+		elif column == 1 and role in [QtCore.Qt.DisplayRole, QtCore.Qt.EditRole]:
 			return QtCore.QVariant(self.item.attributes[index.row()].type)
 		elif column == 2 and role == QtCore.Qt.DisplayRole:
 			return QtCore.QVariant(converter.itemsToText(self.item.attributes[index.row()].description, edit = False))
@@ -113,7 +111,12 @@ class AttributesTableModel(QtCore.QAbstractTableModel):
 			if index.column() == 0:
 				self.item.attributes[index.row()].name = value
 			elif index.column() == 1:
-				self.item.attributes[index.row()].type = value
+				if value == model.AttributeType.SUPPLEMENTARY:
+					self.item.attributes[index.row()].type = model.AttributeType.SUPPLEMENTARY
+				elif value == model.AttributeType.MAIN:
+					self.item.attributes[index.row()].type = model.AttributeType.MAIN
+				else:
+					assert 1 == 2
 			elif index.column() == 2:
 				self.item.attributes[index.row()].description = converter.textToItems(self.afefuc['project'], value)
 
@@ -225,7 +228,10 @@ class BusinessObjectFormWrapper():
 		self.dialog.close()
 
 	def clickedAddButton(self):
-		self.model.insertItem(model.Attribute())
+		attribute = model.Attribute()
+		attribute.type = model.AttributeType.SUPPLEMENTARY
+
+		self.model.insertItem(attribute)
 
 	def clickedDeleteButton(self):
 		if len(self.form.attributesView.selectedIndexes()) == 1:
