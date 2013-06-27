@@ -182,6 +182,7 @@ class BusinessObjectFormWrapper():
 		self.form.nameEdit.setText(_fromUtf8(converter.itemsToText(self.item.name, edit = True)))
 		self.form.idEdit.setText(_fromUtf8(self.item.identifier))
 		self.form.descriptionEdit.setPlainText(_fromUtf8(converter.itemsToText(self.item.description, edit = True)))
+		self.form.stateDiagramEdit.setPlainText(_fromUtf8(self.item.state_diagram))
 
 	def show(self):
 		self.form.setupUi(self.dialog)
@@ -219,6 +220,7 @@ class BusinessObjectFormWrapper():
 				self.afefuc['project'],
 				unicode(self.form.descriptionEdit.toPlainText().toUtf8(), "utf-8")
 		)
+		self.item.state_diagram = unicode(self.form.stateDiagramEdit.toPlainText().toUtf8(), "utf-8")
 
 		if self.item_orginal:
 			self.parent.model.updateItem((self.item_orginal, self.item))

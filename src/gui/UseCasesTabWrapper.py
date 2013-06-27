@@ -159,9 +159,11 @@ class UseCasesTabWrapper():
 			position = self.tab.itemsView.selectedIndexes()[0].row()
 
 			self.model.movePositionUp(position)
+			self.tab.itemsView.selectRow(position - 1)
 
 	def clickedMoveDownButton(self):
 		if len(self.tab.itemsView.selectedIndexes()) == 2:
 			position = self.tab.itemsView.selectedIndexes()[0].row()
 
 			self.model.movePositionUp(position + 1)
+			self.tab.itemsView.selectRow(position + 1)

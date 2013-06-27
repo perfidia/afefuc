@@ -25,6 +25,7 @@ def business_object(target, source):
 	target.description = source.description
 	target.attributes = source.attributes
 	target.properties = source.properties
+	target.state_diagram = source.state_diagram
 
 	return target
 

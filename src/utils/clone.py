@@ -53,6 +53,7 @@ def business_object(source, project):
 
 	target.name = _items(source.name, source, target, project)
 	target.identifier = source.identifier
+	target.state_diagram = source.state_diagram
 	target.description = _items(source.description, source, target, project)
 	target.attributes = [attribute(a, project) for a in source.attributes]
 	target.properties = copy.deepcopy(source.properties)
