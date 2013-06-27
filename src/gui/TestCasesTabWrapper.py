@@ -205,7 +205,7 @@ class TestCasesTabWrapper():
 				ok = True
 				for test in self.afefuc['project'].testcases.tests:
 					newValue = r'\g<1>' + str(num) + r'\g<3>'
-					newTitle = self.numRegEx.sub(newValue, tc.title)
+					newTitle = self.numRegEx.sub(newValue,tc.title) 
 					newIdentifier = self.numRegEx.sub(newValue, tc.identifier)
 					if test.title == newTitle or test.identifier == newIdentifier:
 						num += 1

@@ -530,7 +530,7 @@ class TestCaseFormWrapper():
 		self.item.identifier = self.form.idEdit.text()		  
 
 	def editingFinishedTitleEdit(self):
-		self.item.title = self.form.titleEdit.text()
+		self.item.title = unicode(self.form.titleEdit.text().toUtf8(), 'utf-8') #unicode(.toUtf8(), 'utf-8')
 
 	def choseUseCase(self, arg):
 		uc = self.form.ucChoice.itemData(arg).toPyObject()
