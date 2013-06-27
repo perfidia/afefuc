@@ -50,7 +50,7 @@ class TestCasesTableModel(QtCore.QAbstractTableModel):
     	#elif column == 1 and role == QtCore.Qt.DisplayRole:
         #	return QtCore.QVariant(converter.itemsToText(self.afefuc['project'].testcases[index.row()].title))
 
-    	
+
 		#return QtCore.QVariant()
 
 	def parent(self, index):
@@ -71,12 +71,12 @@ class TestCasesTableModel(QtCore.QAbstractTableModel):
 				self.rowCount(QtCore.QModelIndex()),
 				self.rowCount(QtCore.QModelIndex())
 		)
-		
+
 		if position is None:
 			self.afefuc['project'].testcases.tests.append(testcase[1])
 		else:
 			self.afefuc['project'].testcases.tests.insert(position, testcase[1])
-			
+
 		#self.afefuc['project'].ucspec.usecases.append(usecase[1])
 		#self.afefuc['project'].testcases.tests.append(testcase[1])
 		self.endInsertRows()
@@ -163,7 +163,7 @@ class TestCasesTabWrapper():
 
 	def load(self):
 		self.model.reset()
-		
+
 	def clickedGenerateButton(self):
 		form = SelectUseCaseFormWrapper(self, self.afefuc)
 		form.show()
@@ -173,13 +173,13 @@ class TestCasesTabWrapper():
 #       uc.setParent(self.afefuc['project'])
 		TestCaseFormWrapper(self, self.afefuc, (None, tc)).show()
 		pass
-	
+
 	def clickedCloneButton(self):
 		if len(self.tab.itemsView.selectedIndexes()) == 2:
 			position = self.tab.itemsView.selectedIndexes()[0].row()
 			original = self.afefuc['project'].testcases.tests[position]
 			tc = clone.testcase(original, self.afefuc['project'])
-			
+
 			matchTitle = self.numRegEx.match(tc.title)
 			if matchTitle:
 				n = int(matchTitle.group(2))
@@ -188,7 +188,7 @@ class TestCasesTabWrapper():
 				n = 2
 				tc.title = tc.title + ' (2)'
 				matchTitle = self.numRegEx.match(tc.title)
-				
+
 			matchIdentifier = self.numRegEx.match(tc.identifier)
 			if matchIdentifier:
 				m = int(matchIdentifier.group(2))
@@ -197,10 +197,10 @@ class TestCasesTabWrapper():
 				m = 2
 				tc.identifier = tc.identifier + ' (2)'
 				matchIdentifier = self.numRegEx.match(tc.identifier)
-				
+
 			num = max(n, m)
-			
-			ok = False	
+
+			ok = False
 			while ok is False:
 				ok = True
 				for test in self.afefuc['project'].testcases.tests:
@@ -211,10 +211,10 @@ class TestCasesTabWrapper():
 						num += 1
 						ok = False
 						break
-			
-			tc.title = self.numRegEx.sub(r'\g<1>' + str(num) + r'\g<3>', tc.title)	
+
+			tc.title = self.numRegEx.sub(r'\g<1>' + str(num) + r'\g<3>', tc.title)
 			tc.identifier = self.numRegEx.sub(r'\g<1>' + str(num) + r'\g<3>', tc.identifier)
-					
+
 			self.model.insertItem((None,tc), position+1)
 
 	def clickedDeleteButton(self):
@@ -240,9 +240,11 @@ class TestCasesTabWrapper():
 			position = self.tab.itemsView.selectedIndexes()[0].row()
 
 			self.model.movePositionUp(position)
+			self.tab.itemsView.selectRow(position - 1)
 
 	def clickedMoveDownButton(self):
 		if len(self.tab.itemsView.selectedIndexes()) == 2:
 			position = self.tab.itemsView.selectedIndexes()[0].row()
 
 			self.model.movePositionUp(position + 1)
+			self.tab.itemsView.selectRow(position + 1)
