@@ -290,6 +290,20 @@ def read(filename = None):
 
 		return retval
 
+	def term(project, node):
+		retval = model.Term()
+
+		for n in node.getchildren():
+			if n.tag == 'name':
+				retval.name = n.text
+			elif n.tag == 'definition':
+				retval.definition = items(project, n)
+			else:
+				print n.tag
+				raise ValueError("Unsupported format file")
+
+		return retval
+
 	def ucspec(project, node):
 		retval = model.UCSpec()
 
@@ -332,6 +346,8 @@ def read(filename = None):
 				retval.business_rules = generic_list_iterator(retval, n, business_rule)
 			elif n.tag == 'ucspec':
 				retval.ucspec = ucspec(retval, n)
+			elif n.tag == 'glossary':
+				retval.glossary = generic_list_iterator(retval, n, term)
 			elif n.tag == 'testcases':
 				pass
 			else:

@@ -51,24 +51,24 @@ def Project_att_to_xml(self, parent = None):
 	language.text = self.language
 
 	actors = ET.SubElement(node, "actors")
-
 	for a in self.actors:
 		a.to_xml(actors)
 
 	business_objects = ET.SubElement(node, "business-objects")
-
 	for bo in self.business_objects:
 		bo.to_xml(business_objects)
 
 	business_rules = ET.SubElement(node, "business-rules")
-
 	for br in self.business_rules:
 		br.to_xml(business_rules)
 
 	self.ucspec.to_xml(node)
 
-	testcases = ET.SubElement(node, "testcases")
+	glossary = ET.SubElement(node, "glossary")
+	for t in self.glossary:
+		t.to_xml(glossary)
 
+	testcases = ET.SubElement(node, "testcases")
 	for u in self.ucspec.usecases:
 		if u.testcases:
 			u.testcases.to_xml(testcases, u)
@@ -364,6 +364,18 @@ def Condition_att_to_xml(self, parent):
 
 	return node
 
+def Term_att_to_xml(self, parent):
+	node = ET.SubElement(parent, "term")
+
+	name = ET.SubElement(node, "name")
+	name.text = self.name
+
+	definition = ET.SubElement(node, "definition")
+	for u in self.definition:
+		u.to_xml(definition)
+
+	return node
+
 def TestCases_att_to_xml(self, parent, usecase):
 	node = ET.SubElement(parent, 'usecase')
 	node.set("ref", str(id(usecase)))
@@ -406,6 +418,7 @@ attachments = {
 	orginal.Trigger:        Condition_att_to_xml,
 	orginal.PreCondition:   Condition_att_to_xml,
 	orginal.PostCondition:  Condition_att_to_xml,
+	orginal.Term:           Term_att_to_xml,
 	orginal.TestCases:      TestCases_att_to_xml,
 	orginal.TestCase:       TestCase_att_to_xml,
 }
