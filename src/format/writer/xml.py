@@ -305,12 +305,13 @@ def BusinesObject_att_to_xml(self, parent):
 	identifier.text = self.identifier
 
 	description = ET.SubElement(node, "description")
-
 	for u in self.description:
 		u.to_xml(description)
 
-	attributes = ET.SubElement(node, "attributes")
+	state_diagram = ET.SubElement(node, "state-diagram")
+	state_diagram.text = self.state_diagram
 
+	attributes = ET.SubElement(node, "attributes")
 	for u in self.attributes:
 		u.to_xml(attributes)
 

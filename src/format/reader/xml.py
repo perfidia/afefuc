@@ -161,6 +161,8 @@ def read(filename = None):
 				retval.description = items(project, n)
 			elif n.tag == 'attributes':
 				retval.attributes = generic_list_iterator(retval, n, attribute)
+			elif n.tag == 'state-diagram':
+				retval.state_diagram = n.text
 			elif n.tag == 'properties':
 				pass
 			else:
