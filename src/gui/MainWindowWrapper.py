@@ -55,7 +55,7 @@ class MainWindowWrapper(QtGui.QMainWindow):
 		self.mainWindow.actionClose.triggered.connect(self.clickedClose)
 		self.mainWindow.actionQuit.triggered.connect(self.clickedQuit)
 		self.mainWindow.actionDump.triggered.connect(self.clickedDump)
-		self.mainWindow.actionExport.triggered.connect(self.clickedExport)
+		self.mainWindow.actionWikiExport.triggered.connect(self.clickedExport)
 
 		self.propertiesTab = PropertiesTabWrapper(self, self.afefuc)
 		self.propertiesTab.show()
