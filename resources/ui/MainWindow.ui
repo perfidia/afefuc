@@ -33,7 +33,7 @@
      <x>0</x>
      <y>0</y>
      <width>872</width>
-     <height>29</height>
+     <height>25</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -45,6 +45,7 @@
       <string>Export</string>
      </property>
      <addaction name="actionWikiExport"/>
+     <addaction name="actionSeleniumExport"/>
     </widget>
     <addaction name="actionNew"/>
     <addaction name="actionOpen"/>
@@ -106,6 +107,11 @@
   <action name="actionWikiExport">
    <property name="text">
     <string>Wiki</string>
+   </property>
+  </action>
+  <action name="actionSeleniumExport">
+   <property name="text">
+    <string>Selenium</string>
    </property>
   </action>
  </widget>
