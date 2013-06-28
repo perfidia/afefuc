@@ -30,6 +30,11 @@ def _is_identifier(text):
 
 	return True
 
+def _is_name(text):
+	# pattern [A-Z]+[a-z0-9_]*\.  # do ustalenia
+
+	return True
+
 def priority(project, item):
 	errors = {}
 
@@ -101,10 +106,11 @@ def usecase(project, item):
 	# is unique
 
 	# all uc should end with @eouc
-	# all events shoud end with @eouc or @goto
+	# all events should end with @eouc or @goto
 	# references in uc should exist
 	# conditions should be non empty
-	# there should be at least one main actor
+	# there should be at least one main actor and one other
+	# steop in uc cannot be empty
 
 	return errors
 
