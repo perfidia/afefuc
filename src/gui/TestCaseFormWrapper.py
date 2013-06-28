@@ -86,8 +86,9 @@ class ComboBoxDelegate(QtGui.QItemDelegate):
 		opt = QtGui.QStyleOptionComboBox()
 		opt.currentText = value
 		opt.rect = option.rect
+		opt.state = QtGui.QStyle.State_Active | QtGui.QStyle.State_Enabled;
 
-		style.drawComplexControl(QtGui.QStyle.CC_ComboBox, opt, painter)
+		#style.drawComplexControl(QtGui.QStyle.CC_ComboBox, opt, painter)
 		style.drawControl(QtGui.QStyle.CE_ComboBoxLabel, opt, painter)
 
 	def createEditor(self, parent, option, index):
@@ -109,17 +110,22 @@ class ComboBoxDelegate(QtGui.QItemDelegate):
 		return editor
 
 	def setEditorData(self, editor, index):
-		#step = self.item.uc_ref.scenario.items[index.row()]
+		
 		step = self.item.path[index.row()].ucstep
 		idx = -1 
 
 		if step is not None:
-			#print 'step', step #converter.itemsToText(step.items)
-			idx = editor.findData((step)) #TODO nie znajduje step mimo ze obiekty maja takie same adresy w pamieci
-			#print 'idx', idx
+
+			if step.parent != self.item.uc_ref:
+				toFind = '<' + converter.itemsToText(step.parent.title) + '>' +  converter.itemsToText(step.items)
+			else:
+				toFind = converter.itemsToText(step.items)
+
+			idx = editor.findText(toFind)
 
 		if index != -1:
 			editor.setCurrentIndex(idx)
+
 
 	def setModelData(self, editor, model, index):
 		idx = editor.currentIndex()
@@ -524,7 +530,7 @@ class TestCaseFormWrapper():
 		self.item.identifier = self.form.idEdit.text()		  
 
 	def editingFinishedTitleEdit(self):
-		self.item.title = self.form.titleEdit.text()
+		self.item.title = unicode(self.form.titleEdit.text().toUtf8(), 'utf-8') #unicode(.toUtf8(), 'utf-8')
 
 	def choseUseCase(self, arg):
 		uc = self.form.ucChoice.itemData(arg).toPyObject()

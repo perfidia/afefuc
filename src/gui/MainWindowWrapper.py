@@ -56,6 +56,7 @@ class MainWindowWrapper(QtGui.QMainWindow):
 		self.mainWindow.actionQuit.triggered.connect(self.clickedQuit)
 		self.mainWindow.actionDump.triggered.connect(self.clickedDump)
 		self.mainWindow.actionWikiExport.triggered.connect(self.clickedExport)
+		self.mainWindow.actionSeleniumExport.triggered.connect(self.clickedExportSelenium)
 
 		self.propertiesTab = PropertiesTabWrapper(self, self.afefuc)
 		self.propertiesTab.show()
@@ -156,6 +157,9 @@ class MainWindowWrapper(QtGui.QMainWindow):
 	def clickedExport(self):
 		if self.afefuc['project']:
 			WikiExportWrapper(self, self.afefuc).show()
+
+	def clickedExportSelenium(self): 
+		print '*exporting tests to selenium*'
 
 	def clickedDump(self):
 		format.writer.xml.write("tmp.auc", self.afefuc['project'])

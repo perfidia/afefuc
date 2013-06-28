@@ -9,6 +9,7 @@ from generated.ui.SelectUseCaseForm import Ui_SelectUseCaseForm
 from format import model
 from testcases.paths.all_paths_algorithm import Algorithm
 from utils import clone
+from utils import converter
 
 try:
 		_fromUtf8 = QtCore.QString.fromUtf8
@@ -47,11 +48,12 @@ class SelectUseCaseFormWrapper():
 		if self.uc_ref is not None:
 			algorithm = Algorithm()
 			result = algorithm.execute(self.uc_ref)
-			for test in result.tests:
+			for i, test in enumerate(result.tests):
 				#tc = clone.testcase(test, self.afefuc['project'])
 				#tc = model.TestCase(test.path)
 				#print self.uc_ref.title.text
-				test.title = 'TC'					
-				test.identifier = "Id"					
+				test.uc_ref = self.uc_ref
+				test.title = converter.itemsToText(self.uc_ref.title) + ' - test #' + str(i)	
+				test.identifier = self.uc_ref.identifier + '_T' + str(i)					
 				self.parent.model.insertItem((None, test))
 		self.dialog.close()
