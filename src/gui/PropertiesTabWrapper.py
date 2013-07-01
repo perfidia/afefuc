@@ -33,3 +33,19 @@ class PropertiesTabWrapper():
 		self.parent.mainWindow.tabWidget.addTab(self.child, _fromUtf8("Properties"))
 
 		self.tab.languageComboBox.addItems(["en", "pl"])
+		QtCore.QObject.connect(self.tab.languageComboBox, QtCore.SIGNAL('currentIndexChanged(const QString&)'), self.onLanguageSelect)
+		QtCore.QObject.connect(self.tab.projectNameEdit, QtCore.SIGNAL('editingFinished()'), self.onProjectNameEdit)
+		QtCore.QObject.connect(self.tab.versionEdit, QtCore.SIGNAL('editingFinished()'), self.onVersionEdit)
+		QtCore.QObject.connect(self.tab.abbreviationEdit, QtCore.SIGNAL('editingFinished()'), self.onAbbreviationEdit)
+
+	def onLanguageSelect(self):
+		self.afefuc['project'].language = str(self.tab.languageComboBox.currentText()) 
+
+	def onProjectNameEdit(self):
+		self.afefuc['project'].name = str(self.tab.projectNameEdit.text()) 
+
+	def onVersionEdit(self):
+		self.afefuc['project'].version = str(self.tab.versionEdit.text())
+
+	def onAbbreviationEdit(self):
+		self.afefuc['project'].abbreviation = str(self.tab.abbreviationEdit.text()) 

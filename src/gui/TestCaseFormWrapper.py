@@ -1,3 +1,5 @@
+#-*- coding: utf-8 -*-
+
 import re
 import inspect
 
@@ -20,22 +22,26 @@ from testcases.paths.all_paths_algorithm import Algorithm
 try:
 	_fromUtf8 = QtCore.QString.fromUtf8
 except AttributeError:
-			 _fromUtf8 = lambda s: s
+	_fromUtf8 = lambda s: s
 
 #wstawic tabele
 #jako pole tabeli dac comboBox
 
 class CompleteTextEditDelegate(QtGui.QItemDelegate):
-	def __init__(self, parent, item): #item trzyma informacje o naszym modelu
+	def __init__(self, parent, afefuc, item): #item trzyma informacje o naszym modelu
 		QtGui.QItemDelegate.__init__(self, parent)
 		self.item = item
+		self.afefuc = afefuc
 
 
 	def createEditor(self, parent, option, index):
 		editor = TextEdit(parent)
 		self.completer = QtGui.QCompleter(self)
 
-		sb = highlighter('generated/testcases/en.xml')
+		if self.afefuc['project'].language == 'en':
+			sb = highlighter('generated/testcases/en.xml')
+		else:
+			sb = highlighter('generated/testcases/pl.xml')
 		editor.setHighlighter(sb)
 		output = sb.getNext('')
 		words = []
@@ -333,9 +339,10 @@ class TextEdit(QtGui.QTextEdit):
 		return tc.selectedText()
 
 	def lineUnderCursor(self):
-		tc = self.textCursor()
-		tc.select(QtGui.QTextCursor.LineUnderCursor)
-		return tc.selectedText()
+		#tc = self.textCursor()
+		#tc.select(QtGui.QTextCursor.LineUnderCursor)
+		#return tc.selectedText()
+		return self.toPlainText()
 
 	def insertCompletion(self, completion):
 		if self._completer.widget() is not self:
@@ -374,8 +381,10 @@ class TextEdit(QtGui.QTextEdit):
 
 		#self.setHtml('<font color=red>'+textInTheBox+'</font>')
 
-		myCursor.select(QtGui.QTextCursor.LineUnderCursor)
-		myCursor.removeSelectedText()
+		#myCursor.select(QtGui.QTextCursor.LineUnderCursor)
+		#myCursor.removeSelectedText()
+		
+		self.setPlainText('')
 		self.insertHtml(output[2])
 
 		myCursor.setPosition(oldCursor)
@@ -506,7 +515,7 @@ class TestCaseFormWrapper():
 		self.modelTC = SampleTableModel(self.form.stepView, self.afefuc, (self.item_original, self.item))
 		self.form.stepView.setModel(self.modelTC)
 
-		self.cted = CompleteTextEditDelegate(self.form.stepView, self.item)
+		self.cted = CompleteTextEditDelegate(self.form.stepView, self.afefuc, self.item)
 		self.cbd = ComboBoxDelegate(self.form.stepView, self.item)
 
 		#self.form.stepView.setItemDelegateForColumn(1, CompleteTextEditDelegate(self.form.stepView, self.item))

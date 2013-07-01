@@ -1,5 +1,5 @@
 #! /usr/bin/env python
-# -*- coding: utf-8 -*-
+#-*- coding: utf-8 -*-
 
 '''
 This script converts .mm files (current format for FreeMind) to XML format
@@ -27,6 +27,7 @@ main element -> [start]
 from os import path
 from sys import argv, exit
 from xml.dom import minidom
+import codecs
 
 class element(object):
 
@@ -131,7 +132,7 @@ if __name__ == "__main__":
 		output = xml.toXML()
 
 		try:
-			outputFile = open(outputFileName, 'w')
+			outputFile = codecs.open(outputFileName, 'w', 'utf-8')
 			outputFile.write(output)
 			outputFile.close()
 		except IOError as e:

@@ -1,9 +1,15 @@
 #! /usr/bin/env python
-# -*- coding: utf-8 -*-
+#-*- coding: utf-8 -*-
 
 from xml.dom import minidom
 from os import path
+from PyQt4 import QtCore
 import re
+
+try:
+	_fromUtf8 = QtCore.QString.fromUtf8
+except AttributeError:
+	_fromUtf8 = lambda s: s
 
 class element(object):
 
@@ -74,11 +80,11 @@ class highlighter(object):
 		return self.xml
 
 	def findWordAtBeginning(self, el, toCheck):
-		actor = '^[A-Z][a-z]+'
-		value = '^[\"].*'
-		url = '^[\"].*' #znaleźć lepszy sposób na walidację url'a
-		name = '^[\"].*'
-		number = '^[0-9]+'
+		actor = '^[A-Z][a-z]*$'
+		value = '^\".*'
+		url = '^\".*$'
+		name = '^\".*$'
+		number = '^[0-9]+$'
 
 		if len(toCheck.strip(' ')) == 0:
 			return False
@@ -94,28 +100,29 @@ class highlighter(object):
 			return re.compile(r'^({0}).+'.format(toCheck), flags=re.IGNORECASE).search(el.getValue())
 
 	def compareWords(self, el, toCheck):
-		actor = '^[A-Z][a-z]+'
-		value = '^[\"].*[\"]$'
-		url = '^[\"].*[\"]$' #znaleźć lepszy sposób na walidację url'a
-		name = '^[\"].*[\"]$'
-		number = '^[0-9]+'
+		actor = '^[A-Z][a-z]+$'
+		value = '^\".+\"$'
+		url = '^\".+\"$'
+		name = '^\".*\"$'
+		number = '^[0-9]+$'
 
 		if el.getValue() == toCheck:
 			return True
-		elif el.getValue() == '[actor]' and re.match(actor, toCheck):  
+		elif el.getElementClass() == 'actor' and re.match(actor, toCheck):  
 			return True
-		elif el.getValue() == '[value]' and re.match(value, toCheck):  
+		elif el.getElementClass() == 'value' and re.match(value, toCheck):  
 			return True
-		elif el.getValue() == '[url]' and re.match(url, toCheck):  
+		elif el.getElementClass() == 'url' and re.match(url, toCheck):  
 			return True
-		elif el.getValue() == '[name]' and re.match(name, toCheck): 
+		elif el.getElementClass() == 'name' and re.match(name, toCheck): 
 			return True
-		elif el.getValue() == '[number]' and re.match(number, toCheck): 
+		elif el.getElementClass() == 'number' and re.match(number, toCheck): 
 			return True
 		else:  
 			return False
 
 	def getNext(self, sentence):
+		sentence = sentence.replace('\n', '').replace('\r', '')
 		wordsList = str(sentence).strip(' .').split(' ')
 		output = [0, [], '']
 		if wordsList[0] != '':
@@ -167,7 +174,6 @@ class highlighter(object):
 				return False
 		return True
 
-	#pobranie typów obiektów
 	def getTypesStructure(self):
 		pass
 
