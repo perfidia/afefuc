@@ -372,6 +372,7 @@ class TextEdit(QtGui.QTextEdit):
 		licznik = 0
 
 		#sb = highlighter('XMLConverter/sentencesStructure.XML')
+
 		output = self._highlighter.getNext(self.lineUnderCursor())
 		#print self.lineUnderCursor()
 		#print output[2]
@@ -387,7 +388,10 @@ class TextEdit(QtGui.QTextEdit):
 		self.setPlainText('')
 		self.insertHtml(output[2])
 
-		myCursor.setPosition(oldCursor)
+		if len(self.toPlainText()) < oldCursor :
+			myCursor.setPosition(len(self.toPlainText()))
+		else:
+			myCursor.setPosition(oldCursor)
 		self.setTextCursor(myCursor)
 
 	def keyReleaseEvent(self, e):

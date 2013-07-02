@@ -123,6 +123,15 @@ class highlighter(object):
 
 	def getNext(self, sentence):
 		sentence = sentence.replace('\n', '').replace('\r', '')
+
+		dotReg = '\.$'
+
+		dot = ''
+		print sentence
+		if re.match(dotReg, str(sentence).strip(' ')):
+			print 'found'
+			dot = '.'
+
 		wordsList = str(sentence).strip(' .').split(' ')
 		output = [0, [], '']
 		if wordsList[0] != '':
@@ -132,6 +141,7 @@ class highlighter(object):
 			for el in self.xml.getChildren():
 				output[1].insert(len(output[1]), el)
 		self.verifyResults(wordsList, output)
+		wordsList[len(wordsList)-1] = wordsList[len(wordsList)-1] + dot
 		output[2] = self.colorUp(wordsList, output[0])
 		return output
 
