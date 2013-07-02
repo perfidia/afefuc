@@ -96,8 +96,10 @@ class highlighter(object):
 			return True
 		elif el.getElementClass() == 'name' and re.match(name, toCheck): 
 			return True
-		else:  
+		elif el.getElementClass() not in ['actor', 'value', 'url', 'name']:  
 			return re.compile(r'^({0}).+'.format(toCheck), flags=re.IGNORECASE).search(el.getValue())
+		else:
+			return False
 
 	def compareWords(self, el, toCheck):
 		actor = '^[A-Z][a-z]+$'
@@ -106,7 +108,7 @@ class highlighter(object):
 		name = '^\".*\"$'
 		number = '^[0-9]+$'
 
-		if el.getValue() == toCheck:
+		if el.getValue() == toCheck and el.getElementClass() not in ['actor', 'value', 'url', 'name']:
 			return True
 		elif el.getElementClass() == 'actor' and re.match(actor, toCheck):  
 			return True
