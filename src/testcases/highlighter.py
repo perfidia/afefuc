@@ -124,12 +124,9 @@ class highlighter(object):
 	def getNext(self, sentence):
 		sentence = sentence.replace('\n', '').replace('\r', '')
 
-		dotReg = '\.$'
-
 		dot = ''
-		print sentence
-		if re.match(dotReg, str(sentence).strip(' ')):
-			print 'found'
+		print str(sentence)
+		if re.search(r'\.$', str(sentence).strip(' ')) > 0:
 			dot = '.'
 
 		wordsList = str(sentence).strip(' .').split(' ')
@@ -142,7 +139,12 @@ class highlighter(object):
 				output[1].insert(len(output[1]), el)
 		self.verifyResults(wordsList, output)
 		wordsList[len(wordsList)-1] = wordsList[len(wordsList)-1] + dot
-		output[2] = self.colorUp(wordsList, output[0])
+
+		num = output[0]
+		if len(output[1]) > 0:
+			num = num + 1
+
+		output[2] = self.colorUp(wordsList, num)
 		return output
 
 	def recCheck(self, el, inputWords, output, depth):

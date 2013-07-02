@@ -365,26 +365,12 @@ class TextEdit(QtGui.QTextEdit):
 
 	def formatInput(self):
 		textInTheBox = self.toPlainText()
-		#
-		#here goes parser code
-		#
-		tekstWyjsciowy = ""
-		licznik = 0
-
-		#sb = highlighter('XMLConverter/sentencesStructure.XML')
-
+		
 		output = self._highlighter.getNext(self.lineUnderCursor())
-		#print self.lineUnderCursor()
-		#print output[2]
-
+		
 		oldCursor = self.textCursor().position()
 		myCursor = self.textCursor()
 
-		#self.setHtml('<font color=red>'+textInTheBox+'</font>')
-
-		#myCursor.select(QtGui.QTextCursor.LineUnderCursor)
-		#myCursor.removeSelectedText()
-		
 		self.setPlainText('')
 		self.insertHtml(output[2])
 
@@ -395,17 +381,10 @@ class TextEdit(QtGui.QTextEdit):
 		self.setTextCursor(myCursor)
 
 	def keyReleaseEvent(self, e):
-		#print e.key()
-		if e.key() != 16777220 and e.key() != 32:
-			self.formatInput()
-		#output = self._highlighter.getNext(self.lineUnderCursor())
-		#tc = self.textCursor()
-		#tc.select(QtGui.QTextCursor.LineUnderCursor)
-		#tc.removeSelectedText()
-		#tc.insertHtml(output[2])
+		#if e.key() != 16777220 and e.key() != 32:
+		#	self.formatInput()
 		self.formatInput()
-		#return
-
+		
 	def keyPressEvent(self, e):
 		if self._completer is not None and self._completer.popup().isVisible():
 			if e.key() in (QtCore.Qt.Key_Enter, QtCore.Qt.Key_Return, QtCore.Qt.Key_Escape, QtCore.Qt.Key_Tab, QtCore.Qt.Key_Backtab):
