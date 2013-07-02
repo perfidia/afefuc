@@ -15,14 +15,14 @@
 </node>
 </node>
 </node>
-<node CREATED="1365076228289" ID="ID_590008128" MODIFIED="1372695122701" TEXT="otwiera">
-<attribute NAME="action" VALUE=""/>
+<node CREATED="1365076228289" ID="ID_590008128" MODIFIED="1372800483295" TEXT="otwiera">
+<attribute NAME="action" VALUE="openWindow"/>
 <attribute NAME="class" VALUE="action"/>
 <node CREATED="1365076236452" ID="ID_552788395" MODIFIED="1372695127373" TEXT="okno">
 <attribute NAME="class" VALUE="object"/>
 <attribute NAME="type" VALUE="window"/>
-<node CREATED="1372695140195" ID="ID_1098549259" MODIFIED="1372695236560" TEXT="[id]">
-<attribute NAME="class" VALUE="name"/>
+<node CREATED="1372695140195" ID="ID_1098549259" MODIFIED="1372800495135" TEXT="[url]">
+<attribute NAME="class" VALUE="url"/>
 </node>
 </node>
 </node>
@@ -64,8 +64,8 @@
 </node>
 </node>
 </node>
-<node CREATED="1365076739409" ID="ID_191982934" MODIFIED="1372695590821" TEXT="odznacza">
-<attribute NAME="action" VALUE=""/>
+<node CREATED="1365076739409" ID="ID_191982934" MODIFIED="1372800525372" TEXT="odznacza">
+<attribute NAME="action" VALUE="click"/>
 <attribute NAME="class" VALUE="action"/>
 <node CREATED="1372695592450" ID="ID_1278431253" MODIFIED="1372695618599" TEXT="pole">
 <attribute NAME="class" VALUE="object"/>
@@ -75,8 +75,8 @@
 </node>
 </node>
 </node>
-<node CREATED="1365076241013" ID="ID_139077284" MODIFIED="1372695531827" TEXT="wybiera">
-<attribute NAME="action" VALUE=""/>
+<node CREATED="1365076241013" ID="ID_139077284" MODIFIED="1372800535863" TEXT="wybiera">
+<attribute NAME="action" VALUE="click"/>
 <attribute NAME="class" VALUE="action"/>
 <node CREATED="1365076296532" ID="ID_552195530" MODIFIED="1372695463597" TEXT="element">
 <attribute NAME="class" VALUE="object"/>
@@ -90,16 +90,13 @@
 <attribute NAME="class" VALUE="text"/>
 <node CREATED="1366306578471" ID="ID_91573310" MODIFIED="1372695514620" TEXT="listy">
 <attribute NAME="class" VALUE="text"/>
-<node CREATED="1366306580562" ID="ID_1124067223" MODIFIED="1372695521351" TEXT="[id]">
-<attribute NAME="class" VALUE="name"/>
 </node>
 </node>
 </node>
 </node>
 </node>
-</node>
-<node CREATED="1365076678893" ID="ID_802273945" MODIFIED="1372695534819" TEXT="zaznacza">
-<attribute NAME="action" VALUE=""/>
+<node CREATED="1365076678893" ID="ID_802273945" MODIFIED="1372800541141" TEXT="zaznacza">
+<attribute NAME="action" VALUE="click"/>
 <attribute NAME="class" VALUE="action"/>
 <node CREATED="1372695388544" ID="ID_130852683" MODIFIED="1372695413747" TEXT="pole">
 <attribute NAME="class" VALUE="object"/>
@@ -132,8 +129,8 @@
 </node>
 </node>
 </node>
-<node CREATED="1365075983275" ID="ID_283009473" MODIFIED="1372697746551" TEXT="otwiera">
-<attribute NAME="action" VALUE=""/>
+<node CREATED="1365075983275" ID="ID_283009473" MODIFIED="1372800579821" TEXT="otwiera">
+<attribute NAME="action" VALUE="open"/>
 <attribute NAME="class" VALUE="action"/>
 <node CREATED="1372697748423" ID="ID_515696176" MODIFIED="1372697783974" TEXT="stron&#x119;">
 <attribute NAME="class" VALUE="object"/>
@@ -149,15 +146,8 @@
 <node CREATED="1372697832204" ID="ID_529987543" MODIFIED="1372697876383" TEXT="okno">
 <attribute NAME="class" VALUE="object"/>
 <attribute NAME="type" VALUE="screen"/>
-<node CREATED="1372697838710" ID="ID_1241847075" MODIFIED="1372697907714" TEXT="[id]">
-<attribute NAME="class" VALUE="name"/>
-</node>
-</node>
-<node CREATED="1372697845698" ID="ID_856067767" MODIFIED="1372697924482" TEXT="menu">
-<attribute NAME="class" VALUE="object"/>
-<attribute NAME="type" VALUE="menu"/>
-<node CREATED="1372697848697" ID="ID_549722284" MODIFIED="1372697930382" TEXT="[id]">
-<attribute NAME="class" VALUE="name"/>
+<node CREATED="1372697838710" ID="ID_1241847075" MODIFIED="1372800596903" TEXT="[url]">
+<attribute NAME="class" VALUE="url"/>
 </node>
 </node>
 <node CREATED="1372697852737" ID="ID_1122843869" MODIFIED="1372697946535" TEXT="stron&#x119;">
@@ -168,9 +158,9 @@
 </node>
 </node>
 </node>
-<node CREATED="1372695342882" ID="ID_697438884" MODIFIED="1372697972872" TEXT="wybiera">
+<node CREATED="1372695342882" ID="ID_697438884" MODIFIED="1372800629472" TEXT="wybiera">
 <attribute NAME="class" VALUE="action"/>
-<attribute NAME="action" VALUE=""/>
+<attribute NAME="action" VALUE="click"/>
 <node CREATED="1372695348782" ID="ID_602031478" MODIFIED="1372697979990" TEXT="link">
 <attribute NAME="class" VALUE="text"/>
 <node CREATED="1372695351011" ID="ID_395966145" MODIFIED="1372697988106" TEXT="[id]">

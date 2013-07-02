@@ -367,12 +367,6 @@ class TextEdit(QtGui.QTextEdit):
 		textInTheBox = self.toPlainText()
 		
 		output = self._highlighter.getNext(self.lineUnderCursor())
-		
-		# test
-		#o = self._highlighter.getElements(self.lineUnderCursor())
-		#for e in o:
-		#	print e.getElementClass()
-		# test
 
 		oldCursor = self.textCursor().position()
 		myCursor = self.textCursor()
