@@ -149,6 +149,18 @@ class highlighter(object):
 		output[2] = self.colorUp(wordsList, num)
 		return output
 
+	def getElements(self, sentence):
+		sentence = sentence.replace('\n', '').replace('\r', '')
+		output = []
+
+		wordsList = str(sentence).strip(' .').split(' ')
+		
+		if wordsList[0] != '':
+			for el in self.xml.getChildren():
+				self.getWordsInformations(el, wordsList, output, 0)
+
+		return output
+
 	def recCheck(self, el, inputWords, output, depth):
 		if depth >= len(inputWords):
 			return
@@ -160,6 +172,16 @@ class highlighter(object):
 					output[1].insert(len(output[1]), subElement)
 			for subElement in el.getChildren():
 				self.recCheck(subElement, inputWords, output, depth + 1)
+		return output
+
+	def getWordsInformations(self, el, inputWords, output, depth):
+		if depth >= len(inputWords):
+			return
+		if self.compareWords(el, inputWords[depth]):
+			if self.checkIfNotExists(el, output):
+				output.insert(len(output), el)
+			for subElement in el.getChildren():
+				self.getWordsInformations(subElement, inputWords, output, depth + 1)
 		return output
 
 	def verifyResults(self, wordsList, results):
