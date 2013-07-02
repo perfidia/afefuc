@@ -80,10 +80,10 @@ class highlighter(object):
 		return self.xml
 
 	def findWordAtBeginning(self, el, toCheck):
-		actor = '^[A-Z][a-z]*$'
-		value = '^\".*'
-		url = '^\".*$'
-		name = '^\".*$'
+		actor = u'^[A-ZĄŚĆŻŹÓŁĘ][a-ząśżźćęłó]*$'
+		value = '^\"[^\"]*'
+		url = '^\"[^\"]*$'
+		name = '^\"[^\"]*$'
 		number = '^[0-9]+$'
 
 		if len(toCheck.strip(' ')) == 0:
@@ -102,10 +102,10 @@ class highlighter(object):
 			return False
 
 	def compareWords(self, el, toCheck):
-		actor = '^[A-Z][a-z]+$'
-		value = '^\".+\"$'
-		url = '^\".+\"$'
-		name = '^\".*\"$'
+		actor = u'^[A-ZĄŚĆŻŹÓŁĘ][a-ząśżźćęłó]+$'
+		value = '^\"[^\"]+\"$'
+		url = '^\"[^\"]+\"$'
+		name = '^\"[^\"]*\"$'
 		number = '^[0-9]+$'
 
 		if el.getValue() == toCheck and el.getElementClass() not in ['actor', 'value', 'url', 'name']:
@@ -127,11 +127,10 @@ class highlighter(object):
 		sentence = sentence.replace('\n', '').replace('\r', '')
 
 		dot = ''
-		print str(sentence)
-		if re.search(r'\.$', str(sentence).strip(' ')) > 0:
+		if re.search(r'\.$', unicode(sentence).strip(' ')) > 0:
 			dot = '.'
 
-		wordsList = str(sentence).strip(' .').split(' ')
+		wordsList = unicode(sentence).strip(' .').split(' ')
 		output = [0, [], '']
 		if wordsList[0] != '':
 			for el in self.xml.getChildren():
@@ -153,7 +152,7 @@ class highlighter(object):
 		sentence = sentence.replace('\n', '').replace('\r', '')
 		output = []
 
-		wordsList = str(sentence).strip(' .').split(' ')
+		wordsList = unicode(sentence).strip(' .').split(' ')
 		
 		if wordsList[0] != '':
 			for el in self.xml.getChildren():
