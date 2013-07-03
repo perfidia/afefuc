@@ -196,6 +196,22 @@ def read(filename = None):
 
 		return retval
 
+	def conditions(project, node):
+		retval = []
+
+		for n in node.getchildren():
+			condition = {
+				'trigger': model.Trigger,
+				'pre-condition': model.PreCondition,
+				'post-condition': model.PostCondition
+			}.get(n.tag)()
+
+			condition.items = items(project, n)
+
+			retval.append(condition)
+
+		return retval
+
 	def usecase(project, node):
 		def scenario(project, node):
 			retval = model.Scenario()
@@ -274,11 +290,11 @@ def read(filename = None):
 			elif n.tag == 'priority':
 				retval.priority = priority(project, n)
 			elif n.tag == 'triggers':
-				pass
-			elif n.tag == 'preconditions':
-				pass
-			elif n.tag == 'postconditions':
-				pass
+				retval.triggers = conditions(project, n)
+			elif n.tag == 'pre-conditions':
+				retval.preconditions = conditions(project, n)
+			elif n.tag == 'post-conditions':
+				retval.postconditions = conditions(project, n)
 			elif n.tag == 'scenario':
 				retval.scenario = scenario(project, n)
 			elif n.tag == 'testcases':
