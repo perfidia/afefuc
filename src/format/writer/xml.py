@@ -138,17 +138,17 @@ def UseCase_att_to_xml(self, parent):
 	for a in self.other_actors:
 		a.to_xml(other_actors)
 
-#	triggers = ET.SubElement(usecase, "triggers")
-#	for t in self.triggers:
-#		t.to_xml(triggers)
-#
-#	preconditions = ET.SubElement(usecase, "pre-conditions")
-#	for t in self.preconditions:
-#		t.to_xml(preconditions)
-#
-#	postconditions = ET.SubElement(usecase, "post-conditions")
-#	for t in self.postconditions:
-#		t.to_xml(postconditions)
+	triggers = ET.SubElement(usecase, "triggers")
+	for t in self.triggers:
+		t.to_xml(triggers)
+
+	preconditions = ET.SubElement(usecase, "pre-conditions")
+	for t in self.preconditions:
+		t.to_xml(preconditions)
+
+	postconditions = ET.SubElement(usecase, "post-conditions")
+	for t in self.postconditions:
+		t.to_xml(postconditions)
 
 	scenario = self.scenario.to_xml(usecase)
 
