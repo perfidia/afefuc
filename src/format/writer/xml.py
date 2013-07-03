@@ -69,9 +69,8 @@ def Project_att_to_xml(self, parent = None):
 		t.to_xml(glossary)
 
 	testcases = ET.SubElement(node, "testcases")
-	for u in self.ucspec.usecases:
-		if u.testcases:
-			u.testcases.to_xml(testcases, u)
+
+	self.testcases.to_xml(testcases)
 
 	tree = ET.ElementTree(node)
 	output = StringIO.StringIO()
@@ -377,25 +376,35 @@ def Term_att_to_xml(self, parent):
 
 	return node
 
-def TestCases_att_to_xml(self, parent, usecase):
-	node = ET.SubElement(parent, 'usecase')
-	node.set("ref", str(id(usecase)))
-
-	#node = ET.SubElement(node, 'paths')
-
+def TestCases_att_to_xml(self, parent):
 	for tc in self.tests:
-		tc.to_xml(node)
-
-	return node
+		tc.to_xml(parent)
 
 def TestCase_att_to_xml(self, parent):
 	node = ET.SubElement(parent, 'testcase')
+	
+	uc_ref = ET.SubElement(node, "uc_ref")
+	if self.uc_ref:
+		uc_ref.text = self.uc_ref.identifier
+
+	identifier = ET.SubElement(node, "id")
+	if self.identifier:
+		identifier.text = self.identifier
+
+	title = ET.SubElement(node, "title")
+	if self.title:
+		title.text = self.title 
 
 	node = ET.SubElement(node, 'path')
 
 	for s in self.path:
-		ref = s.get_ref()
-		ref.to_xml(node)
+		tc_step = ET.SubElement(node, 'tc_step')
+		if s.ucstep:
+			ref = s.ucstep.get_ref()
+			ref.to_xml(tc_step)
+		if unicode(s.tcstep) != 'None' and len(unicode(s.tcstep)) > 0:
+			tc_desc = ET.SubElement(tc_step, "tc_desc")
+			tc_desc.text = unicode(s.tcstep)
 
 	return node
 
