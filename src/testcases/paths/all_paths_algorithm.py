@@ -27,7 +27,12 @@ class Algorithm:
 				for i in xrange(len(steps)):
 						for stepItem in steps[i].items:
 								if isinstance(stepItem, GoToCommand):
+									if isinstance(stepItem.item, Step):
 										steps[i].nextSteps.append(stepItem.item)
+									#elif isinstance(stepItem.item, UseCase):
+									#	steps[i].nextSteps.append(stepItem.item.scenario.items[0])
+									#elif isinstance(stepItem.item, Event):
+									#	steps[i].nextSteps.append(stepItem.item.scenario.items[0])
 
 						if i + 1 < len(steps):
 								steps[i].nextSteps.append(steps[i + 1])
