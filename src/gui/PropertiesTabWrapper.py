@@ -39,13 +39,13 @@ class PropertiesTabWrapper():
 		QtCore.QObject.connect(self.tab.abbreviationEdit, QtCore.SIGNAL('editingFinished()'), self.onAbbreviationEdit)
 
 	def onLanguageSelect(self):
-		self.afefuc['project'].language = str(self.tab.languageComboBox.currentText()) 
+		self.afefuc['project'].language = unicode(self.tab.languageComboBox.currentText()) 
 
 	def onProjectNameEdit(self):
-		self.afefuc['project'].name = str(self.tab.projectNameEdit.text()) 
+		self.afefuc['project'].name = unicode(self.tab.projectNameEdit.text()) 
 
 	def onVersionEdit(self):
-		self.afefuc['project'].version = str(self.tab.versionEdit.text())
+		self.afefuc['project'].version = unicode(self.tab.versionEdit.text())
 
 	def onAbbreviationEdit(self):
-		self.afefuc['project'].abbreviation = str(self.tab.abbreviationEdit.text()) 
+		self.afefuc['project'].abbreviation = unicode(self.tab.abbreviationEdit.text()) 
