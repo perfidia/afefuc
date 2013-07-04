@@ -338,6 +338,75 @@ def read(filename = None):
 
 		return retval
 
+	def testcases(project, node):
+		retval = model.TestCases()
+
+		for n in node.getchildren():
+			if n.tag == 'testcase':
+				retval.tests.append(testcase(project, n))
+			else:
+				print n.tag
+				assert 1 == 2
+
+		return retval
+
+	def testcase(project, node):
+		retval = model.TestCase()
+
+		for n in node.getchildren():
+			if n.tag == 'id':
+				if n.text:
+					retval.identifier = n.text
+				else:
+					retval.identifier = ''
+			elif n.tag == 'title':
+				if n.text:
+					retval.title = n.text
+				else:
+					retval.title = ''
+			elif n.tag == 'uc_ref':
+				retval.uc_ref = uc_ref(project, n.text)
+			elif n.tag == 'path':
+				retval.path = path(project, n)
+
+		return retval
+
+	def uc_ref(project, uc_id):
+
+		for uc in project.ucspec.usecases:
+			if uc.identifier == uc_id:
+				return uc
+
+	def path(project, node):
+		retval = []
+
+		# can not use generic_list_iterator since going through items list
+		for n in node.getchildren():
+			if n.tag == 'tc_step':
+				retval.append(teststep(project, n))
+
+		return retval
+
+	def uc_step(project, node):
+		if node.attrib.has_key('ref'):
+			ref = get_ref(node.attrib['ref'], model.Reference)
+			return ref.item
+
+	def teststep(project, node):
+
+		retval = model.TestStep()
+
+		for n in node.getchildren():
+			if n.tag == 'step':
+				retval.ucstep = uc_step(project, n)
+			elif n.tag == 'tc_desc':
+				if n.text:
+					retval.tcstep = n.text
+				else:
+					retval.tcstep = ''
+
+		return retval
+
 	def project(node):
 		if node.tag != 'project':
 			raise ValueError('Tag screen-spec not found')
@@ -367,7 +436,7 @@ def read(filename = None):
 			elif n.tag == 'glossary':
 				retval.glossary = generic_list_iterator(retval, n, term)
 			elif n.tag == 'testcases':
-				pass
+				retval.testcases = testcases(retval, n)
 			else:
 				print n.tag
 				raise ValueError("Unsupported format file")
