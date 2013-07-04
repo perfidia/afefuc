@@ -20,6 +20,7 @@ class element(object):
 		self.elementClass = None
 		self.action = None
 		self.objectType = None
+		self.parsedValue = None
 
 		if el.nodeType == 1:
 			
@@ -47,6 +48,9 @@ class element(object):
 
 	def getValue(self):
 		return self.value
+
+	def getParsedValue(self):
+		return self.parsedValue
 
 	def getElementClass(self):
 		return self.elementClass
@@ -178,6 +182,8 @@ class highlighter(object):
 			return
 		if self.compareWords(el, inputWords[depth]):
 			if self.checkIfNotExists(el, output):
+				if el.getElementClass() in ['name', 'url', 'number', 'actor']:
+					el.parsedValue = inputWords[depth]
 				output.insert(len(output), el)
 			for subElement in el.getChildren():
 				self.getWordsInformations(subElement, inputWords, output, depth + 1)

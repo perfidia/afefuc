@@ -12,6 +12,8 @@ To run generated tests simply type:
 '''
 
 from os import path
+from os import remove
+import re
 import codecs
 
 class selenium:
@@ -20,24 +22,38 @@ class selenium:
 		self.sb = sb
 
 	def generateCode(self, tc):
-		fileName = tc.title
+		fileName = self.makeFileName(tc.title)
 		actions = tc.path
-		outputPath = './' + fileName + '.py'
+		outputDir = './'
+		outputPath = outputDir + fileName + '.py'
 
-		if path.isfile(outputPath):
+		if path.isdir(outputDir):
 			if path.exists(outputPath):
 				raise Exception('File already exists!')
 			else:
 				try:
 					outputFile = codecs.open(outputPath, 'w', 'utf-8')
 
-					self.generateHeader(outputFile)
-					self.generateActions(actions, outputFile, fileName)
+					self.generateHeader(outputFile, fileName)
+					self.generateActions(actions, outputFile)
 					self.generateFooter(outputFile)
 
 					outputFile.close()
+					print ' + ' + fileName
 				except IOError as e:
 					raise Exception('I/O error({0}): {1}'.format(e.errno, e.strerror))
+				except Exception as e:
+					print ' - Unexpected error occured in TC: ' + tc.title
+					print ' - Error message: ' + e.message
+					remove(outputPath)
+		else:
+			raise Exception('Wrong path, or file name')
+
+	def makeFileName(self, input):
+		input = re.sub(ur'[^a-zA-Z0-9ĄŚĆĘŻŹŁÓŃąśćężźółń ]+', '', input)
+		words = input.title().split(' ')
+		output = ''.join(words)
+		return output
 
 	def parseActions(self, sentence):
 		action = ['', '', '']
@@ -47,9 +63,9 @@ class selenium:
 			if e.getElementClass() == 'action':
 				action[0] = e.getAction()
 			elif e.getElementClass() in ['name', 'url']:
-				action[1] = e.getValue()
+				action[1] = e.getParsedValue()
 			elif e.getElementClass() in ['value', 'number']:
-				action[2] = e.getValue()
+				action[2] = e.getParsedValue()
 
 		return action
 
@@ -65,11 +81,19 @@ class selenium:
 		file.write('\tdef test(self):\n')
 
 		actionsBuffer = []
+		i = 0;
 
 		for action in actions:
-			output = self.sb.getElements(action.tcstep)
 
-			actionsBuffer.insert(len(actionsBuffer), output)
+			output = None
+
+			if action.tcstep and len(action.tcstep) > 0:
+				output = self.parseActions(action.tcstep)
+				actionsBuffer.insert(len(actionsBuffer), output)
+				i = i + 1
+			else:
+				actionsBuffer.insert(len(actionsBuffer), output)
+				continue
 
 			if output[0] == 'redo':
 				if output[2] == '':
@@ -84,31 +108,33 @@ class selenium:
 				if output[1] == '':
 					raise Exception('Invalid number of parameters.')
 				else:
-					file.write('\t\tdriver.get("' + output[1] + '")\n\n')
+					file.write('\t\tdriver.get(' + output[1] + ')\n\n')
 			elif output[0] == 'click':
 				if output[1] == '':
 					raise Exception('Invalid number of parameters.')
 				else:
-					file.write('\t\telement = driver.find_element_by_id("' + output[1] + '"")\n')
+					file.write('\t\telement = driver.find_element_by_id(' + output[1] + ')\n')
 					file.write('\t\telement = driver.click()\n\n')
 			elif output[0] == 'type':
 				if output[1] == '' or output[2]:
 					raise Exception('Invalid number of parameters.')
 				else:
-					file.write('\t\telement = driver.find_element_by_id("' + output[1] + '"")\n')
-					file.write('\t\telement = driver.send_keys("' + output[2] + '")\n\n')
+					file.write('\t\telement = driver.find_element_by_id(' + output[1] + ')\n')
+					file.write('\t\telement = driver.send_keys(' + output[2] + ')\n\n')
 			elif output[0] == 'checkTextPresent':
-				#pass
+				pass
 			elif output[0] == 'openWindow':
 				if output[1] == '':
 					raise Exception('Invalid number of parameters.')
 				else:
-					file.write('\t\tdriver.get("' + output[1] + '")\n\n')
+					file.write('\t\tdriver.get(' + output[1] + ')\n\n')
 			elif output[0] == 'checkPagePresent':
-				#pass
+				pass
 			else:
 				raise Exception('Invalid action.')
 
+		if i == 0:
+			file.write('\t\tpass\n\n')
 
 # allPageCode = driver.getPageSource()
 # allPageCode.contains(" ")
