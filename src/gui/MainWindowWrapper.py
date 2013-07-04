@@ -55,7 +55,7 @@ class MainWindowWrapper(QtGui.QMainWindow):
 		self.mainWindow.actionClose.triggered.connect(self.clickedClose)
 		self.mainWindow.actionQuit.triggered.connect(self.clickedQuit)
 		self.mainWindow.actionDump.triggered.connect(self.clickedDump)
-		self.mainWindow.actionWikiExport.triggered.connect(self.clickedExport)
+		self.mainWindow.actionWikiExport.triggered.connect(self.clickedExportWiki)
 		self.mainWindow.actionSeleniumExport.triggered.connect(self.clickedExportSelenium)
 
 		self.propertiesTab = PropertiesTabWrapper(self, self.afefuc)
@@ -154,7 +154,7 @@ class MainWindowWrapper(QtGui.QMainWindow):
 	def clickedQuit(self):
 		self.close()
 
-	def clickedExport(self):
+	def clickedExportWiki(self):
 		if self.afefuc['project']:
 			WikiExportWrapper(self, self.afefuc).show()
 
