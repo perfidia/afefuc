@@ -182,7 +182,7 @@ class highlighter(object):
 			return
 		if self.compareWords(el, inputWords[depth]):
 			if self.checkIfNotExists(el, output):
-				if el.getElementClass() in ['name', 'url', 'number', 'actor']:
+				if el.getElementClass() in ['name', 'url', 'number', 'actor', 'value']:
 					el.parsedValue = inputWords[depth]
 				output.insert(len(output), el)
 			for subElement in el.getChildren():
