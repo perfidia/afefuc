@@ -16,7 +16,7 @@ from gui.MainWindowWrapper import MainWindowWrapper
 
 if __name__ == "__main__":
 	signal.signal(signal.SIGINT, signal.SIG_DFL)
-
+	
 	app = QtGui.QApplication(sys.argv)
 	myapp = MainWindowWrapper(application = app)
 	myapp.show()
