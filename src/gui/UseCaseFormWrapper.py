@@ -10,6 +10,7 @@ import inspect
 from PyQt4 import QtCore, QtGui
 from generated.ui.UseCaseForm import Ui_UseCaseForm
 from format import model
+from utils import validation
 from utils import converter
 from SelectActorsFormWrapper import SelectActorsFormWrapper
 from EventPropertiesFormWrapper import EventPropertiesFormWrapper
@@ -614,6 +615,14 @@ class UseCaseFormWrapper():
 				self.afefuc['project'],
 				unicode(self.form.summaryTextEdit.toPlainText().toUtf8(), "utf-8")
 		)
+		
+		# validate
+
+		errors = validation.usecase(self.afefuc['project'], self.item)
+
+		if errors:
+			validation._show(self.dialog, errors)
+			return
 
 		if self.item_original:
 			self.parent.model.updateItem((self.item_original, self.item))

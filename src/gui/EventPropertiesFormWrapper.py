@@ -9,6 +9,7 @@ from PyQt4 import QtCore, QtGui
 from generated.ui.EventPropertiesForm import Ui_EventPropertiesForm
 from format import model
 from utils import converter
+from utils import validation
 
 try:
 		_fromUtf8 = QtCore.QString.fromUtf8
@@ -72,5 +73,5 @@ class EventPropertiesFormWrapper():
 
 		index = self.form.anchorComboBox.currentIndex()
 		self.item.anchor = unicode(self.form.anchorComboBox.itemData(index).toPyObject().toUtf8(), "utf-8")
-
+		
 		self.dialog.close()

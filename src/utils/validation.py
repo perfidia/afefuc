@@ -56,13 +56,12 @@ def _is_name(text):
 
 def priority(project, item):
 	errors = {}
-	errors['Name'] = []
 
 	if _is_empty(item.name):
-		errors['Name'].append({"This field cannot be empty"})
+		errors['Name'] = {"This field cannot be empty"}
 
 	if _count_field(item, project.ucspec.priorities, "name") > 0:
-		errors['Name'].append({"The following name is not unique"})
+		errors['Name'] = {"The following name is not unique"}
 
 	return errors
 
@@ -73,7 +72,7 @@ def goal_level(project, item):
 		errors['Name'] = {"This field cannot be empty"}
 
 	if _count_field(item, project.ucspec.goal_levels, "name") > 0:
-		errors['Name'].append({"The following name is not unique"})
+		errors['Name'] = {"The following name is not unique"}
 
 	return errors
 
@@ -84,13 +83,13 @@ def business_object(project, item):
 		errors['Name'] = {"This field cannot be empty"}
 
 	if _count_field(item, project.business_objects, "name") > 0:
-		errors['Name'].append({"The following name is not unique"})
+		errors['Name'] = {"The following name is not unique"}
 
 	if _is_empty(item.identifier):
 		errors['ID'] = {"This field cannot be empty"}
 
 	if _count_field(item, project.business_objects, "identifier") > 0:
-		errors['ID'].append({"The following identifier is not unique"})
+		errors['ID'] = {"The following identifier is not unique"}
 
 	# check attributes
 
@@ -123,29 +122,27 @@ def actor(project, item):
 
 def usecase(project, item):
 	errors = {}
-	errors['Name'] = []
-	errors['ID'] = []
 	
-	if _is_empty(item.name):
-		errors['Name'].append({"This field cannot be empty"})
+	if _is_empty(item.title):
+		errors['Title'] = {"This field cannot be empty"}
 
-	if _count_field(item, project.ucspec.usecases, 'name') > 0:
-		errors['Name'].append({"Name should be unique"})
+	if _count_field(item, project.ucspec.usecases, 'title') > 0:
+		errors['Title'] = {"Title should be unique"}
 
 	if _is_empty(item.identifier):
-		errors['ID'].append({"This field cannot be empty"})
+		errors['ID'] = {"This field cannot be empty"}
 
 	if _count_field(item, project.ucspec.usecases, 'identifier') > 0:
-		errors['ID'].append({"Identifier should be unique"})
+		errors['ID'] = {"Identifier should be unique"}
 	
 	# there should be at least one main actor and one other
-	if len(item.ucspec.usecases.main_actors) == 0:
+	if len(item.main_actors) == 0:
 		errors['main_actors'] = {"There should be at least one main actor"}
-	if len(item.ucspec.usecases.other_actors) == 0:
+	if len(item.other_actors) == 0:
 		errors['main_actors'] = {"There should be at least one other actor"}
-	if len(item.ucspec.usecases.preconditions) == 0:
+	if len(item.preconditions) == 0:
 		errors['preconditions'] = {"There should be at least one precondition"} # conditions should be non empty
-	if len(item.ucspec.usecases.postconditions) == 0:
+	if len(item.postconditions) == 0:
 		errors['postconditions'] = {"There should be at least one postcondition"}
 		
 	# all uc should end with @eouc
@@ -159,18 +156,15 @@ def usecase(project, item):
 
 def glossary(project, item):
 	errors = {}
-	
-	errors['Name'] = [];
-	errors['Definition'] = [];
 
 	if _is_empty(item.name):
-		errors['Name'].append({"This field cannot be empty"})
+		errors['Name'] = {"This field cannot be empty"}
 
 	if _count_field(item, project.glossary, 'name') > 0:
-		errors['Name'].append({"Name should be unique"})
+		errors['Name'] = {"Name should be unique"}
 		
 	if _count_field(item, project.glossary, 'definition') > 0:
-		errors['Definition'].append({"Definition should be unique"});
+		errors['Definition'] = {"Definition should be unique"};
 
 
 	return errors

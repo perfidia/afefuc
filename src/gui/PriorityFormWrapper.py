@@ -6,6 +6,7 @@ Created on Apr 25, 2013
 
 from PyQt4 import QtCore, QtGui
 from generated.ui.LineEditForm import Ui_LineEditForm
+from utils import validation
 #from format import model
 
 try:
@@ -50,6 +51,14 @@ class PriorityFormWrapper():
 
 	def clickedOKButton(self):
 		self.item.name = unicode(self.form.nameEdit.text().toUtf8(), "utf-8")
+
+		# validate
+
+		errors = validation.priority(self.afefuc['project'], self.item)
+
+		if errors:
+			validation._show(self.dialog, errors)
+			return
 
 		if self.item_orginal:
 			self.parent.model.updateItem((self.item_orginal, self.item))

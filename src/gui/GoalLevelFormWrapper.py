@@ -7,6 +7,7 @@ Created on Apr 25, 2013
 from PyQt4 import QtCore, QtGui
 from generated.ui.LineEditForm import Ui_LineEditForm
 from format import model
+from utils import validation
 
 try:
 	_fromUtf8 = QtCore.QString.fromUtf8
@@ -50,6 +51,14 @@ class GoalLevelFormWrapper():
 
 	def clickedOKButton(self):
 		self.item.name = unicode(self.form.nameEdit.text().toUtf8(), "utf-8")
+
+		# validate
+
+		errors = validation.goal_level(self.afefuc['project'], self.item)
+
+		if errors:
+			validation._show(self.dialog, errors)
+			return
 
 		if self.item_orginal:
 			self.parent.model.updateItem((self.item_orginal, self.item))

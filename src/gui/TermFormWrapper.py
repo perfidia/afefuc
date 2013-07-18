@@ -8,6 +8,7 @@ from PyQt4 import QtCore, QtGui
 from generated.ui.TermForm import Ui_TermForm
 #from format import model
 from utils import converter
+from utils import validation
 
 try:
 		_fromUtf8 = QtCore.QString.fromUtf8
@@ -51,6 +52,14 @@ class TermFormWrapper():
 				self.afefuc['project'],
 				unicode(self.form.definitionEdit.toPlainText().toUtf8(), "utf-8")
 		)
+
+		# validate
+
+		errors = validation.glossary(self.afefuc['project'], self.item)
+
+		if errors:
+			validation._show(self.dialog, errors)
+			return
 
 		if self.item_orginal:
 			self.parent.model.updateItem((self.item_orginal, self.item))

@@ -8,6 +8,7 @@ from collections import OrderedDict
 from PyQt4 import QtCore, QtGui
 from generated.ui.BusinessRuleForm import Ui_BusinessRuleForm
 from format import model
+from utils import validation
 from utils import converter
 
 try:
@@ -101,6 +102,14 @@ class BusinessRuleFormWrapper():
 				self.afefuc['project'],
 				unicode(self.form.sourceEdit.toPlainText().toUtf8(), "utf-8")
 		)
+
+		# validate
+
+		errors = validation.business_rule(self.afefuc['project'], self.item)
+
+		if errors:
+			validation._show(self.dialog, errors)
+			return
 
 		if self.item_orginal:
 			self.parent.model.updateItem((self.item_orginal, self.item))
