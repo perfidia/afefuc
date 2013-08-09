@@ -9,6 +9,8 @@ import re
 #def identifier(parent):
 #	return QtGui.QRegExpValidator(QtCore.QRegExp("[A-Z]+[A-Z_]*[0-9]*"), parent);
 
+name_pattern = re.compile(r"[A-Z]+[a-z0-9_]*")
+
 def _show(parent, errors):
 	msg = ["The following errors were detected:"]
 
@@ -49,13 +51,19 @@ def _is_identifier(text):
 
 def _is_name(text):
 
-	if not re.match(r"[A-Z]+[a-z0-9_]*\.", text):
+	#import pdb
+	#pdb.set_trace()
+	if not name_pattern.match(text):
+# 	if not re.match(r"[A-Z]+[a-z0-9_]*", text):
 		return False
 
 	return True
 
 def priority(project, item):
 	errors = {}
+
+	if(_is_name(item.name) == False):
+		errors['Name'] = {"This field is not a valid name"}
 
 	if _is_empty(item.name):
 		errors['Name'] = {"This field cannot be empty"}
@@ -68,6 +76,9 @@ def priority(project, item):
 def goal_level(project, item):
 	errors = {}
 
+	if(_is_name(item.name) == False):
+		errors['Name'] = {"This field is not a valid name"}
+
 	if _is_empty(item.name):
 		errors['Name'] = {"This field cannot be empty"}
 
@@ -79,11 +90,17 @@ def goal_level(project, item):
 def business_object(project, item):
 	errors = {}
 
+	if(_is_name(item.name[0].toText()) == False):
+		errors['Name'] = {"This field is not a valid name"}
+
 	if _is_empty(item.name):
 		errors['Name'] = {"This field cannot be empty"}
 
 	if _count_field(item, project.business_objects, "name") > 0:
 		errors['Name'] = {"The following name is not unique"}
+
+	if(_is_identifier(item.identifier) == False):
+		errors['ID'] = {"This field is not a valid identifier"}
 
 	if _is_empty(item.identifier):
 		errors['ID'] = {"This field cannot be empty"}
@@ -91,12 +108,20 @@ def business_object(project, item):
 	if _count_field(item, project.business_objects, "identifier") > 0:
 		errors['ID'] = {"The following identifier is not unique"}
 
-	# check attributes
+	for a in item.attributes:
+		if(_is_name(a.name) == False):
+			errors['Attribute name'] = {"Attribute has not a valid name"}
+		
+		if(_is_empty(a.name) == True):
+			errors['Attribute description'] = {"Attribute descripton couldn't be empty"}
 
 	return errors
 
 def business_rule(project, item):
 	errors = {}
+
+	if(_is_identifier(item.identifier) == False):
+		errors['ID'] = {"This field is not a valid identifier"}
 
 	if _is_empty(item.identifier):
 		errors['ID'] = {"This field cannot be empty"}
@@ -105,10 +130,16 @@ def business_rule(project, item):
 
 def actor(project, item):
 	errors = {}
-
+	
+	if(_is_name(item.name) == False):
+		errors['Name'] = {"This field is not a valid name"}
+		
 	if _is_empty(item.name):
 		errors['Name'] = {"This field cannot be empty"}
-
+		
+	if(_is_identifier(item.identifier) == False):
+		errors['ID'] = {"This field is not a valid identifier"}
+		
 	if _is_empty(item.identifier):
 		errors['ID'] = {"This field cannot be empty"}
 		
@@ -129,6 +160,9 @@ def usecase(project, item):
 	if _count_field(item, project.ucspec.usecases, 'title') > 0:
 		errors['Title'] = {"Title should be unique"}
 
+	if(_is_identifier(item.identifier) == False):
+		errors['ID'] = {"This field is not a valid identifier"}
+
 	if _is_empty(item.identifier):
 		errors['ID'] = {"This field cannot be empty"}
 
@@ -145,17 +179,29 @@ def usecase(project, item):
 	if len(item.postconditions) == 0:
 		errors['postconditions'] = {"There should be at least one postcondition"}
 		
+	
+	#import pdb
+	#pdb.set_trace()
+	
 	# all uc should end with @eouc
 	# all events should end with @eouc or @goto
+	# step in uc cannot be empty
 	# references in uc should exist
 	
 	
-	# steop in uc cannot be empty
+	
+	
+	#for step in item.scenario.events:
+		
+		
 
 	return errors
 
 def glossary(project, item):
 	errors = {}
+
+	if(_is_name(item.name) == False):
+		errors['Name'] = {"This field is not a valid name"}
 
 	if _is_empty(item.name):
 		errors['Name'] = {"This field cannot be empty"}
