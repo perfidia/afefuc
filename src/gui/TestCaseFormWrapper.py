@@ -379,11 +379,6 @@ class TextEdit(QtGui.QTextEdit):
 		else:
 			myCursor.setPosition(oldCursor)
 		self.setTextCursor(myCursor)
-
-	def keyReleaseEvent(self, e):
-		#if e.key() != 16777220 and e.key() != 32:
-		#	self.formatInput()
-		self.formatInput()
 		
 	def keyPressEvent(self, e):
 		if self._completer is not None and self._completer.popup().isVisible():
@@ -395,6 +390,9 @@ class TextEdit(QtGui.QTextEdit):
 		isShortcut = (modifiers == QtCore.Qt.ControlModifier and e.key() == QtCore.Qt.Key_Space)
 		if self._completer is None or not isShortcut:
 			super(TextEdit, self).keyPressEvent(e)
+
+		if modifiers == QtCore.Qt.ControlModifier:
+			return
 
 		self.formatInput()
 		output = self._highlighter.getNext(self.lineUnderCursor())
