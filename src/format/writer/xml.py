@@ -385,15 +385,15 @@ def TestCase_att_to_xml(self, parent):
 	
 	uc_ref = ET.SubElement(node, "uc_ref")
 	if self.uc_ref:
-		uc_ref.text = self.uc_ref.identifier
+		uc_ref.text = unicode(self.uc_ref.identifier)
 
 	identifier = ET.SubElement(node, "id")
 	if self.identifier:
-		identifier.text = self.identifier
+		identifier.text = unicode(self.identifier)
 
 	title = ET.SubElement(node, "title")
 	if self.title:
-		title.text = self.title 
+		title.text = unicode(self.title) 
 
 	node = ET.SubElement(node, 'path')
 
