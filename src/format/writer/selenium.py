@@ -23,11 +23,15 @@ class selenium:
 
 	def __init__(self, sb):
 		self.sb = sb
+		self.browser = None
+		self.system = None
 
-	def generateCode(self, tc):
+	def generateCode(self, tc, browser, system, directory):
 		fileName = self.makeFileName(tc.title)
 		actions = tc.path
-		outputDir = './'
+		self.browser = browser.toLower()
+		self.system = system.toUpper()
+		outputDir = directory + '/'
 		outputPath = outputDir + fileName + '.py'
 
 		if path.isdir(outputDir):
@@ -91,7 +95,7 @@ class selenium:
 
 		file.write('from selenium import webdriver\nimport unittest\nimport sys\n\n')
 		file.write('class ' + fileName + '(unittest.TestCase):\n\n')
-		file.write('\tdef setUp(self):\n\t\tself.driver = webdriver.Remote(desired_capabilities={"browserName": "firefox","platform": "LINUX"})\n')
+		file.write('\tdef setUp(self):\n\t\tself.driver = webdriver.Remote(desired_capabilities={"browserName": "' + self.browser + '","platform": "' + self.system + '"})\n')
 		file.write('\t\tself.driver.implicitly_wait(3)\n\n')
 
 	def generateFooter(self, file):
