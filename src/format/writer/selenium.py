@@ -26,10 +26,16 @@ class selenium:
 		self.browser = None
 		self.system = None
 
+	def translateBrowserName(self, browserName):
+		if browserName in ['iPad', 'iPhone']:
+			return browserName
+		else:
+			return browserName.toLower()
+
 	def generateCode(self, tc, browser, system, directory):
 		fileName = self.makeFileName(tc.title)
 		actions = tc.path
-		self.browser = browser.toLower()
+		self.browser = self.translateBrowserName(browser)
 		self.system = system.toUpper()
 		outputDir = directory + '/'
 		outputPath = outputDir + fileName + '.py'
