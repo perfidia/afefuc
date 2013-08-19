@@ -351,10 +351,21 @@ class TextEdit(QtGui.QTextEdit):
 		if self.textUnderCursor() == completion:
 			return
 
+		sentence = self.lineUnderCursor()
+		if re.search(r'\.$', unicode(sentence).strip(' ')) > 0:
+			return
+
 		tc = self.textCursor()
 		extra = len(completion) - len(self._completer.completionPrefix())
 		tc.movePosition(QtGui.QTextCursor.EndOfWord)
-		tc.insertText(completion[-extra:])
+		if completion in ['[url]', '[value]', '[name]']:
+			tc.insertText('""')
+			tc.movePosition(QtGui.QTextCursor.EndOfWord)
+			tc.setPosition(tc.position() - 1)
+		elif completion in ['[actor]', '[number]']:
+			return
+		else:
+			tc.insertText(completion[-extra:])
 		self.setTextCursor(tc)
 
 	def focusInEvent(self, e):
@@ -395,6 +406,12 @@ class TextEdit(QtGui.QTextEdit):
 			return
 
 		self.formatInput()
+
+		sentence = self.lineUnderCursor()
+		if re.search(r'\.$', unicode(sentence).strip(' ')) > 0:
+			self._completer.setModel(QtGui.QStringListModel([], self._completer))
+			return
+
 		output = self._highlighter.getNext(self.lineUnderCursor())
 		words = []
 		for element in output[1]:
