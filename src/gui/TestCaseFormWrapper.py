@@ -534,7 +534,7 @@ class TestCaseFormWrapper():
 
 		self.dialog.exec_()
 	def editingFinishedIdEdit(self):
-		self.item.identifier = self.form.idEdit.text()		  
+		self.item.identifier = unicode(self.form.idEdit.text().toUtf8(), 'utf-8')
 
 	def editingFinishedTitleEdit(self):
 		self.item.title = unicode(self.form.titleEdit.text().toUtf8(), 'utf-8') #unicode(.toUtf8(), 'utf-8')
