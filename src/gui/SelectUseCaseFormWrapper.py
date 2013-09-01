@@ -53,7 +53,8 @@ class SelectUseCaseFormWrapper():
 				#tc = model.TestCase(test.path)
 				#print self.uc_ref.title.text
 				test.uc_ref = self.uc_ref
-				test.title = converter.itemsToText(self.uc_ref.title) + ' - test #' + str(i)	
-				test.identifier = self.uc_ref.identifier + '_T' + str(i)					
+				test.title = converter.itemsToText(self.uc_ref.title) + ' - test #' + str(i)
+				test.identifier = self.afefuc['project'].testcases.getUniqueId(
+						self.uc_ref.identifier + '_T' + str(i))
 				self.parent.model.insertItem((None, test))
 		self.dialog.close()
