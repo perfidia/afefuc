@@ -123,7 +123,7 @@ class ComboBoxDelegate(QtGui.QItemDelegate):
 	def updateEditorGeometry(self, editor, option, index):
 		editor.setGeometry(option.rect)
 
-class SampleTableModel(QtCore.QAbstractTableModel):
+class ScenarioTableModel(QtCore.QAbstractTableModel):
 	def __init__(self, parent, afefuc, items):
 		QtCore.QAbstractItemModel.__init__(self,parent)
 		self.afefuc = afefuc
@@ -221,33 +221,6 @@ class SampleTableModel(QtCore.QAbstractTableModel):
 
 	def movePositionDown(self, position):
 		self.movePositionUp(position + 1)
-
-class Test(QtGui.QWidget):
-	def __init__( self, labelText, parent=None):
-		super(Test, self).__init__(parent)
-
-		self.completingTextEdit = TextEdit()
-		self.completer = QtGui.QCompleter(self)
-
-		sb = highlighter('./generated/testcases/en.xml')
-		self.completingTextEdit.setHighlighter(sb)
-		output = sb.getNext('')
-		words = []
-
-		for element in output[1]:
-			words.append(element.getValue())
-
-		self.completer.setModel(QtGui.QStringListModel(words, self.completer))
-		self.completer.setModelSorting(QtGui.QCompleter.CaseInsensitivelySortedModel)
-		self.completer.setCaseSensitivity(QtCore.Qt.CaseInsensitive)
-		self.completer.setWrapAround(False)
-		self.completingTextEdit.setCompleter(self.completer)
-		self.label = QtGui.QLabel(labelText)
-
-		layout = QtGui.QVBoxLayout()
-		layout.addWidget(self.label)
-		layout.addWidget(self.completingTextEdit)
-		self.setLayout(layout)
 
 class TextEdit(QtGui.QTextEdit):
 	def __init__(self, parent=None):
@@ -367,7 +340,7 @@ class TextEdit(QtGui.QTextEdit):
 		self._completer.complete(cr)
 
 class TestCaseFormWrapper():
-	def __init__(self, parent, afefuc, item=None): #item[1] to testCase object
+	def __init__(self, parent, afefuc, item=None): #item[1] is a testCase object
 		self.parent = parent
 		self.dialog = QtGui.QDialog()
 		self.form = Ui_TestCaseForm()
@@ -412,7 +385,7 @@ class TestCaseFormWrapper():
 		QtCore.QObject.connect(self.form.moveUpButton, QtCore.SIGNAL(_fromUtf8("clicked()")), self.clickedMoveUpButton)
 		QtCore.QObject.connect(self.form.moveDownButton, QtCore.SIGNAL(_fromUtf8("clicked()")), self.clickedMoveDownButton)
 
-		self.modelTC = SampleTableModel(self.form.stepView, self.afefuc, (self.item_original, self.item))
+		self.modelTC = ScenarioTableModel(self.form.stepView, self.afefuc, (self.item_original, self.item))
 		self.form.stepView.setModel(self.modelTC)
 
 		self.cted = CompleteTextEditDelegate(self.form.stepView, self.afefuc, self.item)
@@ -468,34 +441,6 @@ class TestCaseFormWrapper():
 			for i in range(node.attributes.length):
 				if node.attributes.item(i).name == 'value':
 					return node.attributes.item(i).value
-
-	def readNodes(self, inputNodes, outputList):
-		for element in inputNodes:
-			if element.attributes:
-				attr = self.getTextAttribute(element)
-				outputList.insert(len(outputList), [self.getTextAttribute(element)])
-			if element.childNodes:
-				self.readNodes(element.childNodes, outputList[len(outputList)-1])
-
-	def findChild(self, myList, childName):
-		for idx, elem in enumerate(myList):
-			for childName in elem:
-				return idx
-		return -1
-
-	def goDeeperForCompletion(self, myList):
-		toReturn = []
-		self.goDeeperForCompletionRecursive(myList[1:], toReturn)
-		return toReturn
-
-	def goDeeperForCompletionRecursive(self, myList, toReturn):
-		for elem in myList:
-			if elem[0][0] == '[':
-				toReturn = (self.goDeeperForCompletionRecursive(elem[1:], toReturn))
-			else:
-				for idx, elem in enumerate(myList):
-					toReturn.append(elem)
-		return toReturn
 
 	def getCurrentOptions(self, myList):
 		toReturn = []
