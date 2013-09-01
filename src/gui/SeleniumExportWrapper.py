@@ -5,6 +5,7 @@ from PyQt4 import QtCore, QtGui
 from generated.ui.SeleniumExport import Ui_SeleniumExport
 from format.writer.selenium import selenium
 from testcases.highlighter import highlighter
+from format.model import TestCases
 
 try:
 		_fromUtf8 = QtCore.QString.fromUtf8
@@ -24,7 +25,7 @@ class SeleniumExportWrapper():
 		self.tc = None
 
 	def load(self):
-		self.form.testCaseComboBox.addItem('All test cases', self.afefuc['project'].testcases.tests)
+		self.form.testCaseComboBox.addItem('All test cases', self.afefuc['project'].testcases)
 
 		for testcase in self.afefuc['project'].testcases.tests:
 			self.form.testCaseComboBox.addItem(testcase.title, testcase)
@@ -52,7 +53,7 @@ class SeleniumExportWrapper():
 
 		sccb = self.form.systemComboBox
 		self.system = sccb.currentText()
-		
+
 		if self.path:
 			if len(self.tc) > 0:
 				print '* exporting tests to selenium *'
@@ -66,12 +67,19 @@ class SeleniumExportWrapper():
 
 				s = selenium(sb)
 
-				for test in self.tc:
-					try:
-						s.generateCode(test, self.browser, self.system, self.path)
-					except Exception as e:
-						print 'Unexpected error occured in TC: ' + test.title
-						print 'Error message: ' + e.message									
+				if isinstance(self.tc, TestCases):
+					for test in self.tc.tests:
+						try:
+							s.generateCode(test, self.browser, self.system, self.path)
+						except Exception as e:
+							print 'Unexpected error occured in TC: ' + test.title
+							print 'Error message: ' + e.message
+				else:
+						try:
+							s.generateCode(self.tc, self.browser, self.system, self.path)
+						except Exception as e:
+							print 'Unexpected error occured in TC: ' + test.title
+							print 'Error message: ' + e.message
 
 				print '* export finished *'
 			else:
