@@ -91,7 +91,8 @@ class SeleniumExportWrapper():
 		
 
 	def clickedSelectButton(self):
-		self.path = QtGui.QFileDialog.getExistingDirectory(self.dialog, 'Select directory')
+		path = QtGui.QFileDialog.getExistingDirectory(self.dialog, 'Select directory')
 
-		if self.path:
-			self.form.pathLineEdit.setText(self.path)
+		if path:
+			self.path = path
+			self.form.pathLineEdit.setText(path)
