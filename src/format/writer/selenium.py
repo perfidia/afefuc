@@ -171,7 +171,7 @@ class selenium:
 				if output[1] == '':
 					raise Exception('Invalid number of parameters for action: checkPagePresent')
 				else:
-					file.write('\t\tself.assertEqual(' + self.driver.current_url + ', ' + output[1] + ')\n\n')
+					file.write('\t\tself.assertEqual(self.driver.current_url, ' + output[1] + ')\n\n')
 			else:
 				raise Exception('Invalid action.')
 
