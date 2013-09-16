@@ -133,7 +133,7 @@ class highlighter(object):
 		else:  
 			return False
 
-	def replace_spaces(self, sentence):
+	def replace_spaces_and_dots(self, sentence):
 		output = ""
 		quote = False
 
@@ -149,19 +149,41 @@ class highlighter(object):
 					output += "%20"
 				else:
 					output += c
+			elif c == '.':
+				if quote == True:
+					output += "%2E"
+				else:
+					output += c
 			else:
 				output += c	
 
 		return output
 
+	def isDot(self, sentence):
+		quote = False
+		dot = False
+
+		for c in sentence:
+			if c == '"':
+				if quote == False:
+					quote = True
+				else: 
+					quote = False
+			elif c == ".":
+				if quote == True:
+					dot = False
+				else:
+					dot = True
+
+		return dot
+
 	def getNext(self, sentence):
 		sentence = sentence.replace('\n', '').replace('\r', '')
+		sentence = self.replace_spaces_and_dots(unicode(sentence))
 
 		dot = ''
-		if re.search(r'\.$', unicode(sentence).strip(' ')) > 0:
+		if self.isDot(sentence):
 			dot = '.'
-
-		sentence = self.replace_spaces(unicode(sentence))
 
 		wordsList = sentence.strip(' .').split(' ')
 		output = [0, [], '']
@@ -180,6 +202,7 @@ class highlighter(object):
 
 		for i in xrange(len(wordsList)):
 			wordsList[i] = re.sub(r'%20', " ", wordsList[i])
+			wordsList[i] = re.sub(r'%2E', ".", wordsList[i])
 
 		output[2] = self.colorUp(wordsList, num)
 		return output
@@ -188,7 +211,7 @@ class highlighter(object):
 		sentence = sentence.replace('\n', '').replace('\r', '')
 		output = []
 
-		sentence = self.replace_spaces(unicode(sentence))
+		sentence = self.replace_spaces_and_dots(unicode(sentence))
 		wordsList = sentence.strip(' .').split(' ')
 		
 		if wordsList[0] != '':
@@ -216,6 +239,7 @@ class highlighter(object):
 		if self.compareWords(el, inputWords[depth]):
 			if self.checkIfNotExists(el, output):
 				if el.getElementClass() in ['name', 'url', 'number', 'actor', 'value']:
+					inputWords[depth] = re.sub(r'%2E', ".", inputWords[depth])
 					el.parsedValue = re.sub(r'%20', " ", inputWords[depth])
 				output.insert(len(output), el)
 			for subElement in el.getChildren():
