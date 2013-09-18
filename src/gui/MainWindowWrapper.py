@@ -18,6 +18,7 @@ from gui.BusinessRulesTabWrapper import BusinessRulesTabWrapper
 from gui.TestCasesTabWrapper import TestCasesTabWrapper
 from gui.GlossaryTabWrapper import GlossaryTabWrapper
 from gui.WikiExportWrapper import WikiExportWrapper
+from gui.SeleniumExportWrapper import SeleniumExportWrapper
 import format.writer.xml
 import format.reader.xml
 from format.writer.selenium import selenium
@@ -161,29 +162,8 @@ class MainWindowWrapper(QtGui.QMainWindow):
 			WikiExportWrapper(self, self.afefuc).show()
 
 	def clickedExportSelenium(self): 
-		print '* exporting tests to selenium *'
-
-		sb = None
-
-		if self.afefuc['project'].language == 'en':
-			sb = highlighter('generated/testcases/en.xml')
-		else:
-			sb = highlighter('generated/testcases/pl.xml')
-		
 		if self.afefuc['project']:
-			s = selenium(sb)
-
-			if len(self.afefuc['project'].testcases.tests) == 0:
-				print '* nothing to export *'
-
-			for tc in self.afefuc['project'].testcases.tests:
-				try:
-					s.generateCode(tc)
-				except Exception as e:
-					print 'Unexpected error occured in TC: ' + tc.title
-					print 'Error message: ' + e.message
-
-		print '* export finished *'
+			SeleniumExportWrapper(self, self.afefuc).show()
 
 	def clickedDump(self):
 		format.writer.xml.write("tmp.auc", self.afefuc['project'])

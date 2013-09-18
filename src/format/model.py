@@ -406,6 +406,17 @@ class TestCases(object):
 	def __init__(self):							# TestCase{0..}
 		self.tests = []
 
+	def getUniqueId(self, identifier):
+		while(self.doesIdExist(identifier)):
+			identifier += ' (2)'
+		return identifier
+
+	def doesIdExist(self, identifier):
+		for i in self.tests:
+			if identifier == i.identifier:
+				return True
+		return False
+
 	def __len__(self):
 		return len(self.tests)
 

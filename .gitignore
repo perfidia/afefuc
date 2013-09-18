@@ -39,4 +39,7 @@ doc/_build
 
 *.auc
 
+#swap files
+*.swp
+*.swo
 private/

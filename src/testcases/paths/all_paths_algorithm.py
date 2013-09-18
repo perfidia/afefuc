@@ -25,6 +25,9 @@ class Algorithm:
 		def initNextSteps(self, usecase):
 				steps = usecase.scenario.items
 				for i in xrange(len(steps)):
+						del steps[i].nextSteps[:]
+                    
+				for i in xrange(len(steps)):
 						for stepItem in steps[i].items:
 								if isinstance(stepItem, GoToCommand):
 									if isinstance(stepItem.item, Step):
