@@ -154,6 +154,7 @@ class highlighter(object):
 					output += "%2E"
 				else:
 					output += c
+					return output
 			else:
 				output += c	
 
