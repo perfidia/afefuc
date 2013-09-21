@@ -87,7 +87,7 @@ class TestCasesTableModel(QtCore.QAbstractTableModel):
 			if tc is testcase[0]:
 				counter = i
 				self.afefuc['project'].testcases.tests[i] = testcase[1]
-				break
+				breakpp
 
 		self.emit(QtCore.SIGNAL("dataChanged(index, index)"),
 				self.createIndex(counter, 0, None),

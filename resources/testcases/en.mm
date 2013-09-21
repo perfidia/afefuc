@@ -176,7 +176,7 @@
 </node>
 </node>
 </node>
-<node CREATED="1366306460271" FOLDED="true" ID="ID_1323830584" MODIFIED="1372800399268" TEXT="verifies">
+<node CREATED="1366306460271" ID="ID_1323830584" MODIFIED="1379781864035" TEXT="verifies">
 <attribute NAME="action" VALUE="checkTextPresent"/>
 <attribute NAME="class" VALUE="action"/>
 <node CREATED="1366306466385" ID="ID_459363018" MODIFIED="1366306500714" TEXT="that">
@@ -193,6 +193,18 @@
 <node CREATED="1366306480708" ID="ID_1042955394" MODIFIED="1366306552887" TEXT="message">
 <attribute NAME="class" VALUE="text"/>
 </node>
+</node>
+</node>
+</node>
+</node>
+<node CREATED="1379782272177" ID="ID_401530522" MODIFIED="1379782426544" TEXT="page">
+<attribute NAME="class" VALUE="text"/>
+<node CREATED="1379782277006" ID="ID_1033952513" MODIFIED="1379782435709" TEXT="displays">
+<attribute NAME="class" VALUE="text"/>
+<node CREATED="1379782280206" ID="ID_1243770948" MODIFIED="1379782443423" TEXT="[value]">
+<attribute NAME="class" VALUE="value"/>
+<node CREATED="1379782283566" ID="ID_988953154" MODIFIED="1379782448993" TEXT="text">
+<attribute NAME="class" VALUE="text"/>
 </node>
 </node>
 </node>
@@ -241,7 +253,7 @@
 </node>
 </node>
 </node>
-<node CREATED="1365076447684" FOLDED="true" ID="ID_470456392" MODIFIED="1372800422030" TEXT="displays">
+<node CREATED="1365076447684" ID="ID_470456392" MODIFIED="1379781874899" TEXT="displays">
 <attribute NAME="class" VALUE="action"/>
 <attribute NAME="action" VALUE="checkPagePresent"/>
 <node CREATED="1365076451460" ID="ID_1825663846" MODIFIED="1372800239404" TEXT="[url]">
@@ -256,6 +268,28 @@
 <attribute NAME="type" VALUE="page"/>
 <node CREATED="1365076487953" ID="ID_755292648" MODIFIED="1366305917997" TEXT="[url]">
 <attribute NAME="class" VALUE="url"/>
+</node>
+</node>
+</node>
+<node CREATED="1379781925030" ID="ID_1017230092" MODIFIED="1379782085305" TEXT="verifies">
+<attribute NAME="action" VALUE="checkPagePresent"/>
+<attribute NAME="class" VALUE="action"/>
+<node CREATED="1379781943787" ID="ID_368992810" MODIFIED="1379782099095" TEXT="that">
+<attribute NAME="class" VALUE="text"/>
+<node CREATED="1379781948869" ID="ID_831816647" MODIFIED="1379782111886" TEXT="user">
+<attribute NAME="class" VALUE="text"/>
+<node CREATED="1379781950856" ID="ID_605200417" MODIFIED="1379782123293" TEXT="is">
+<attribute NAME="class" VALUE="text"/>
+<node CREATED="1379781951937" ID="ID_653042845" MODIFIED="1379782128889" TEXT="on">
+<attribute NAME="class" VALUE="text"/>
+<node CREATED="1379781955721" ID="ID_1304147080" MODIFIED="1379782142077" TEXT="[url]">
+<attribute NAME="class" VALUE="url"/>
+<node CREATED="1379781963163" ID="ID_1365319231" MODIFIED="1379782133882" TEXT="page">
+<attribute NAME="class" VALUE="text"/>
+</node>
+</node>
+</node>
+</node>
 </node>
 </node>
 </node>
