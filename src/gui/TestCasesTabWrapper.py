@@ -59,7 +59,6 @@ class TestCasesTableModel(QtCore.QAbstractTableModel):
 	def removeItem(self, position):
 		self.beginRemoveRows(QtCore.QModelIndex(), position, position);
 		del(self.afefuc['project'].testcases.tests[position])
-#       del(self.afefuc['project'].ucspec.usecases[position])
 
 		self.endRemoveRows();
 
@@ -77,25 +76,18 @@ class TestCasesTableModel(QtCore.QAbstractTableModel):
 		else:
 			self.afefuc['project'].testcases.tests.insert(position, testcase[1])
 
-		#self.afefuc['project'].ucspec.usecases.append(usecase[1])
-		#self.afefuc['project'].testcases.tests.append(testcase[1])
 		self.endInsertRows()
 
 	def updateItem(self, testcase): #testcase = (original,new)
 		counter = 0
 
-		print 'tests len', len(self.afefuc['project'].testcases.tests)
+		#print 'tests len', len(self.afefuc['project'].testcases.tests)
 
 		for i, tc in enumerate(self.afefuc['project'].testcases.tests):
 			if tc is testcase[0]:
 				counter = i
 				self.afefuc['project'].testcases.tests[i] = testcase[1]
 				break
-#       for i, uc in enumerate(self.afefuc['project'].ucspec.usecases):
-#           if uc is usecase[0]:
-#               counter = i
-#               self.afefuc['project'].ucspec.usecases[i] = usecase[1]
-#               break
 
 		self.emit(QtCore.SIGNAL("dataChanged(index, index)"),
 				self.createIndex(counter, 0, None),
@@ -226,13 +218,7 @@ class TestCasesTabWrapper():
 		if len(self.tab.itemsView.selectedIndexes()) == 2:
 			position = self.tab.itemsView.selectedIndexes()[0].row()
 			original = self.afefuc['project'].testcases.tests[position]
-			#print 'position', position
 			tc = clone.testcase(original, self.afefuc['project'])
-#           original = self.afefuc['project'].ucspec.test[position]
-
-#           uc = clone.test_case(original, self.afefuc['project'])
-#           uc.setParent(original.parent)
-
 			TestCaseFormWrapper(self, self.afefuc, item = (original, tc)).show()
 
 	def clickedMoveUpButton(self):

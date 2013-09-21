@@ -489,7 +489,7 @@ class TestCaseFormWrapper():
 		self.dialog.close()
 
 	def clickedOKButton(self):
-		if self.item_original:
+		if isinstance(self.item_original, model.TestCase):
 			self.parent.model.updateItem((self.item_original, self.item))
 		else:
 			self.parent.model.insertItem((self.item_original, self.item))
