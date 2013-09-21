@@ -96,11 +96,7 @@ class selenium():
 				action[0] = e.getAction()
 			elif e.getElementClass() in ['name', 'url']:
 				if e.getElementClass() == 'url':
-					if re.match(r'^http://', e.getParsedValue()) == None:
-						url = e.getParsedValue()
-						action[1] = '"http://' + url[1:]
-					else:
-						action[1] = e.getParsedValue()
+					action[1] = e.getParsedValue()
 				else:
 					action[1] = e.getParsedValue()
 			elif e.getElementClass() in ['value', 'number']:
@@ -169,12 +165,12 @@ class selenium():
 				else:
 					if output[1] == '':
 						# all page
-						file.write('\t\tallPageCode = self.driver.getPageSource()\n\n')
-						file.write('\t\tself.assertTrue(allPageCode.contains(' + output[2] + '))\n\n')
+						file.write('\t\tallPageCode = self.driver.page_source\n\n')
+						file.write('\t\tself.assertTrue(allPageCode.find(' + output[2] + '))\n\n')
 					else:
 						# specified element
 						file.write('\t\telement = self.driver.find_element_by_id(' + output[2] + ').text\n\n')
-						file.write('\t\tself.assertTrue(element.contains(' + output[2] + '))\n\n')
+						file.write('\t\tself.assertTrue(element.find(' + output[2] + '))\n\n')
 			elif output[0] == 'openWindow':
 				if output[1] == '':
 					raise Exception('Invalid number of parameters for action: openWindow')

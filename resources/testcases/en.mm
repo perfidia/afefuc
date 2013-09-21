@@ -271,28 +271,6 @@
 </node>
 </node>
 </node>
-<node CREATED="1379781925030" ID="ID_1017230092" MODIFIED="1379782085305" TEXT="verifies">
-<attribute NAME="action" VALUE="checkPagePresent"/>
-<attribute NAME="class" VALUE="action"/>
-<node CREATED="1379781943787" ID="ID_368992810" MODIFIED="1379782099095" TEXT="that">
-<attribute NAME="class" VALUE="text"/>
-<node CREATED="1379781948869" ID="ID_831816647" MODIFIED="1379782111886" TEXT="user">
-<attribute NAME="class" VALUE="text"/>
-<node CREATED="1379781950856" ID="ID_605200417" MODIFIED="1379782123293" TEXT="is">
-<attribute NAME="class" VALUE="text"/>
-<node CREATED="1379781951937" ID="ID_653042845" MODIFIED="1379782128889" TEXT="on">
-<attribute NAME="class" VALUE="text"/>
-<node CREATED="1379781955721" ID="ID_1304147080" MODIFIED="1379782142077" TEXT="[url]">
-<attribute NAME="class" VALUE="url"/>
-<node CREATED="1379781963163" ID="ID_1365319231" MODIFIED="1379782133882" TEXT="page">
-<attribute NAME="class" VALUE="text"/>
-</node>
-</node>
-</node>
-</node>
-</node>
-</node>
-</node>
 </node>
 </node>
 </map>
