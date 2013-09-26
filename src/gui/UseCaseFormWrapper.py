@@ -81,9 +81,15 @@ class MainScenarioTableModel(QtCore.QAbstractTableModel):
 	def setData(self, index, value, role):
 		if index.isValid() and role == QtCore.Qt.EditRole:
 			value = unicode(value.toString().toUtf8(), 'utf-8')
-			items = converter.textToItems(self.afefuc['project'], value, (self.item_orginal, self.item))
-
-			self.item.scenario.items[index.row()].items = items
+			try:
+				items = converter.textToItems(self.afefuc['project'], value, (self.item_orginal, self.item))
+				self.item.scenario.items[index.row()].items = items
+			except ValueError:
+				QtGui.QMessageBox.about(None, "Errors", "Invalid reference")
+				self.item.scenario.items[index.row()].items = [model.TextItem(value)]
+				#form.mainScenarioView.setFocus()
+				#form.mainScenarioView.setCurrentCell(index, 2)
+				
 
 			return True
 
@@ -252,9 +258,13 @@ class EventsTableModel(QtCore.QAbstractTableModel):
 			row = index.row()
 
 			value = unicode(value.toString().toUtf8(), 'utf-8')
-			new = converter.textToItems(self.afefuc['project'], value, (self.item_orginal, self.item))
+			
 
-			#self.beginInsertRows(QtCore.QModelIndex(), row, row)
+			try:
+				new = converter.textToItems(self.afefuc['project'], value, (self.item_orginal, self.item))
+			except ValueError:
+				QtGui.QMessageBox.about(None, "Errors", "Invalid reference")
+				new = [model.TextItem(value)]
 
 			counter = 0;
 
@@ -601,11 +611,21 @@ class UseCaseFormWrapper():
 	def clickedOKButton(self):
 		index = self.form.priorityComboBox.currentIndex()
 		priority = self.form.priorityComboBox.itemData(index).toPyObject()
-		self.item.priority = priority.get_ref()
+		
+		try:
+			self.item.priority = priority.get_ref()
+		except:
+			QtGui.QMessageBox.about(self.dialog, "Errors", "Priority must be specified")
+			return
 
 		index = self.form.goalLevelComboBox.currentIndex()
 		priority = self.form.goalLevelComboBox.itemData(index).toPyObject()
-		self.item.goal_level = priority.get_ref()
+		
+		try:
+			self.item.goal_level = priority.get_ref()
+		except:
+			QtGui.QMessageBox.about(self.dialog, "Errors", "Goal level must be specified")
+			return
 
 		self.item.remarks = converter.textToItems(
 				self.afefuc['project'],

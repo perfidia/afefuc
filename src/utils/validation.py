@@ -1,10 +1,11 @@
 '''
 Created on 19 Jun 2013
 
-@author: Bartosz Alchimowicz
+@author: Bartosz Alchimowicz, Michal Tomczyk, Mateusz Dembski
 '''
 
 from PyQt4 import QtGui, QtCore
+import format.model
 import re
 #def identifier(parent):
 #	return QtGui.QRegExpValidator(QtCore.QRegExp("[A-Z]+[A-Z_]*[0-9]*"), parent);
@@ -38,12 +39,16 @@ def _count_field(test_item, items_list, field_name):
 	return count
 
 def _is_empty(text):
-	if len(text): return False
-
+	if text is None: return False
+	try:
+		if len(text): return False
+	except:
+		return False
+		
 	return True
 
 def _is_identifier(text):
-
+	if text is None: return False
 	if not re.match(r"[A-Z]+[A-Z_]*[0-9]*", text):
 		return False
 
@@ -154,17 +159,16 @@ def actor(project, item):
 def usecase(project, item):
 	errors = {}
 	
-	if _is_empty(item.title):
+	if item.title == [] or _is_empty(item.title):
 		errors['Title'] = {"This field cannot be empty"}
 
 	if _count_field(item, project.ucspec.usecases, 'title') > 0:
 		errors['Title'] = {"Title should be unique"}
 
-	if(_is_identifier(item.identifier) == False):
-		errors['ID'] = {"This field is not a valid identifier"}
-
 	if _is_empty(item.identifier):
 		errors['ID'] = {"This field cannot be empty"}
+	elif(_is_identifier(item.identifier) == False):
+			errors['ID'] = {"This field is not a valid identifier"}
 
 	if _count_field(item, project.ucspec.usecases, 'identifier') > 0:
 		errors['ID'] = {"Identifier should be unique"}
@@ -178,24 +182,28 @@ def usecase(project, item):
 		errors['preconditions'] = {"There should be at least one precondition"} # conditions should be non empty
 	if len(item.postconditions) == 0:
 		errors['postconditions'] = {"There should be at least one postcondition"}
-		
 	
-	#import pdb
-	#pdb.set_trace()
-	
-	# all uc should end with @eouc
-	# all events should end with @eouc or @goto
-	# step in uc cannot be empty
-	# references in uc should exist
-	
-	
-	
-	
-	#for step in item.scenario.events:
-		
-		
+	scenario_errors = scenario(project, item.scenario)
+	errors.update(scenario_errors)
 
 	return errors
+
+def scenario(project, item):
+	errors = {}
+	
+	# step in uc cannot be empty (step.items.len > 0)
+	for step in item.items:
+		if len(step.items) == 0:
+			errors['Scenario'] = {"Step in scenario cannot be empty."}
+		elif (isinstance(step.items[-1], format.model.Command)) == False:
+			errors['Scenario'] = {"Step should end with @eouc or @goto"}
+		
+		for event in step.events:
+			scenario_errors = scenario(project, event.scenario)
+			errors.update(scenario_errors)
+	
+	return errors
+	
 
 def glossary(project, item):
 	errors = {}
