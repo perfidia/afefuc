@@ -18,10 +18,12 @@ from os import path
 from os import remove
 import re
 import codecs
+from PyQt4 import QtGui
 
-class selenium:
+class selenium():
 
-	def __init__(self, sb):
+	def __init__(self, sb, parent):
+		self.parent = parent
 		self.sb = sb
 		self.browser = None
 		self.system = None
@@ -41,10 +43,21 @@ class selenium:
 		outputPath = outputDir + fileName + '.py'
 
 		if path.isdir(outputDir):
-			if path.exists(outputPath):
-				raise Exception('File already exists!')
-			else:
-				try:
+			try:
+				if path.exists(outputPath):
+					msg = 'File ' + fileName + '.py already exists. Do you want to overwrite this file?'
+					ret = QtGui.QMessageBox.warning(self.parent, "Warning", msg, QtGui.QMessageBox.Yes, QtGui.QMessageBox.No)
+					if ret == 65536:
+						return
+					else:
+						outputFile = codecs.open(outputPath, 'w', 'utf-8')
+
+						self.generateHeader(outputFile, fileName)
+						self.generateActions(actions, outputFile)
+						self.generateFooter(outputFile)
+
+						outputFile.close()
+				else:
 					outputFile = codecs.open(outputPath, 'w', 'utf-8')
 
 					self.generateHeader(outputFile, fileName)
@@ -52,15 +65,15 @@ class selenium:
 					self.generateFooter(outputFile)
 
 					outputFile.close()
-					print ' + ' + fileName
-				except IOError as e:
-					raise Exception('I/O error({0}): {1}'.format(e.errno, e.strerror))
-				except Exception as e:
-					print ' - Unexpected error occured in TC: ' + tc.title
-					print ' - Error message: ' + e.message
-					remove(outputPath)
+			except IOError as e:
+				QtGui.QMessageBox.warning(self.parent, 'Message', 'I/O error({0}): {1}'.format(e.errno, e.strerror), QtGui.QMessageBox.Ok)
+			except Exception as e:
+				remove(outputPath)
+				msg = 'Unexpected error occured in TC: ' + tc.title + '\n' + 'Error message: ' + e.message
+
+				QtGui.QMessageBox.warning(self.parent, 'Message', msg, QtGui.QMessageBox.Ok)
 		else:
-			raise Exception('Wrong path, or file name')
+			QtGui.QMessageBox.warning(self.parent, 'Message', 'Wrong path, or file name', QtGui.QMessageBox.Ok)
 
 	def makeFileName(self, input):
 		dic = {'ś':'s', 'ć':'c', 'ą':'a', 'ę':'e', 'ż':'z', 'ź':'z', 'ó':'o', 'ł':'l', 'ń':'n'}
@@ -83,11 +96,7 @@ class selenium:
 				action[0] = e.getAction()
 			elif e.getElementClass() in ['name', 'url']:
 				if e.getElementClass() == 'url':
-					if re.match(r'^http://', e.getParsedValue()) == None:
-						url = e.getParsedValue()
-						action[1] = '"http://' + url[1:]
-					else:
-						action[1] = e.getParsedValue()
+					action[1] = e.getParsedValue()
 				else:
 					action[1] = e.getParsedValue()
 			elif e.getElementClass() in ['value', 'number']:
@@ -156,12 +165,12 @@ class selenium:
 				else:
 					if output[1] == '':
 						# all page
-						file.write('\t\tallPageCode = self.driver.getPageSource()\n\n')
-						file.write('\t\tself.assertTrue(allPageCode.contains(' + output[2] + '))\n\n')
+						file.write('\t\tallPageCode = self.driver.page_source\n\n')
+						file.write('\t\tself.assertTrue(allPageCode.find(' + output[2] + '))\n\n')
 					else:
 						# specified element
 						file.write('\t\telement = self.driver.find_element_by_id(' + output[2] + ').text\n\n')
-						file.write('\t\tself.assertTrue(element.contains(' + output[2] + '))\n\n')
+						file.write('\t\tself.assertTrue(element.find(' + output[2] + '))\n\n')
 			elif output[0] == 'openWindow':
 				if output[1] == '':
 					raise Exception('Invalid number of parameters for action: openWindow')

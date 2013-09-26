@@ -12,17 +12,17 @@ try:
 except AttributeError:
 		_fromUtf8 = lambda s: s
 
-class SeleniumExportWrapper():
+class SeleniumExportWrapper(QtGui.QDialog):
 	def __init__(self, parent, afefuc):
+		super(SeleniumExportWrapper, self).__init__(parent)
 		self.parent = parent
-
-		self.dialog = QtGui.QDialog()
 		self.form = Ui_SeleniumExport()
 		self.afefuc = afefuc
 		self.system = None
 		self.browser = None
 		self.path = None
 		self.tc = None
+		self.isClosed = False
 
 	def load(self):
 		self.form.testCaseComboBox.addItem('All test cases', self.afefuc['project'].testcases)
@@ -31,18 +31,19 @@ class SeleniumExportWrapper():
 			self.form.testCaseComboBox.addItem(testcase.title, testcase)
 
 	def show(self):
-		self.form.setupUi(self.dialog)
+		self.form.setupUi(self)
 
 		self.load()
 
-		QtCore.QObject.connect(self.form.boxButton, QtCore.SIGNAL(_fromUtf8("accepted()")), self.clickedOKButton)
-		QtCore.QObject.connect(self.form.boxButton, QtCore.SIGNAL(_fromUtf8("rejected()")), self.clickedCancelButton)
+		QtCore.QObject.connect(self.form.buttonOK, QtCore.SIGNAL(_fromUtf8("clicked()")), self.clickedOKButton)
+		QtCore.QObject.connect(self.form.buttonCancel, QtCore.SIGNAL(_fromUtf8("clicked()")), self.clickedCancelButton)
 		QtCore.QObject.connect(self.form.selectPathButton, QtCore.SIGNAL(_fromUtf8("clicked()")), self.clickedSelectButton)
 
-		self.dialog.exec_()
+		self.exec_()
 
 	def clickedCancelButton(self):
-		self.dialog.close()
+		self.isClosed = True
+		self.close()
 
 	def clickedOKButton(self):
 		tccb = self.form.testCaseComboBox
@@ -56,8 +57,6 @@ class SeleniumExportWrapper():
 
 		if self.path:
 			if len(self.tc) > 0:
-				print '* exporting tests to selenium *'
-
 				sb = None
 
 				if self.afefuc['project'].language == 'en':
@@ -65,34 +64,32 @@ class SeleniumExportWrapper():
 				else:
 					sb = highlighter('generated/testcases/pl.xml')
 
-				s = selenium(sb)
+				s = selenium(sb, self)
 
 				if isinstance(self.tc, TestCases):
 					for test in self.tc.tests:
-						try:
-							s.generateCode(test, self.browser, self.system, self.path)
-						except Exception as e:
-							print 'Unexpected error occured in TC: ' + test.title
-							print 'Error message: ' + e.message
+						s.generateCode(test, self.browser, self.system, self.path)
 				else:
-						try:
-							s.generateCode(self.tc, self.browser, self.system, self.path)
-						except Exception as e:
-							print 'Unexpected error occured in TC: ' + test.title
-							print 'Error message: ' + e.message
-
-				print '* export finished *'
+						s.generateCode(self.tc, self.browser, self.system, self.path)
+						
+				QtGui.QMessageBox.information(self, 'Message', 'Export finished.', QtGui.QMessageBox.Ok)
 			else:
-				print '* nothing to export *'
+				QtGui.QMessageBox.information(self, 'Message', 'There is nothing to export.', QtGui.QMessageBox.Ok)
 		else:
-			print '* directory is not selected *'
+			QtGui.QMessageBox.warning(self, 'Message', 'Directory is not selected.', QtGui.QMessageBox.Ok)
 
-		self.dialog.close()
+		self.close()
 		
 
 	def clickedSelectButton(self):
-		path = QtGui.QFileDialog.getExistingDirectory(self.dialog, 'Select directory')
+		path = QtGui.QFileDialog.getExistingDirectory(self, 'Select directory')
 
 		if path:
 			self.path = path
 			self.form.pathLineEdit.setText(path)
+
+	def closeEvent(self, e):
+		if self.isClosed:
+			e.accept()
+		else:
+			e.ignore()

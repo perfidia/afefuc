@@ -27,7 +27,7 @@ class CompleteTextEditDelegate(QtGui.QItemDelegate):
 		self.afefuc = afefuc
 
 	def createEditor(self, parent, option, index):
-		editor = TextEdit(parent)
+		editor = TextEdit(parent, self.afefuc)
 		self.completer = QtGui.QCompleter(self)
 
 		if self.afefuc['project'].language == 'en':
@@ -223,10 +223,11 @@ class ScenarioTableModel(QtCore.QAbstractTableModel):
 		self.movePositionUp(position + 1)
 
 class TextEdit(QtGui.QTextEdit):
-	def __init__(self, parent=None):
+	def __init__(self, parent=None, afefuc=None):
 		super(TextEdit, self).__init__(parent)
 		self._completer = None
 		self._highlighter = None
+		self.afefuc = afefuc
 
 	def setCompleter(self, c):
 		if self._completer is not None:
@@ -272,7 +273,7 @@ class TextEdit(QtGui.QTextEdit):
 			tc.insertText('""')
 			tc.movePosition(QtGui.QTextCursor.EndOfWord)
 			tc.setPosition(tc.position() - 1)
-		elif completion in ['[actor]', '[number]']:
+		elif completion in ['[number]', '[actor]']:
 			return
 		else:
 			tc.insertText(completion[-extra:])
@@ -328,6 +329,11 @@ class TextEdit(QtGui.QTextEdit):
 		for element in output[1]:
 			words.append(element.getValue())
 
+		if len(words) > 0 and words[0] == '[actor]' and len(self.afefuc['project'].actors) > 0:
+			words = []
+			for actor in self.afefuc['project'].actors:
+				words.append(actor.name)
+			
 		self._completer.setModel(QtGui.QStringListModel(words, self._completer))
 		completionPrefix = self.textUnderCursor()
 
@@ -483,7 +489,7 @@ class TestCaseFormWrapper():
 		self.dialog.close()
 
 	def clickedOKButton(self):
-		if self.item_original:
+		if isinstance(self.item_original, model.TestCase):
 			self.parent.model.updateItem((self.item_original, self.item))
 		else:
 			self.parent.model.insertItem((self.item_original, self.item))
