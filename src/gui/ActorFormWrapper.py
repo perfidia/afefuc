@@ -23,6 +23,7 @@ class ActorFormWrapper():
 		self.dialog = QtGui.QDialog()
 		self.form = Ui_ActorForm()
 		self.afefuc = afefuc
+		
 		self.item = item[1]
 		self.item_orginal = item[0]
 
@@ -75,12 +76,15 @@ class ActorFormWrapper():
 		self.dialog.close()
 
 	def clickedOKButton(self):
-		self.item.name = unicode(self.form.nameEdit.text().toUtf8(), "utf-8")
-		self.item.identifier = unicode(self.form.idEdit.text().toUtf8(), "utf-8")
-		self.item.description = converter.textToItems(
-				self.afefuc['project'],
-				unicode(self.form.descriptionEdit.toPlainText().toUtf8(), "utf-8")
-		)
+		try:
+			self.item.name = unicode(self.form.nameEdit.text().toUtf8(), "utf-8")
+			self.item.identifier = unicode(self.form.idEdit.text().toUtf8(), "utf-8")
+			self.item.description = converter.textToItems(
+					self.afefuc['project'],
+					unicode(self.form.descriptionEdit.toPlainText().toUtf8(), "utf-8")
+			)
+		except ValueError:
+			validation.errorMessage(self.dialog, "Invalid reference")
 
 		index = self.form.typeComboBox.currentIndex()
 		self.item.type = unicode(self.form.typeComboBox.itemData(index).toPyObject().toUtf8(), "utf-8")
@@ -89,8 +93,7 @@ class ActorFormWrapper():
 		self.item.communication = unicode(self.form.communicationComboBox.itemData(index).toPyObject().toUtf8(), "utf-8")
 
 		# validate
-
-		errors = validation.actor(self.afefuc['project'], self.item)
+		errors = validation.actor(self.afefuc['project'], self.item, self.item_orginal is None)
 
 		if errors:
 			validation._show(self.dialog, errors)

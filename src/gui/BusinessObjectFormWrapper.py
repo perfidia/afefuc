@@ -119,8 +119,12 @@ class AttributesTableModel(QtCore.QAbstractTableModel):
 				else:
 					assert 1 == 2
 			elif index.column() == 2:
-				self.item.attributes[index.row()].description = converter.textToItems(self.afefuc['project'], value)
+				try:
+					self.item.attributes[index.row()].description = converter.textToItems(self.afefuc['project'], value)
+				except ValueError:
+					validation.errorMessage(self.dialog, "Invalid reference")
 
+				self.item.attributes[index.row()].description = value
 			return True
 
 		return False
@@ -212,20 +216,31 @@ class BusinessObjectFormWrapper():
 		self.dialog.close()
 
 	def clickedOKButton(self):
-		self.item.name = converter.textToItems(
+		try:
+			self.item.name = converter.textToItems(
 				self.afefuc['project'],
 				unicode(self.form.nameEdit.text().toUtf8(), "utf-8")
-		)
+			)
+		except ValueError:
+			validation.errorMessage(self.dialog, "Invalid reference in name")
+			return
+		
 		self.item.identifier = unicode(self.form.idEdit.text().toUtf8(), "utf-8")
-		self.item.description = converter.textToItems(
-				self.afefuc['project'],
-				unicode(self.form.descriptionEdit.toPlainText().toUtf8(), "utf-8")
-		)
+		
+		try:
+			self.item.description = converter.textToItems(
+					self.afefuc['project'],
+					unicode(self.form.descriptionEdit.toPlainText().toUtf8(), "utf-8")
+			)
+		except ValueError:
+			validation.errorMessage(self.dialog, "Invalid reference in description")
+			return
+		
 		self.item.state_diagram = unicode(self.form.stateDiagramEdit.toPlainText().toUtf8(), "utf-8")
 
 		# validate
 
-		errors = validation.business_object(self.afefuc['project'], self.item)
+		errors = validation.business_object(self.afefuc['project'], self.item, self.item_orginal is None)
 
 		if errors:
 			validation._show(self.dialog, errors)

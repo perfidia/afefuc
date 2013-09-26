@@ -54,7 +54,7 @@ class PriorityFormWrapper():
 
 		# validate
 
-		errors = validation.priority(self.afefuc['project'], self.item)
+		errors = validation.priority(self.afefuc['project'], self.item, self.item_orginal is None)
 
 		if errors:
 			validation._show(self.dialog, errors)

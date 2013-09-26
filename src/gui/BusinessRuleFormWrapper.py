@@ -92,20 +92,28 @@ class BusinessRuleFormWrapper():
 
 		index = self.form.dynamismComboBox.currentIndex()
 		self.item.dynamism = unicode(self.form.dynamismComboBox.itemData(index).toPyObject().toUtf8(), "utf-8")
-
-		self.item.description = converter.textToItems(
+		
+		try:
+			self.item.description = converter.textToItems(
 				self.afefuc['project'],
 				unicode(self.form.descriptionEdit.toPlainText().toUtf8(), "utf-8")
-		)
-
-		self.item.source = converter.textToItems(
+			)
+		except ValueError:
+			validation.errorMessage(self.dialog, "Invalid reference in description")
+			return
+		
+		try:
+			self.item.source = converter.textToItems(
 				self.afefuc['project'],
 				unicode(self.form.sourceEdit.toPlainText().toUtf8(), "utf-8")
-		)
+			)
+		except ValueError:
+			validation.errorMessage(self.dialog, "Invalid reference in source")
+			return
 
 		# validate
 
-		errors = validation.business_rule(self.afefuc['project'], self.item)
+		errors = validation.business_rule(self.afefuc['project'], self.item, self.item_orginal is None)
 
 		if errors:
 			validation._show(self.dialog, errors)

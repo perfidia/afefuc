@@ -85,7 +85,7 @@ class MainScenarioTableModel(QtCore.QAbstractTableModel):
 				items = converter.textToItems(self.afefuc['project'], value, (self.item_orginal, self.item))
 				self.item.scenario.items[index.row()].items = items
 			except ValueError:
-				QtGui.QMessageBox.about(None, "Errors", "Invalid reference")
+				validation.errorMessage(None, "Invalid reference")
 				self.item.scenario.items[index.row()].items = [model.TextItem(value)]
 				#form.mainScenarioView.setFocus()
 				#form.mainScenarioView.setCurrentCell(index, 2)
@@ -263,7 +263,7 @@ class EventsTableModel(QtCore.QAbstractTableModel):
 			try:
 				new = converter.textToItems(self.afefuc['project'], value, (self.item_orginal, self.item))
 			except ValueError:
-				QtGui.QMessageBox.about(None, "Errors", "Invalid reference")
+				validation.errorMessage(None, "Invalid reference")
 				new = [model.TextItem(value)]
 
 			counter = 0;
@@ -428,9 +428,14 @@ class ConditionsTableModel(QtCore.QAbstractTableModel):
 	def setData(self, index, value, role):
 		if index.isValid() and role == QtCore.Qt.EditRole:
 			value = unicode(value.toString().toUtf8(), 'utf-8')
-			items = converter.textToItems(self.afefuc['project'], value, (self.item_orginal, self.item))
+			
+			try:
+				items = converter.textToItems(self.afefuc['project'], value, (self.item_orginal, self.item))
+				self.conditions[index.row()].items = items
+			except ValueError:
+				validation.errorMessage(self.dialog, "Invalid reference")
 
-			self.conditions[index.row()].items = items
+			self.conditions[index.row()].items = [format.model.TextItem(value)]
 
 			return True
 
@@ -615,7 +620,7 @@ class UseCaseFormWrapper():
 		try:
 			self.item.priority = priority.get_ref()
 		except:
-			QtGui.QMessageBox.about(self.dialog, "Errors", "Priority must be specified")
+			validation.errorMessage(self.dialog, "Priority must be specified")
 			return
 
 		index = self.form.goalLevelComboBox.currentIndex()
@@ -624,21 +629,30 @@ class UseCaseFormWrapper():
 		try:
 			self.item.goal_level = priority.get_ref()
 		except:
-			QtGui.QMessageBox.about(self.dialog, "Errors", "Goal level must be specified")
+			validation.errorMessage(self.dialog, "Goal level must be specified")
 			return
-
-		self.item.remarks = converter.textToItems(
+		
+		try:
+			self.item.remarks = converter.textToItems(
 				self.afefuc['project'],
 				unicode(self.form.remarksTextEdit.toPlainText().toUtf8(), "utf-8")
-		)
-		self.item.summary = converter.textToItems(
+			)
+		except:
+			validation.errorMessage(self.dialog, "Invalid reference in remarks")
+			return
+		
+		try:
+			self.item.summary = converter.textToItems(
 				self.afefuc['project'],
 				unicode(self.form.summaryTextEdit.toPlainText().toUtf8(), "utf-8")
-		)
+			)
+		except:
+			validation.errorMessage(self.dialog, "Invalid reference in summary")
+			return
 		
 		# validate
 
-		errors = validation.usecase(self.afefuc['project'], self.item)
+		errors = validation.usecase(self.afefuc['project'], self.item, self.item_original is None)
 
 		if errors:
 			validation._show(self.dialog, errors)
@@ -745,7 +759,8 @@ class UseCaseFormWrapper():
 			self.modelEV.movePositionDown(position)
 
 	def editingFinishedTitleEdit(self):
-		self.item.title = converter.textToItems(
+		try:
+			self.item.title = converter.textToItems(
 				self.afefuc['project'],
 				unicode(
 						self.form.titleEdit.text().toUtf8(),
@@ -755,7 +770,10 @@ class UseCaseFormWrapper():
 						self.item_original,
 						self.item
 				)
-		)
+			)
+		except ValueError:
+			validation.errorMessage(None, "Invalid reference in title")
+			return
 
 		self.modelEV.reset()
 		self.modelMS.reset()

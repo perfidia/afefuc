@@ -54,7 +54,7 @@ class GoalLevelFormWrapper():
 
 		# validate
 
-		errors = validation.goal_level(self.afefuc['project'], self.item)
+		errors = validation.goal_level(self.afefuc['project'], self.item, self.item_orginal is None)
 
 		if errors:
 			validation._show(self.dialog, errors)

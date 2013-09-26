@@ -47,15 +47,20 @@ class TermFormWrapper():
 		self.dialog.close()
 
 	def clickedOKButton(self):
-		self.item.name = unicode(self.form.nameEdit.text().toUtf8(), "utf-8")
-		self.item.definition = converter.textToItems(
-				self.afefuc['project'],
-				unicode(self.form.definitionEdit.toPlainText().toUtf8(), "utf-8")
-		)
+		try:
+			self.item.name = unicode(self.form.nameEdit.text().toUtf8(), "utf-8")
+			self.item.definition = converter.textToItems(
+					self.afefuc['project'],
+					unicode(self.form.definitionEdit.toPlainText().toUtf8(), "utf-8")
+			)
+		except ValueError:
+			validation.errorMessage(self.dialog, "Invalid reference")
+			return
+		
 
 		# validate
 
-		errors = validation.glossary(self.afefuc['project'], self.item)
+		errors = validation.glossary(self.afefuc['project'], self.item, self.item_orginal is None)
 
 		if errors:
 			validation._show(self.dialog, errors)
