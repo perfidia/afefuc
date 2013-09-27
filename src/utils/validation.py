@@ -244,12 +244,15 @@ def scenario(project, item, edit):
         for event in step.events:
             scenario_errors = scenario(project, event.scenario, edit)
             errors.update(scenario_errors)
+        
 
     if len(item.items) > 0:
         if len(item.items[-1].items) > 0:
+            #import pdb
+            #pdb.set_trace()
             ok=False
             for sitem in item.items[-1].items:
-                if isinstance(item.items[-1].items[-1], format.model.Command):
+                if isinstance(sitem, format.model.Command):
                     ok=True
             if ok==False:
                 errors['Scenario'] = {"Scenario should end with @eouc or @goto"}
