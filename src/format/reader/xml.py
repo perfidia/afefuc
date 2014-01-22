@@ -393,7 +393,6 @@ def read(filename = None):
 			return ref.item
 
 	def teststep(project, node):
-
 		retval = model.TestStep()
 
 		for n in node.getchildren():
@@ -406,6 +405,19 @@ def read(filename = None):
 					retval.tcstep = ''
 
 		return retval
+
+	def descriptions(project, node):
+		retval = {'problem': '', 'system': ''}
+
+		for n in node.getchildren():
+			if n.tag == 'problem':
+				retval['problem'] = n.text
+			elif n.tag == 'system':
+				retval['system'] = n.text
+
+		print retval
+
+		return retval['problem'], retval['system']
 
 	def project(node):
 		if node.tag != 'project':
@@ -437,6 +449,8 @@ def read(filename = None):
 				retval.glossary = generic_list_iterator(retval, n, term)
 			elif n.tag == 'testcases':
 				retval.testcases = testcases(retval, n)
+			elif n.tag == 'description':
+				retval.problem_description, retval.system_description = descriptions(retval, n)
 			else:
 				print n.tag
 				raise ValueError("Unsupported format file")

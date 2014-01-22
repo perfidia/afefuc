@@ -133,9 +133,11 @@ class MainWindowWrapper(QtGui.QMainWindow):
 			self.mainWindow.tabWidget.show()
 
 	def clickedSave(self, saveAs = False):
-		self.afefuc['project'].name         = unicode(self.propertiesTab.tab.projectNameEdit.text().toUtf8(), "utf-8")
-		self.afefuc['project'].version      = unicode(self.propertiesTab.tab.versionEdit.text().toUtf8(), "utf-8")
-		self.afefuc['project'].abbreviation = unicode(self.propertiesTab.tab.abbreviationEdit.text().toUtf8(), "utf-8")
+		self.afefuc['project'].name                = unicode(self.propertiesTab.tab.projectNameEdit.text().toUtf8(), "utf-8")
+		self.afefuc['project'].version             = unicode(self.propertiesTab.tab.versionEdit.text().toUtf8(), "utf-8")
+		self.afefuc['project'].abbreviation        = unicode(self.propertiesTab.tab.abbreviationEdit.text().toUtf8(), "utf-8")
+		self.afefuc['project'].problem_description = unicode(self.propertiesTab.tab.problemEdit.toPlainText().toUtf8(), "utf-8")
+		self.afefuc['project'].system_description  = unicode(self.propertiesTab.tab.systemEdit.toPlainText().toUtf8(), "utf-8")
 
 		if self.afefuc['project'] and (not self.filename or saveAs == True):
 			self.filename = QtGui.QFileDialog.getSaveFileName(self, "Save as", "", "AFEFUC (*.auc)")
@@ -161,7 +163,7 @@ class MainWindowWrapper(QtGui.QMainWindow):
 		if self.afefuc['project']:
 			WikiExportWrapper(self, self.afefuc).show()
 
-	def clickedExportSelenium(self): 
+	def clickedExportSelenium(self):
 		if self.afefuc['project']:
 			SeleniumExportWrapper(self, self.afefuc).show()
 

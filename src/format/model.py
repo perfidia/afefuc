@@ -57,6 +57,8 @@ class Project(object):
 		self.ucspec = UCSpec()                  # UCSpec
 		self.testcases = TestCases()
 			#TODO TCSpec()
+		self.problem_description = ""           # str
+		self.system_description = ""            # str
 		self.glossary = []						# Term{0..}
 
 	def _getItemByName(self, item, storage, name, replace):

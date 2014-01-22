@@ -68,6 +68,17 @@ def Project_att_to_xml(self, parent = None):
 	for t in self.glossary:
 		t.to_xml(glossary)
 
+	if len(self.problem_description) or len(self.system_description):
+		description = ET.SubElement(node, "description")
+
+		if len(self.problem_description):
+			problem = ET.SubElement(description, "problem")
+			problem.text = self.problem_description
+
+		if len(self.system_description):
+			system = ET.SubElement(description, "system")
+			system.text = self.system_description
+
 	testcases = ET.SubElement(node, "testcases")
 
 	self.testcases.to_xml(testcases)
@@ -382,7 +393,7 @@ def TestCases_att_to_xml(self, parent):
 
 def TestCase_att_to_xml(self, parent):
 	node = ET.SubElement(parent, 'testcase')
-	
+
 	uc_ref = ET.SubElement(node, "uc_ref")
 	if self.uc_ref:
 		uc_ref.text = unicode(self.uc_ref.identifier)
@@ -393,7 +404,7 @@ def TestCase_att_to_xml(self, parent):
 
 	title = ET.SubElement(node, "title")
 	if self.title:
-		title.text = unicode(self.title) 
+		title.text = unicode(self.title)
 
 	node = ET.SubElement(node, 'path')
 
