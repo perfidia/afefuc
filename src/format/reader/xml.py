@@ -415,8 +415,6 @@ def read(filename = None):
 			elif n.tag == 'system':
 				retval['system'] = n.text
 
-		print retval
-
 		return retval['problem'], retval['system']
 
 	def project(node):
