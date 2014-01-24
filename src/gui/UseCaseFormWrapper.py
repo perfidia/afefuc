@@ -690,13 +690,17 @@ class UseCaseFormWrapper():
 		self.form.actorOtherEdit.setText(_fromUtf8(", ".join(["[%s] %s" % (a.item.identifier, a.item.name) for a in self.item.other_actors])))
 
 	def clickedInsertStepMSButton(self):
+		print "!!!"
+
 		step = model.Step()
 		step.setParent(self.item)
+
+		print self.form.mainScenarioView.selectedIndexes()
 
 		if len(self.form.mainScenarioView.selectedIndexes()) != 0:
 			position = self.form.mainScenarioView.selectedIndexes()[0].row()
 
-			self.modelMS.insertItem(step, position)
+			self.modelMS.insertItem(step, position + 1)
 		else:
 			self.modelMS.insertItem(step)
 

@@ -182,7 +182,7 @@
            <item>
             <widget class="QPushButton" name="insertStepMSButton">
              <property name="text">
-              <string>Insert step</string>
+              <string>Add step</string>
              </property>
             </widget>
            </item>
