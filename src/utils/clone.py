@@ -146,8 +146,8 @@ def usecase_content(target, source, project):
 		return retval
 
 	target.identifier = source.identifier
-	target.goal_level = source.goal_level.item.get_ref()
-	target.priority = source.priority.item.get_ref()
+	target.goal_level = source.goal_level.item.get_ref() if source.goal_level else None
+	target.priority = source.priority.item.get_ref() if source.priority else None
 	target.main_actors = [r.item.get_ref() for r in source.main_actors]
 	target.other_actors = [r.item.get_ref() for r in source.other_actors]
 

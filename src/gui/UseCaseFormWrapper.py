@@ -89,7 +89,7 @@ class MainScenarioTableModel(QtCore.QAbstractTableModel):
 				self.item.scenario.items[index.row()].items = [model.TextItem(value)]
 				#form.mainScenarioView.setFocus()
 				#form.mainScenarioView.setCurrentCell(index, 2)
-				
+
 
 			return True
 
@@ -258,7 +258,7 @@ class EventsTableModel(QtCore.QAbstractTableModel):
 			row = index.row()
 
 			value = unicode(value.toString().toUtf8(), 'utf-8')
-			
+
 
 			try:
 				new = converter.textToItems(self.afefuc['project'], value, (self.item_orginal, self.item))
@@ -428,7 +428,7 @@ class ConditionsTableModel(QtCore.QAbstractTableModel):
 	def setData(self, index, value, role):
 		if index.isValid() and role == QtCore.Qt.EditRole:
 			value = unicode(value.toString().toUtf8(), 'utf-8')
-			
+
 			try:
 				items = converter.textToItems(self.afefuc['project'], value, (self.item_orginal, self.item))
 				self.conditions[index.row()].items = items
@@ -614,45 +614,45 @@ class UseCaseFormWrapper():
 		self.dialog.close()
 
 	def clickedOKButton(self):
-		index = self.form.priorityComboBox.currentIndex()
-		priority = self.form.priorityComboBox.itemData(index).toPyObject()
-		
-		try:
-			self.item.priority = priority.get_ref()
-		except:
-			validation.errorMessage(self.dialog, "Priority must be specified")
-			return
+# 		index = self.form.priorityComboBox.currentIndex()
+# 		priority = self.form.priorityComboBox.itemData(index).toPyObject()
+#
+# 		try:
+# 			self.item.priority = priority.get_ref()
+# 		except:
+# 			validation.errorMessage(self.dialog, "Priority must be specified")
+# 			return
 
-		index = self.form.goalLevelComboBox.currentIndex()
-		priority = self.form.goalLevelComboBox.itemData(index).toPyObject()
-		
-		try:
-			self.item.goal_level = priority.get_ref()
-		except:
-			validation.errorMessage(self.dialog, "Goal level must be specified")
-			return
-		
-		try:
-			self.item.remarks = converter.textToItems(
-				self.afefuc['project'],
-				unicode(self.form.remarksTextEdit.toPlainText().toUtf8(), "utf-8")
-			)
-		except:
-			validation.errorMessage(self.dialog, "Invalid reference in remarks")
-			return
-		
-		try:
-			self.item.summary = converter.textToItems(
-				self.afefuc['project'],
-				unicode(self.form.summaryTextEdit.toPlainText().toUtf8(), "utf-8")
-			)
-		except:
-			validation.errorMessage(self.dialog, "Invalid reference in summary")
-			return
-		
+# 		index = self.form.goalLevelComboBox.currentIndex()
+# 		priority = self.form.goalLevelComboBox.itemData(index).toPyObject()
+#
+# 		try:
+# 			self.item.goal_level = priority.get_ref()
+# 		except:
+# 			validation.errorMessage(self.dialog, "Goal level must be specified")
+# 			return
+
+# 		try:
+# 			self.item.remarks = converter.textToItems(
+# 				self.afefuc['project'],
+# 				unicode(self.form.remarksTextEdit.toPlainText().toUtf8(), "utf-8")
+# 			)
+# 		except:
+# 			validation.errorMessage(self.dialog, "Invalid reference in remarks")
+# 			return
+#
+# 		try:
+# 			self.item.summary = converter.textToItems(
+# 				self.afefuc['project'],
+# 				unicode(self.form.summaryTextEdit.toPlainText().toUtf8(), "utf-8")
+# 			)
+# 		except:
+# 			validation.errorMessage(self.dialog, "Invalid reference in summary")
+# 			return
+
 		# validate
 
-		errors = validation.usecase(self.afefuc['project'], self.item, self.item_original is None)
+		errors = validation.usecase(self.afefuc['project'], self.item, self.item_original is None, self.form)
 
 		if errors:
 			validation._show(self.dialog, errors)

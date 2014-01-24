@@ -7,6 +7,7 @@ Created on 19 Jun 2013
 from PyQt4 import QtGui, QtCore
 import format.model
 import re
+import converter
 #def identifier(parent):
 #    return QtGui.QRegExpValidator(QtCore.QRegExp("[A-Z]+[A-Z_]*[0-9]*"), parent);
 
@@ -22,7 +23,7 @@ def _show(parent, errors):
         msg.append("\n".join(e[1]))
 
     QtGui.QMessageBox.about(parent, "Errors", "".join(msg))
-    
+
 def errorMessage(parent, error):
     msg = "The following error was detected:\n* " + error
 
@@ -63,7 +64,7 @@ def _is_name(text):
 
     #import pdb
     #pdb.set_trace()
-    
+
     if not name_pattern.match(text):
 #     if not re.match(r"[A-Z]+[a-z0-9_]*", text):
         return False
@@ -71,18 +72,18 @@ def _is_name(text):
     return True
 
 def _is_title(text):
-    
+
     if text == []: return False
     return True
 
 def priority(project, item, edit):
     errors = {}
-    
+
     if edit:
         upper = 0
     else:
         upper = 1
-    
+
     if(_is_name(item.name) == False):
         errors['Name'] = {"Name should start with uppercase"}
 
@@ -121,7 +122,7 @@ def business_object(project, item, edit):
     else:
         upper = 1
 
-        
+
 
     if(_is_title(item.name) == False):
         errors['Name'] = {"Name cannot be empty."}
@@ -185,37 +186,76 @@ def actor(project, item, edit):
         errors['ID'] = {"This field cannot be empty"}
     elif _count_field(item, project.actors, "identifier") > upper:
         errors['ID'] = {"The following identifier is not unique"}
-        
+
     if _count_field(item, project.actors, "name") > upper:
         errors['Name'] = {"The following name is not unique"}
 
     return errors
 
-def usecase(project, item, edit):
+def usecase(project, item, edit, form):
     errors = {}
     #import pdb
     #pdb.set_trace()
-    
+
     if edit:
         upper = 0
     else:
         upper = 1
-    
+
+#     # priority
+#     index = form.priorityComboBox.currentIndex()
+#     priority = form.priorityComboBox.itemData(index).toPyObject()
+#
+#     try:
+#         item.priority = priority.get_ref()
+#     except:
+#         errors['Priority'] = {"Priority must be specified"}
+#
+#     # goal
+#     index = form.goalLevelComboBox.currentIndex()
+#     priority = form.goalLevelComboBox.itemData(index).toPyObject()
+#
+#     try:
+#         item.goal_level = priority.get_ref()
+#     except:
+#         errors['Goal level'] = {"Goal level must be specified"}
+#
+#     # remarks
+#     try:
+#         item.remarks = converter.textToItems(
+# 			project.afefuc['project'],
+# 			unicode(form.remarksTextEdit.toPlainText().toUtf8(), "utf-8")
+# 		)
+#     except:
+#         errors['Remarks'] = {"Invalid reference in remarks"}
+#
+#     # summary
+#     try:
+#         item.summary = converter.textToItems(
+# 			project.afefuc['project'],
+# 			unicode(form.summaryTextEdit.toPlainText().toUtf8(), "utf-8")
+# 		)
+#     except:
+#         errors['Summary'] = {"Invalid reference in summary"}
+
+    # title
     if(_is_title(item.title) == False):
         errors['Name'] = {"Title cannot be empty."}
 
+    # id
     if _is_empty(item.identifier):
         errors['ID'] = {"This field cannot be empty"}
     elif(_is_identifier(item.identifier) == False):
-            errors['ID'] = {"Identifier should start with uppercase"}
+        errors['ID'] = {"Identifier should start with uppercase"}
     elif _count_field(item, project.ucspec.usecases, 'identifier') > upper:
         errors['ID'] = {"Identifier should be unique"}
 
     # there should be at least one main actor and one other
-    if len(item.main_actors) == 0:
-        errors['main_actors'] = {"There should be at least one main actor"}
-    if len(item.other_actors) == 0:
-        errors['main_actors'] = {"There should be at least one other actor"}
+    if item.scenario.items:
+        if len(item.main_actors) == 0:
+            errors['main_actors'] = {"There should be at least one main actor"}
+        if len(item.other_actors) == 0:
+            errors['main_actors'] = {"There should be at least one other actor"}
 
     scenario_errors = scenario(project, item.scenario, edit)
     errors.update(scenario_errors)
@@ -244,7 +284,7 @@ def scenario(project, item, edit):
         for event in step.events:
             scenario_errors = scenario(project, event.scenario, edit)
             errors.update(scenario_errors)
-        
+
 
     if len(item.items) > 0:
         if len(item.items[-1].items) > 0:
