@@ -132,7 +132,7 @@ def nameToText(type):
 	if isinstance(type, format.model.Reference):
 		type = type.item
 
-	return type.name
+	return type.name if type else ""
 
 def actorsToText(items):
 	retval = []
